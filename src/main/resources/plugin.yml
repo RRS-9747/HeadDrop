@@ -1,11 +1,11 @@
 name: "HeadDrop"
-version: "1.7"
+version: "1.8"
 main: "rrs.headdrop.PluginMain"
 api-version: 1.13
 author: "RRS"
-description: "A plugin which drop player head on death"
+description: "A plugin which let player and mobs drop head on death"
 prefix: "HeadDrop"
-website: "https://discord.gg/fxYtDsqJfg"
+website: "https://rrs-9747.github.io/HeadDrop/"
 softdepend: [SkinsRestorer, PlaceholderAPI]
 commands:
   head:
@@ -14,28 +14,20 @@ commands:
     permission: "rrs.head"
     permission-message: "You need rrs.head permission to use this command!"
     usage: "Get player head"
+  headdrop:
+    aliases: [hd]
+    description: "Main command of headdrop"
+    permission-message: "You don't have permission!"
+  customhead:
+    aliases: [customskull]
+    description: "Get custom head"
+    permission: "head.custom"
+    permission-message: "You need head.custom permission to use this command!"
+    usage: "Get own head"
   myhead:
     aliases: [myskull]
     description: "Get your own head"
     permission: "rrs.myhead"
     permission-message: "You need rrs.myhead permission to use this command!"
     usage: "Get own head"
-  headdrop:
-    aliases: [hd]
-    description: "Main command of headdrop"
-    permission-message: "You don't have permission!"
-  headgui:
-    aliases: [headdb]
-    description: "Open HeadDatabase"
-    permission: "rrs.headgui"
-    permission-message: "You don't have permission!"
-    usage: "Head Database"
-  m:
-  autoreload:
-  autoreload:
-  customhead:
-    aliases: [customskull]
-    description: "Get custom head"
-    permission: "head.custom"
-    permission-message: "You need head.custom permission to use this command!"
 permissions:

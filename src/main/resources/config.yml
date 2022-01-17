@@ -2,7 +2,7 @@
 # join support server: https://discord.gg/EWH5PhaCuh 
 
 config:
-    version: 1.6 #don't edit or plugin may break
+    version: 1.8 #don't edit or plugin may break
     update-checker: true 
     
 message:
@@ -34,8 +34,7 @@ Drop:
     Goat: true 
     Guardian: true 
     Husk: true 
-    Parrot: true 
-    Piglin: true 
+    Parrot: true
     Rabbit: true 
     Strider: true 
     Turtle: true 
@@ -70,8 +69,7 @@ Drop:
     Phantom: true 
     Axolotl: true 
     Glow_Squid: true 
-    Stray: true 
-    Witch: true 
+    Stray: true  
     
 Chance: #Drop Need to be enable
     Players: 100
