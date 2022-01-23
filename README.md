@@ -16,7 +16,7 @@ A head plugin for minecraft java
 * Player and all mob head drop on death
 * Death Head drop chance system
 * Fully customizable in config
-* 1.8 - 1.18.1 support
+* 1.13 - 1.18.1 support
 
 
 **How to install**<br>
