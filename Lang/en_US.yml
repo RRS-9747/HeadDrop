@@ -1,0 +1,3 @@
+MyHead-Success: "%prefix% Your Head added in your inventory!"
+Head-Success: "%prefix% %player_name%'s Head added in your inventory"
+Head-Error: "%prefix% You Need to give a player name to get head!"
