@@ -1,4 +1,0 @@
-MyHead-Success: "%prefix% আপনার হেড, আপনার ইনভেন্টরিতে দেওয়া হয়েছে!"
-Head-Success: "%prefix% %player_name% এর হেড আপনার ইনভেন্টরিতে দেওয়া হয়েছে!"
-Head-Error: "%prefix% হেড এর জন্য একজন প্লেয়ারের নাম দেওয়া লাগবে!"
-Reload: "%prefix% প্লাগিন রিলোড হয়েছে!"

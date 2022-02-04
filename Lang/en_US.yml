@@ -1,6 +1,0 @@
-MyHead-Success: "%prefix% Your Head added in your inventory!"
-Head-Success: "%prefix% %player_name%'s Head added in your inventory"
-Head-Error: "%prefix% You Need to give a player name to get head!"
-Head-Search-Error: "%prefix% You need to give a name to search for head!"
-Reload: "%prefix% Plugin reloaded!"
-Permission-Error: "You don't have permission to execute this command!"
