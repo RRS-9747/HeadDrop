@@ -6,7 +6,6 @@ import me.rrs.util.*;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.ArrayList;
 import java.util.logging.Level;
 
 public class HeadDrop extends JavaPlugin {
@@ -53,12 +52,10 @@ public class HeadDrop extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        Bukkit.getLogger().log(Level.FINE, "HeadDrop Disable!");
+        Bukkit.getLogger().warning("HeadDrop Disable!");
 
     }
 
 
 
 }
-
-//Todo -> Check pom.xml line 25

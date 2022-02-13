@@ -29,6 +29,9 @@ public class MainCommand implements CommandExecutor {
                     player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&3HeadDrop&r plugin by RRS."));
                     player.sendMessage(ChatColor.translateAlternateColorCodes('&',"n&9>&r ยงl/headdrop help&r -> you already discovered it!"));
                     player.sendMessage(ChatColor.translateAlternateColorCodes('&',"n&9>&r &l/headdrop reload&r -> reload plugin config."));
+                    player.sendMessage(ChatColor.translateAlternateColorCodes('&',"n&9>&r &l/myhead&r -> Get your head."));
+                    player.sendMessage(ChatColor.translateAlternateColorCodes('&',"n&9>&r &l/head <player Name>&r -> Get another player head"));
+                    player.sendMessage(ChatColor.translateAlternateColorCodes('&',"n&9>&r &l/search <Head Name>&r -> Search for a head in online."));
 
                 }else if(args[0].equalsIgnoreCase("reload")){
                     if (player.hasPermission("head.reload")) {
@@ -45,10 +48,10 @@ public class MainCommand implements CommandExecutor {
         }else{
             if (args.length > 0) {
                 if (args[0].equalsIgnoreCase("reload")) {
-                    Bukkit.getLogger().log(Level.FINE, "HeadDrop reloaded" );
+                    Bukkit.getLogger().warning("HeadDrop reloaded");
                 }
             } else {
-                Bukkit.getLogger().log(Level.FINE, "&bHeadDrop "+ HeadDrop.getInstance().getDescription().getVersion()+ "&r by RRS");
+                Bukkit.getLogger().warning("&bHeadDrop "+ HeadDrop.getInstance().getDescription().getVersion()+ "&r by RRS");
             }
 
         }

@@ -34,7 +34,7 @@ public class ServerLoad implements Listener {
                 if (isUpdate) {
                     Bukkit.getLogger().warning("There is an update available, it will now be downloaded!");
                     if (success){
-                        Bukkit.getLogger().log(Level.FINE, "Downloaded update successfully! Please restart your server");
+                        Bukkit.getLogger().warning("Downloaded update successfully! Please restart your server");
 
                     }else Bukkit.getLogger().log(Level.SEVERE, "Failed to download the update! Check your connection.");
                 }
