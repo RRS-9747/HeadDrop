@@ -1,0 +1,154 @@
+# Thanks for using HeadDrop.
+# For bug report or suggestion, join https://discord.gg/fV4P2yMSgR
+
+Config:
+  Version: 2.0
+  Update-Checker: true
+  Auto-Update: true
+
+Drop:
+  PLAYER: true
+  AXOLOTL: true
+  BAT: true
+  BEE: true
+  BLAZE: true
+  CAT: true
+  DOLPHIN: true
+  DROWNED: true
+  SPIDER: true
+  CAVE_SPIDER: true
+  CHICKEN: true
+  ENDERMAN: true
+  COW: true
+  ENDERMITE: true
+  EVOKER: true
+  DONKEY: true
+  FOX: true
+  GIANT: true
+  HOGLIN: true
+  HUSK: true
+  GOAT: true
+  IRON_GOLEM: true
+  ILLUSIONER: true
+  HORSE: true
+  GUARDIAN: true
+  MUSHROOM_COW: true
+  Ocelot: true
+  PHANTOM: true
+  GLOW_SQUID: true
+  PIG: true
+  LLAMA: true
+  MULE: true
+  PIGLIN: true
+  PIGLIN_BRUTE: true
+  ELDER_GUARDIAN: true
+  PUFFERFISH: true
+  SILVERFISH: true
+  POLAR_BEAR: true
+  SALMON: true
+  SHULKER: true
+  STRAY: true
+  STRIDER: true
+  SKELETON_HORSE: true
+  PILLAGER: true
+  SQUID: true
+  WANDERING_TRADER: true
+  TURTLE: true
+  SLIME: true
+  COD: true
+  RAVAGER: true
+  WITCH: true
+  GHAST: true
+  ZOMBIE_HORSE: true
+  WOLF: true
+  VINDICATOR: true
+  ZOGLIN: true
+  TRADER_LLAMA: true
+  ZOMBIE_VILLAGER: true
+  WITHER: true
+  VILLAGER: true
+  PARROT: true
+  TROPICAL_FISH: true
+  VEX: true
+  ZOMBIFIED_PIGLIN: true
+  SNOW_GOLEM: true
+  RABBIT: true
+
+Chance:
+  PLAYER: 50
+  SILVERFISH: 50
+  TURTLE: 50
+  PARROT: 50
+  WOLF: 50
+  TROPICAL_FISH: 50
+  VILLAGER: 50
+  ZOMBIE_VILLAGER: 50
+  TRADER_LLAMA: 50
+  ZOMBIFIED_PIGLIN: 50
+  VEX: 50
+  GHAST: 50
+  ZOGLIN: 50
+  ZOMBIE_HORSE: 50
+  WANDERING_TRADER: 50
+  VINDICATOR: 50
+  WITCH: 50
+  STRIDER: 50
+  WITHER: 50
+  STRAY: 50
+  PIG: 50
+  SNOW_GOLEM: 50
+  SKELETON_HORSE: 50
+  SQUID: 50
+  GUARDIAN: 50
+  SLIME: 50
+  SHULKER: 50
+  RABBIT: 50
+  PIGLIN_BRUTE: 50
+  SALMON: 50
+  RAVAGER: 50
+  PUFFERFISH: 50
+  POLAR_BEAR: 50
+  PILLAGER: 50
+  MULE: 50
+  PIGLIN: 50
+  PHANTOM: 50
+  AXOLOTL: 50
+  Ocelot: 50
+  LLAMA: 50
+  IRON_GOLEM: 50
+  MUSHROOM_COW: 50
+  ILLUSIONER: 50
+  HORSE: 50
+  HUSK: 50
+  HOGLIN: 50
+  DONKEY: 50
+  GLOW_SQUID: 50
+  GOAT: 50
+  ELDER_GUARDIAN: 50
+  GIANT: 50
+  FOX: 50
+  EVOKER: 50
+  ENDERMITE: 50
+  ENDERMAN: 50
+  DROWNED: 50
+  COD: 50
+  COW: 50
+  DOLPHIN: 50
+  BAT: 50
+  BEE: 50
+  BLAZE: 50
+  CAT: 50
+  SPIDER: 50
+  CAVE_SPIDER: 50
+  CHICKEN: 50
+
+
+Lang:
+  MyHead-Success: "Your Head added in your inventory!"
+  Head-Success: "%player%'s Head added in your inventory"
+  Head-Error: "You Need to give a player name to get head!"
+  Head-Search-Error: "You need to give a name to search for head!"
+  Reload: "Plugin reloaded!"
+  Permission-Error: "You don't have permission to execute this command!"
+
+
