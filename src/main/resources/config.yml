@@ -4,7 +4,6 @@
 Config:
   Version: 2.0
   Update-Checker: true
-  Auto-Update: true
 
 Drop:
   PLAYER: true

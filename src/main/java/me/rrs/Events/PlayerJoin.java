@@ -20,7 +20,6 @@ public class PlayerJoin implements Listener {
         String newVersion = UpdateAPI.getGithubVersion("RRS-9747", "HeadDrop");
         boolean hasUpdateGitHub = UpdateAPI.hasGithubUpdate("RRS-9747", "HeadDrop");
         boolean updateChecker = HeadDrop.getInstance().getConfig().getBoolean("Config.Update-Checker");
-        boolean autoUpdate = HeadDrop.getInstance().getConfig().getBoolean("Config.Auto-Update");
         boolean hasUpdateSpigot = UpdateAPI.checkForUpdate(HeadDrop.getInstance(), 99976, false);
 
         Date date = new Date();
@@ -31,12 +30,10 @@ public class PlayerJoin implements Listener {
 
         if (hasUpdateGitHub || hasUpdateSpigot){
             if (updateChecker) {
-                if (event.getPlayer().hasPermission("HeadDrop.notify")) {
-                    if (!autoUpdate) {
+                if (event.getPlayer().hasPermission("headdrop.notify")) {
                         event.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', "You are using HeadDrop" + HeadDrop.getInstance().getDescription().getVersion()));
                         event.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', "However version" + newVersion + " is available."));
                         event.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', "You can download it from: https://bit.ly/HeadDrop"));
-                    }
                 }
             }
         }
