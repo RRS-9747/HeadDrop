@@ -12,6 +12,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
+import java.io.IOException;
 import java.util.logging.Level;
 
 
@@ -36,9 +37,20 @@ public class Search implements CommandExecutor {
                     ItemStack skull = retriever.getCustomSkull(texture, args[0]);
                     player.getInventory().addItem(skull);
 
-                } else player.sendMessage(PlaceholderAPI.setPlaceholders(player, ChatColor.translateAlternateColorCodes('&', "&c&l[HeadDrop]&r " + Head_Search_Error)));
+                } else
+                    if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")){
+                        player.sendMessage(PlaceholderAPI.setPlaceholders(player, ChatColor.translateAlternateColorCodes('&', "&c&l[HeadDrop]&r " + Head_Search_Error)));
 
-            } else player.sendMessage(PlaceholderAPI.setPlaceholders(player, ChatColor.translateAlternateColorCodes('&', "&c&l[HeadDrop]&r " + Permission_Error)));
+                    }else player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&c&l[HeadDrop]&r " + Head_Search_Error));
+
+
+            } else
+                if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")){
+                    player.sendMessage(PlaceholderAPI.setPlaceholders(player, ChatColor.translateAlternateColorCodes('&', "&c&l[HeadDrop]&r " + Permission_Error)));
+
+                }else player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&c&l[HeadDrop]&r " + Permission_Error));
+
+
 
         }else Bukkit.getLogger().log(Level.SEVERE, "This is a player only command!");
 

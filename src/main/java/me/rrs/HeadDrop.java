@@ -39,6 +39,9 @@ public class HeadDrop extends JavaPlugin {
         getCommand("head").setExecutor(new OtherHead());
         getCommand("headdrop").setExecutor(new MainCommand());
         getCommand("search").setExecutor(new Search());
+        getCommand("customhead").setExecutor(new CustomHead());
+        getCommand("update").setExecutor(new AutoUpdate());
+        getCommand("headdrop").setTabCompleter(new me.rrs.TabCompleter.HeadDrop());
 
 
 
@@ -48,6 +51,8 @@ public class HeadDrop extends JavaPlugin {
     public void onLoad(){
 
     }
+
+
 
 
     @Override

@@ -20,7 +20,6 @@ public class PlayerJoin implements Listener {
         String newVersion = UpdateAPI.getGithubVersion("RRS-9747", "HeadDrop");
         boolean hasUpdateGitHub = UpdateAPI.hasGithubUpdate("RRS-9747", "HeadDrop");
         boolean updateChecker = HeadDrop.getInstance().getConfig().getBoolean("Config.Update-Checker");
-        boolean hasUpdateSpigot = UpdateAPI.checkForUpdate(HeadDrop.getInstance(), 99976, false);
 
         Date date = new Date();
         DateFormat dateFormat = new SimpleDateFormat("dd/MM");
@@ -28,12 +27,15 @@ public class PlayerJoin implements Listener {
 
 
 
-        if (hasUpdateGitHub || hasUpdateSpigot){
+        if (hasUpdateGitHub){
             if (updateChecker) {
                 if (event.getPlayer().hasPermission("headdrop.notify")) {
-                        event.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', "You are using HeadDrop" + HeadDrop.getInstance().getDescription().getVersion()));
-                        event.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', "However version" + newVersion + " is available."));
-                        event.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', "You can download it from: https://bit.ly/HeadDrop"));
+                    event.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', "You are using HeadDrop" + HeadDrop.getInstance().getDescription().getVersion()));
+                    event.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', "However version" + newVersion + " is available."));
+                    event.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', "You can download it from: https://bit.ly/HeadDrop"));
+                    if (event.getPlayer().hasPermission("headdrop.update")) {
+                        event.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', "You can also do /update to update the plugin, but suggest to download from spigot ;)"));
+                    }
                 }
             }
         }

@@ -16,8 +16,8 @@ public enum Database {
             "GET"
     );
 
-    public String DATABASE, SEARCH, START, END, END_SEARCH, TEXTURE_LINK_GETTER, TEXTURE_SPLITTER, NAME_START, NAME_END, URL_START, URL_END, REQUEST_METHOD;
-    public boolean USE_JSON;
+    public final String DATABASE, SEARCH, START, END, END_SEARCH, TEXTURE_LINK_GETTER, TEXTURE_SPLITTER, NAME_START, NAME_END, URL_START, URL_END, REQUEST_METHOD;
+    public final boolean USE_JSON;
     Database(String DATABASE, String SEARCH, String START, String END, String END_SEARCH,
              String TEXTURE_LINK_GETTER, String TEXTURE_SPLITTER,
              String NAME_START, String NAME_END,

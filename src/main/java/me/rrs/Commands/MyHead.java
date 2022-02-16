@@ -27,9 +27,16 @@ public class MyHead implements CommandExecutor {
             if (player.hasPermission("headdrop.ownhead")) {
 
                 player.getInventory().addItem(skull);
-                player.sendMessage(PlaceholderAPI.setPlaceholders(player, ChatColor.translateAlternateColorCodes('&', "&a&l[HeadDrop]&r " + MyHead_Success)));
+                if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")){
+                    player.sendMessage(PlaceholderAPI.setPlaceholders(player, ChatColor.translateAlternateColorCodes('&', "&a&l[HeadDrop]&r " + MyHead_Success)));
+                }else player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&a&l[HeadDrop]&r " + MyHead_Success));
 
-            }else player.sendMessage(PlaceholderAPI.setPlaceholders(player, ChatColor.translateAlternateColorCodes('&', "&c&l[HeadDrop]&r " + Permission_Error)));
+
+            }else
+                if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")){
+                    player.sendMessage(PlaceholderAPI.setPlaceholders(player, ChatColor.translateAlternateColorCodes('&', "&c&l[HeadDrop]&r " + Permission_Error)));
+                }else player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&c&l[HeadDrop]&r " + Permission_Error));
+
 
 
         }else{
