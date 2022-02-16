@@ -27,19 +27,27 @@ public class MainCommand implements CommandExecutor {
                 if (args[0].equalsIgnoreCase("help")) {
 
                     player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&3HeadDrop&r plugin by RRS."));
-                    player.sendMessage(ChatColor.translateAlternateColorCodes('&',"n&9>&r ยงl/headdrop help&r -> you already discovered it!"));
-                    player.sendMessage(ChatColor.translateAlternateColorCodes('&',"n&9>&r &l/headdrop reload&r -> reload plugin config."));
-                    player.sendMessage(ChatColor.translateAlternateColorCodes('&',"n&9>&r &l/myhead&r -> Get your head."));
-                    player.sendMessage(ChatColor.translateAlternateColorCodes('&',"n&9>&r &l/head <player Name>&r -> Get another player head"));
-                    player.sendMessage(ChatColor.translateAlternateColorCodes('&',"n&9>&r &l/search <Head Name>&r -> Search for a head in online."));
+                    player.sendMessage(ChatColor.translateAlternateColorCodes('&',"&9>&r &l/headdrop help&r -> you already discovered it!"));
+                    player.sendMessage(ChatColor.translateAlternateColorCodes('&',"&9>&r &l/headdrop reload&r -> reload plugin config."));
+                    player.sendMessage(ChatColor.translateAlternateColorCodes('&',"&9>&r &l/myhead&r -> Get your head."));
+                    player.sendMessage(ChatColor.translateAlternateColorCodes('&',"&9>&r &l/head <player Name>&r -> Get another player head"));
+                    player.sendMessage(ChatColor.translateAlternateColorCodes('&',"&9>&r &l/search <Head Name>&r -> Search for a head in online."));
+                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&9>&r &l/customhead <base64>&r -> Get head from base64."));
+                    player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&9>&r &l/updatehd&r -> Auto update the plugin."));
 
                 }else if(args[0].equalsIgnoreCase("reload")){
                     if (player.hasPermission("head.reload")) {
                         HeadDrop.getInstance().reloadConfig();
-                        player.sendMessage(PlaceholderAPI.setPlaceholders(player,ChatColor.translateAlternateColorCodes('&' ,"&a&l[HeadDrop]&r" + Reload )));
+                        if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+                            player.sendMessage(PlaceholderAPI.setPlaceholders(player,ChatColor.translateAlternateColorCodes('&' ,"&a&l[HeadDrop]&r" + Reload )));
+                        }else player.sendMessage(ChatColor.translateAlternateColorCodes('&',"&a&l[HeadDrop]&r" + Reload ));
+
 
                     }else{
-                        player.sendMessage(PlaceholderAPI.setPlaceholders(player, ChatColor.translateAlternateColorCodes('&', "&c&l[HeadDrop]&r " + Permission_Error)));
+                        if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")){
+                            player.sendMessage(PlaceholderAPI.setPlaceholders(player, ChatColor.translateAlternateColorCodes('&', "&c&l[HeadDrop]&r " + Permission_Error)));
+                        }else player.sendMessage(ChatColor.translateAlternateColorCodes('&',"&c&l[HeadDrop]&r " + Permission_Error));
+
                     }
                 }
             }else{

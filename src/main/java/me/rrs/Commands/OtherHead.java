@@ -29,13 +29,25 @@ public class OtherHead implements CommandExecutor {
 
                 if (args.length > 0) {
                     player.getInventory().addItem(skull);
-                    player.sendMessage(PlaceholderAPI.setPlaceholders(player, ChatColor.translateAlternateColorCodes('&', "&a&l[HeadDrop]&r " + Head_Success).replaceAll("%player%", args[0])));
+                    if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")){
+                        player.sendMessage(PlaceholderAPI.setPlaceholders(player, ChatColor.translateAlternateColorCodes('&', "&a&l[HeadDrop]&r " + Head_Success).replaceAll("%player%", args[0])));
+
+                    }else player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&a&l[HeadDrop]&r " + Head_Success).replaceAll("%player%", args[0]));
+
 
                 } else {
-                    player.sendMessage(PlaceholderAPI.setPlaceholders(player, ChatColor.translateAlternateColorCodes('&', "&c&l[HeadDrop]&r " + Head_Error)));
+                    if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")){
+                        player.sendMessage(PlaceholderAPI.setPlaceholders(player, ChatColor.translateAlternateColorCodes('&', "&c&l[HeadDrop]&r " + Head_Error)));
+
+                    }else player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&c&l[HeadDrop]&r " + Head_Error));
+
                 }
             }else{
-                player.sendMessage(PlaceholderAPI.setPlaceholders(player, ChatColor.translateAlternateColorCodes('&', "&c&l[HeadDrop]&r " + Permission_Error)));
+                if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")){
+                    player.sendMessage(PlaceholderAPI.setPlaceholders(player, ChatColor.translateAlternateColorCodes('&', "&c&l[HeadDrop]&r " + Permission_Error)));
+
+                }else player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&c&l[HeadDrop]&r " + Permission_Error));
+
             }
 
 
