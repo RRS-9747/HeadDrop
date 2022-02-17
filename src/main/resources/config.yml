@@ -1,9 +1,19 @@
 # Thanks for using HeadDrop.
 # For bug report or suggestion, join https://discord.gg/fV4P2yMSgR
 
+# Don't edit config.version or plugin may break!
+# Player-Permission = true mean player will drop head if they have headdrop.player permission.
+# Chances will not be ignored if you disable drop.
+# Chance is from 1-100. fraction number will not work.
+
 Config:
-  Version: 2.1
+  Version: 2.3
   Update-Checker: true
+  Player-Permission: false
+  Disable-Worlds:
+    - demoWorld
+    - demoWorld_2
+    - demoWorld_3
 
 Drop:
   PLAYER: true
