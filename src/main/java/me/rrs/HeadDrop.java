@@ -2,10 +2,15 @@ package me.rrs;
 
 import me.rrs.Commands.*;
 import me.rrs.Events.*;
-import me.rrs.util.*;
+import me.rrs.util.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.logging.Level;
 
 public class HeadDrop extends JavaPlugin {
@@ -33,7 +38,7 @@ public class HeadDrop extends JavaPlugin {
         saveDefaultConfig();
         Metrics metrics = new Metrics(this, 13554);
         getServer().getPluginManager().registerEvents(new PlayerDeath(), this);
-        getServer().getPluginManager().registerEvents(new Entitydeath(), this);
+        getServer().getPluginManager().registerEvents(new EntityDeath(), this);
         getServer().getPluginManager().registerEvents(new PlayerJoin(), this);
         getCommand("myhead").setExecutor(new MyHead());
         getCommand("head").setExecutor(new OtherHead());
@@ -45,10 +50,36 @@ public class HeadDrop extends JavaPlugin {
 
 
 
+
     }
 
     @Override
     public void onLoad(){
+        if (this.getDataFolder().exists()) {
+
+            File config = new File(this.getDataFolder().getAbsolutePath() + "/config.yml");
+            File oc = new File(this.getDataFolder().getAbsolutePath() + "/config.yml.old");
+            double version = this.getConfig().getDouble("Config.Version");
+            Path oldConfig = Paths.get(this.getDataFolder().getAbsolutePath() + "/config.yml");
+
+
+            if (config.exists()) {
+                if (version <= 2.3) {
+
+                    if (oc.exists()) {
+                        oc.delete();
+                    }
+                        try {
+                            Files.move(oldConfig, oldConfig.resolveSibling("config.yml.old"));
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
+
+
+                }
+            }
+
+        }
 
     }
 
@@ -57,7 +88,7 @@ public class HeadDrop extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        Bukkit.getLogger().warning("HeadDrop Disable!");
+        Bukkit.getLogger().warning("HeadDrop Disable.");
 
     }
 

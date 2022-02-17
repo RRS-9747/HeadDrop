@@ -1,18 +1,14 @@
 package me.rrs.util;
 
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.inventory.meta.SkullMeta;
+import org.bukkit.inventory.meta.ItemMeta;
 
 public class ItemStack {
+    public static void rename(org.bukkit.inventory.ItemStack itemStack, String name){
+        ItemMeta m = itemStack.getItemMeta();
+        if (m != null) {
+            m.setDisplayName(name);
+        }
 
-
-    public static void rename(org.bukkit.inventory.ItemStack Itemstack, String Owner){
-        SkullMeta meta = (SkullMeta) Bukkit.getItemFactory().getItemMeta(Material.PLAYER_HEAD);
-        meta.setOwner(Owner);
-        Itemstack.setItemMeta(meta);
+        itemStack.setItemMeta(m);
     }
 }
-
-
-
