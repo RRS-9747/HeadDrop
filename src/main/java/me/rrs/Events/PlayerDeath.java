@@ -4,6 +4,7 @@ import me.rrs.HeadDrop;
 import me.rrs.util.SkullCreator;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -16,43 +17,47 @@ import java.util.Random;
 
 
 public class PlayerDeath implements Listener {
+
+    Player killerPlayer;
+    FileConfiguration config;
+
     @EventHandler(priority = EventPriority.NORMAL)
 
-    public void onPlayerDeath(PlayerDeathEvent event) {
+    public void onPlayerDropHeadEvent(PlayerDeathEvent event) {
 
         Random random = new Random();
-
         int x = random.nextInt(101);
-        Player killerPlayer = event.getEntity().getKiller();
-        boolean needPermission = HeadDrop.getInstance().getConfig().getBoolean("Config.Player-Permission");
 
-        List<String> worldList = HeadDrop.getInstance().getConfig().getStringList("Config.Disable-Worlds");
+        this.killerPlayer = event.getEntity().getKiller();
+        this.config = HeadDrop.getInstance().getConfig();
+        boolean needPermission = this.config.getBoolean("PLAYER.Require-Permission");
+
+        List<String> worldList = this.config.getStringList("Config.Disable-Worlds");
 
         for (String world : worldList) {
             World w = Bukkit.getWorld(world);
             if (event.getEntity().getWorld() != w) {
 
 
-                if (needPermission) {
+
                     if (event.getEntity().getKiller() == killerPlayer) {
+                        if (needPermission) {
                         if (event.getEntity().hasPermission("headdrop.player")) {
-                            if (HeadDrop.getInstance().getConfig().getBoolean("Drop.PLAYER")) {
-                                if (x <= HeadDrop.getInstance().getConfig().getInt("Chance.PLAYER")) {
+                            if (HeadDrop.getInstance().getConfig().getBoolean("PLAYER.Drop")) {
+                                if (x <= HeadDrop.getInstance().getConfig().getInt("PLAYER.Chance")) {
                                     ItemStack skull = SkullCreator.itemFromName(event.getEntity().getDisplayName());
                                     event.getDrops().add(skull);
                                 }
                             }
                         }
-                    }
-                } else {
-                    if (event.getEntity().getKiller() == killerPlayer) {
-                        if (HeadDrop.getInstance().getConfig().getBoolean("Drop.PLAYER")) {
-                            if (x <= HeadDrop.getInstance().getConfig().getInt("Chance.PLAYER")) {
-                                ItemStack skull = SkullCreator.itemFromName(event.getEntity().getDisplayName());
-                                event.getDrops().add(skull);
+                    }else {
+                                if (HeadDrop.getInstance().getConfig().getBoolean("PLAYER.Drop")) {
+                                    if (x <= HeadDrop.getInstance().getConfig().getInt("PLAYER.Chance")) {
+                                        ItemStack skull = SkullCreator.itemFromName(event.getEntity().getDisplayName());
+                                        event.getDrops().add(skull);
+                                    }
+                                }
                             }
-                        }
-                    }
                 }
             }
         }
