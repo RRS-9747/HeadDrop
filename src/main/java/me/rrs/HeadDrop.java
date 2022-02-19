@@ -60,16 +60,17 @@ public class HeadDrop extends JavaPlugin {
             File config = new File(this.getDataFolder().getAbsolutePath() + "/config.yml");
             File oc = new File(this.getDataFolder().getAbsolutePath() + "/config.yml.old");
             double version = this.getConfig().getDouble("Config.Version");
-            Path oldConfig = Paths.get(this.getDataFolder().getAbsolutePath() + "/config.yml");
+
 
 
             if (config.exists()) {
-                if (version <= 2.3) {
+                if (version != 2.4) {
 
                     if (oc.exists()) {
                         oc.delete();
                     }
                         try {
+                            Path oldConfig = Paths.get(this.getDataFolder().getAbsolutePath() + "/config.yml");
                             Files.move(oldConfig, oldConfig.resolveSibling("config.yml.old"));
                         } catch (IOException e) {
                             e.printStackTrace();
