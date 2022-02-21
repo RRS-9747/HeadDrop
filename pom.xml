@@ -6,7 +6,7 @@
 
     <groupId>me.rrs</groupId>
     <artifactId>HeadDrop</artifactId>
-    <version>2.5</version>
+    <version>2.6</version>
     <packaging>jar</packaging>
 
     <name>HeadDrop</name>
@@ -70,6 +70,7 @@
             <url>https://oss.sonatype.org/content/groups/public/</url>
         </repository>
     </repositories>
+
 
     <dependencies>
         <dependency>

@@ -1,7 +1,7 @@
 package me.rrs.Commands;
 
 import me.rrs.HeadDrop;
-import me.rrs.util.UpdateAPI;
+import me.rrs.Util.UpdateAPI;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
