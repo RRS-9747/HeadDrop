@@ -1,7 +1,7 @@
 package me.rrs.Database;
 
 
-import me.rrs.util.SkullCreator;
+import me.rrs.Util.SkullCreator;
 import org.bukkit.inventory.ItemStack;
 
 

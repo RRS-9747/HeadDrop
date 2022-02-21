@@ -1,8 +1,8 @@
 package me.rrs;
 
 import me.rrs.Commands.*;
-import me.rrs.Events.*;
-import me.rrs.util.Metrics;
+import me.rrs.Listeners.*;
+import me.rrs.Util.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -36,6 +36,7 @@ public class HeadDrop extends JavaPlugin {
 
 
         saveDefaultConfig();
+
         Metrics metrics = new Metrics(this, 13554);
         getServer().getPluginManager().registerEvents(new PlayerDeath(), this);
         getServer().getPluginManager().registerEvents(new EntityDeath(), this);
@@ -89,6 +90,7 @@ public class HeadDrop extends JavaPlugin {
 
     @Override
     public void onDisable() {
+
         Bukkit.getLogger().warning("HeadDrop Disable.");
 
     }
