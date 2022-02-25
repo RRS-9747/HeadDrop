@@ -10,12 +10,15 @@ import org.bukkit.event.server.ServerLoadEvent;
 
 public class ServerLoad implements Listener {
 
+
+
     @EventHandler
     public void onLoad(ServerLoadEvent event){
 
 
         boolean hasUpdateGitHub = UpdateAPI.hasGithubUpdate("RRS-9747", "HeadDrop");
         boolean updateChecker = HeadDrop.getInstance().getConfig().getBoolean("Config.Update-Checker");
+
 
 
 

@@ -21,21 +21,22 @@ import java.util.Random;
 
 public class EntityDeath implements Listener {
 
-
+    Random random = new Random();
 
     @EventHandler(priority = EventPriority.NORMAL)
     public void EntityDropHeadEvent(EntityDeathEvent event) {
+
+
         Entity entity = event.getEntity();
         FileConfiguration config = HeadDrop.getInstance().getConfig();
-        Player killerPlayer = event.getEntity().getKiller();
         boolean isInDisabledWorld = false;
-        Random random = new Random();
         int x = random.nextInt(100) + 1;
+
 
         List<String> worldList = HeadDrop.getInstance().getConfig().getStringList("Config.Disable-Worlds");
 
 
-        if (event.getEntity().getKiller() == killerPlayer) {
+        if (event.getEntity().getKiller() != null) {
 
             for(String world : worldList) {
                 World w = Bukkit.getWorld(world);
@@ -249,8 +250,20 @@ public class EntityDeath implements Listener {
 
                 } else if (entity.getType() == EntityType.FOX) {
                     if (config.getBoolean("FOX.Drop") && x <= config.getInt("FOX.Chance")) {
-                        event.getDrops().add(LivingEntityHead.FOX);
-                        ItemStack.rename(LivingEntityHead.FOX, ChatColor.YELLOW + config.getString("FOX.Name"));
+                        Fox fox = (Fox) event.getEntity();
+
+                        switch (fox.getFoxType()){
+                            case RED:
+                                event.getDrops().add(LivingEntityHead.FOX);
+                                ItemStack.rename(LivingEntityHead.FOX, ChatColor.YELLOW + config.getString("FOX.Name"));
+
+                                break;
+                            case SNOW:
+                                event.getDrops().add(LivingEntityHead.FOX_WHITE);
+                                ItemStack.rename(LivingEntityHead.FOX, ChatColor.YELLOW + config.getString("FOX.Name"));
+
+                                break;
+                        }
                     }
 
 
@@ -487,10 +500,46 @@ public class EntityDeath implements Listener {
 
                 } else if (entity.getType() == EntityType.RABBIT) {
                     if (config.getBoolean("RABBIT.Drop") && x <= config.getInt("RABBIT.Chance")) {
-                        event.getDrops().add(LivingEntityHead.RABBIT);
-                        ItemStack.rename(LivingEntityHead.RABBIT, ChatColor.YELLOW + config.getString("RABBIT.Name"));
-                    }
+                        Rabbit rabbit = (Rabbit) event.getEntity();
+                        switch (rabbit.getRabbitType()){
 
+                            case BROWN:
+                                event.getDrops().add(LivingEntityHead.RABBIT_BROWN);
+                                ItemStack.rename(LivingEntityHead.RABBIT_BROWN, ChatColor.YELLOW + config.getString("RABBIT.Name"));
+
+                                break;
+                            case WHITE:
+                                event.getDrops().add(LivingEntityHead.RABBIT_WHITE);
+                                ItemStack.rename(LivingEntityHead.RABBIT_WHITE, ChatColor.YELLOW + config.getString("RABBIT.Name"));
+
+                                break;
+                            case BLACK:
+                                event.getDrops().add(LivingEntityHead.RABBIT_BLACK);
+                                ItemStack.rename(LivingEntityHead.RABBIT_BLACK, ChatColor.YELLOW + config.getString("RABBIT.Name"));
+
+                                break;
+                            case BLACK_AND_WHITE:
+                                event.getDrops().add(LivingEntityHead.RABBIT_BLACK_AND_WHITE);
+                                ItemStack.rename(LivingEntityHead.RABBIT_BLACK_AND_WHITE, ChatColor.YELLOW + config.getString("RABBIT.Name"));
+
+                                break;
+                            case GOLD:
+                                event.getDrops().add(LivingEntityHead.RABBIT_GOLD);
+                                ItemStack.rename(LivingEntityHead.RABBIT_GOLD, ChatColor.YELLOW + config.getString("RABBIT.Name"));
+
+                                break;
+                            case SALT_AND_PEPPER:
+                                event.getDrops().add(LivingEntityHead.RABBIT_SALT_AND_PEPPER);
+                                ItemStack.rename(LivingEntityHead.RABBIT_SALT_AND_PEPPER, ChatColor.YELLOW + config.getString("RABBIT.Name"));
+
+                                break;
+                            case THE_KILLER_BUNNY:
+                                event.getDrops().add(LivingEntityHead.RABBIT_THE_KILLER_BUNNY);
+                                ItemStack.rename(LivingEntityHead.RABBIT_THE_KILLER_BUNNY, ChatColor.YELLOW + config.getString("RABBIT.Name"));
+
+                                break;
+                        }
+                    }
 
                 } else if (entity.getType() == EntityType.RAVAGER) {
                     if (config.getBoolean("RAVAGER.Drop") && x <= config.getInt("RAVAGER.Chance")) {
