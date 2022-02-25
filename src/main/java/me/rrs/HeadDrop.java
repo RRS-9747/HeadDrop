@@ -11,7 +11,6 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.logging.Level;
 
 public class HeadDrop extends JavaPlugin {
 
@@ -23,19 +22,17 @@ public class HeadDrop extends JavaPlugin {
     }
 
 
-
-
     @Override
     public void onEnable() {
         instance = this;
 
         if (!this.getDescription().getName().equals("HeadDrop")){
-            Bukkit.getLogger().log(Level.SEVERE, "You can't change my name!");
+            Bukkit.getLogger().severe("You can't change my name!");
             Bukkit.getPluginManager().disablePlugin(this);
         }
 
-
         saveDefaultConfig();
+
 
         Metrics metrics = new Metrics(this, 13554);
         getServer().getPluginManager().registerEvents(new PlayerDeath(), this);

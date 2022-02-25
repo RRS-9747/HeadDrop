@@ -18,23 +18,20 @@ import java.util.Random;
 
 public class PlayerDeath implements Listener {
 
-    Player killerPlayer;
-    FileConfiguration config;
+    final FileConfiguration config = HeadDrop.getInstance().getConfig();
     Random random = new Random();
 
     @EventHandler(priority = EventPriority.NORMAL)
 
     public void PlayerDropHeadEvent(PlayerDeathEvent event) {
 
-        this.killerPlayer = event.getEntity().getKiller();
-        this.config = HeadDrop.getInstance().getConfig();
         boolean needPermission = this.config.getBoolean("PLAYER.Require-Permission");
         boolean isInDisabledWorld = false;
 
         int x = random.nextInt(100) + 1;
 
 
-        List<String> worldList = this.config.getStringList("Config.Disable-Worlds");
+        List<String> worldList = config.getStringList("Config.Disable-Worlds");
 
 
         for (String world : worldList) {
@@ -46,7 +43,7 @@ public class PlayerDeath implements Listener {
 
         if (!isInDisabledWorld) {
 
-            if (event.getEntity().getKiller() == killerPlayer) {
+            if (event.getEntity().getKiller() != null) {
                 if (needPermission) {
                     if (event.getEntity().hasPermission("headdrop.player")) {
                         if (HeadDrop.getInstance().getConfig().getBoolean("PLAYER.Drop")) {
