@@ -21,13 +21,23 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="Maven: net.dv8tion:JDA:5.0.0-alpha.9" level="project" />
+    <orderEntry type="library" name="Maven: com.google.code.findbugs:jsr305:3.0.2" level="project" />
+    <orderEntry type="library" name="Maven: org.jetbrains:annotations:16.0.1" level="project" />
+    <orderEntry type="library" name="Maven: org.slf4j:slf4j-api:1.7.25" level="project" />
+    <orderEntry type="library" name="Maven: com.neovisionaries:nv-websocket-client:2.14" level="project" />
+    <orderEntry type="library" name="Maven: com.squareup.okhttp3:okhttp:3.13.0" level="project" />
+    <orderEntry type="library" name="Maven: com.squareup.okio:okio:1.17.2" level="project" />
+    <orderEntry type="library" name="Maven: org.apache.commons:commons-collections4:4.1" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Maven: net.sf.trove4j:trove4j:3.0.3" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Maven: com.fasterxml.jackson.core:jackson-databind:2.10.1" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Maven: com.fasterxml.jackson.core:jackson-annotations:2.10.1" level="project" />
+    <orderEntry type="library" scope="RUNTIME" name="Maven: com.fasterxml.jackson.core:jackson-core:2.10.1" level="project" />
     <orderEntry type="library" name="Maven: com.googlecode.json-simple:json-simple:1.1.1" level="project" />
     <orderEntry type="library" name="Maven: junit:junit:4.10" level="project" />
     <orderEntry type="library" name="Maven: org.hamcrest:hamcrest-core:1.1" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: me.clip:placeholderapi:2.11.1" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: org.jetbrains:annotations:19.0.0" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.mojang:authlib:1.5.25" level="project" />
-    <orderEntry type="library" scope="PROVIDED" name="Maven: com.google.code.findbugs:jsr305:2.0.1" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: commons-codec:commons-codec:1.10" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: commons-io:commons-io:2.4" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.google.code.gson:gson:2.8.0" level="project" />

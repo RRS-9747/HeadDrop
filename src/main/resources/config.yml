@@ -6,14 +6,23 @@
 # Chances will not be ignored if you disable drop.
 # Chance is from 1-100. fraction number will not work.
 
+#Get bot token from https://discord.com/developers/applications
+# %killer% will return player name who killed the mob & %mob% will return mob name which was killed (only work on Bot section)
+
 Config:
-  Version: 2.4
+  Version: 2.9
   Update-Checker: true
   Disable-Worlds:
     - demoWorld
     - demoWorld2
-    - demoWorld3
 
+Bot:
+  Enable: false
+  Token: "Bot Token here"
+  Channel: ""
+  Title: "HeadDrop"
+  Description: ""
+  Footer: ""
 
 PLAYER:
   Drop: true
