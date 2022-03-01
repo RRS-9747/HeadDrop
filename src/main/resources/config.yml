@@ -21,7 +21,7 @@ Bot:
   Token: "Bot Token here"
   Channel: ""
   Title: "HeadDrop"
-  Description: ""
+  Description: "%killer% killed %mob% and got a Head!"
   Footer: ""
 
 PLAYER:
