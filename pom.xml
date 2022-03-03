@@ -6,7 +6,7 @@
 
     <groupId>me.rrs</groupId>
     <artifactId>HeadDrop</artifactId>
-    <version>2.9</version>
+    <version>3.0</version>
     <packaging>jar</packaging>
 
     <name>HeadDrop</name>

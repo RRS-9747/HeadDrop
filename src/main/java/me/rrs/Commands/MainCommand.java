@@ -2,6 +2,7 @@ package me.rrs.Commands;
 
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.rrs.HeadDrop;
+import me.rrs.Util.Lang;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
@@ -15,12 +16,8 @@ public class MainCommand implements CommandExecutor {
         if (sender instanceof Player){
 
             Player player = (Player) sender;
-            String Reload = HeadDrop.getInstance().getConfig().getString("Lang.Reload");
-            String Permission_Error = HeadDrop.getInstance().getConfig().getString("Lang.Permission-Error");
 
             if (args.length > 0) {
-
-
 
                 if (args[0].equalsIgnoreCase("help")) {
 
@@ -36,15 +33,11 @@ public class MainCommand implements CommandExecutor {
                 }else if(args[0].equalsIgnoreCase("reload")){
                     if (player.hasPermission("head.reload")) {
                         HeadDrop.getInstance().reloadConfig();
-                        if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-                            player.sendMessage(PlaceholderAPI.setPlaceholders(player,ChatColor.translateAlternateColorCodes('&' ,"&a&l[HeadDrop]&r" + Reload )));
-                        }else player.sendMessage(ChatColor.translateAlternateColorCodes('&',"&a&l[HeadDrop]&r" + Reload ));
+                            Lang.msg("&a&l[HeadDrop]&r", "Reload", player);
 
 
                     }else{
-                        if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")){
-                            player.sendMessage(PlaceholderAPI.setPlaceholders(player, ChatColor.translateAlternateColorCodes('&', "&c&l[HeadDrop]&r " + Permission_Error)));
-                        }else player.sendMessage(ChatColor.translateAlternateColorCodes('&',"&c&l[HeadDrop]&r " + Permission_Error));
+                            Lang.noPerm(player);
 
                     }
                 }
