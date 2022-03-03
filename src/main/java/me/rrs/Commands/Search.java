@@ -3,6 +3,7 @@ package me.rrs.Commands;
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.rrs.Database.Database;
 import me.rrs.HeadDrop;
+import me.rrs.Util.Lang;
 import me.rrs.Util.SkullRetriever;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -22,8 +23,6 @@ public class Search implements CommandExecutor {
         if (sender instanceof Player) {
 
             Player player = (Player) sender;
-            String Head_Search_Error = HeadDrop.getInstance().getConfig().getString("Lang.Head-Search-Error");
-            String Permission_Error = HeadDrop.getInstance().getConfig().getString("Lang.Permission-Error");
 
 
             if (player.hasPermission("head.search")) {
@@ -37,7 +36,7 @@ public class Search implements CommandExecutor {
 
 
                             String query = args[0];
-                            player.sendMessage("Searching for " + args[0]);
+                            Lang.msg("&a&l[HeadDrop]&r", "Searching", player, "%name%", args[0]);
                             String texture = retriever.getMostRelevantSkull(query);
                             ItemStack skull = retriever.getCustomSkull(texture, args[0]);
                             player.getInventory().addItem(skull);
@@ -45,22 +44,14 @@ public class Search implements CommandExecutor {
                     }.runTaskAsynchronously(HeadDrop.getInstance());
 
 
-                } else
-                    if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")){
-                        player.sendMessage(PlaceholderAPI.setPlaceholders(player, ChatColor.translateAlternateColorCodes('&', "&c&l[HeadDrop]&r " + Head_Search_Error)));
-
-                    }else player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&c&l[HeadDrop]&r " + Head_Search_Error));
+                } else Lang.msg("&c&l[HeadDrop]&r", "Head-Search-Error", player);
 
 
-            } else
-                if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")){
-                    player.sendMessage(PlaceholderAPI.setPlaceholders(player, ChatColor.translateAlternateColorCodes('&', "&c&l[HeadDrop]&r " + Permission_Error)));
-
-                }else player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&c&l[HeadDrop]&r " + Permission_Error));
+            } else Lang.noPerm(player);
 
 
 
-        }else Bukkit.getLogger().log(Level.SEVERE, "This is a player only command!");
+        }else Lang.pcmd();
 
             return true;
 

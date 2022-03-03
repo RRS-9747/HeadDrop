@@ -5,10 +5,7 @@ import me.rrs.Database.LivingEntityHead;
 import me.rrs.HeadDrop;
 import me.rrs.Util.Embed;
 import me.rrs.Util.ItemStack;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.DyeColor;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
@@ -84,7 +81,6 @@ public class EntityDeath implements Listener {
                             event.getDrops().add(LivingEntityHead.AXOLOTL_LUCY);
                             ItemStack.rename(LivingEntityHead.AXOLOTL_LUCY, ChatColor.YELLOW + config.getString("AXOLOTL.Name"));
 
-
                             break;
                         case BLUE:
                             event.getDrops().add(LivingEntityHead.AXOLOTL_BLUE);
@@ -129,6 +125,7 @@ public class EntityDeath implements Listener {
                     } else {
                         ItemStack.rename(LivingEntityHead.BEE, ChatColor.YELLOW + config.getString("BEE.Name"));
                         event.getDrops().add(LivingEntityHead.BEE);
+
                     }
                     if (config.getBoolean("Bot.Enable")) Embed.msg(title, description, footer);
                 }
