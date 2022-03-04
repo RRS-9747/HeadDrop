@@ -36,7 +36,7 @@ public class Search implements CommandExecutor {
 
 
                             String query = args[0];
-                            Lang.msg("&a&l[HeadDrop]&r", "Searching", player, "%name%", args[0]);
+                            Lang.msg("&a&l[HeadDrop]&r", "Searching", "%name%", args[0], player);
                             String texture = retriever.getMostRelevantSkull(query);
                             ItemStack skull = retriever.getCustomSkull(texture, args[0]);
                             player.getInventory().addItem(skull);

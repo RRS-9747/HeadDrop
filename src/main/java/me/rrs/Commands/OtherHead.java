@@ -23,7 +23,7 @@ public class OtherHead implements CommandExecutor {
 
                 if (args.length > 0) {
                     player.getInventory().addItem(skull);
-                    Lang.msg("&a&l[HeadDrop]&r", "Head-Success" , player, "%player%", args[0]);
+                    Lang.msg("&a&l[HeadDrop]&r", "Head-Success", "%player%", args[0], player);
 
 
 

@@ -1,14 +1,18 @@
 package me.rrs.Util;
 
+import org.bukkit.Location;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.List;
 
-public class Config {
+
+public class Config{
     private final String fileName;
     private final String pathToFile;
+
 
     public Config(String fileName, String pathToFile) {
         this.pathToFile = pathToFile;
@@ -51,9 +55,23 @@ public class Config {
 
         try {
             cfg.save(this.getFile());
-        } catch (IOException var5) {
-            var5.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
 
+    }
+
+    public void set(String path, Object value){
+        FileConfiguration cfg = this.getFileConfiguration();
+        cfg.set(path, value);
+
+        try {
+            cfg.save(this.getFile());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+    public List<Location> getLocationList(String path){
+        return this.getLocationList(path);
     }
 }

@@ -21,7 +21,11 @@ public class HeadDrop extends JavaPlugin {
     private static HeadDrop instance;
     private static JDA Bot;
     private static Config lang;
+    private static Config data;
 
+    public static Config getData() {
+        return data;
+    }
     public static Config getLang() {
         return lang;
     }
@@ -33,10 +37,12 @@ public class HeadDrop extends JavaPlugin {
     }
 
 
+
     @Override
     public void onEnable() {
         instance = this;
         lang = new Config("lang.yml", getDataFolder().getAbsolutePath());
+        data = new Config("data.yml", getDataFolder().getAbsolutePath());
 
         if (!this.getDescription().getName().equals("HeadDrop")){
             Bukkit.getLogger().severe("You can't change my name!");
@@ -46,6 +52,7 @@ public class HeadDrop extends JavaPlugin {
 
         try {
             lang.create();
+            data.create();
         } catch (IOException e) {
             e.printStackTrace();
         }

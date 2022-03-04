@@ -5,7 +5,10 @@ import me.rrs.Database.LivingEntityHead;
 import me.rrs.HeadDrop;
 import me.rrs.Util.Embed;
 import me.rrs.Util.ItemStack;
-import org.bukkit.*;
+import net.md_5.bungee.api.ChatColor;
+import org.bukkit.Bukkit;
+import org.bukkit.DyeColor;
+import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
@@ -19,6 +22,7 @@ import java.util.Random;
 
 
 public class EntityDeath implements Listener {
+
 
     final FileConfiguration config = HeadDrop.getInstance().getConfig();
     Random random = new Random();
@@ -107,7 +111,8 @@ public class EntityDeath implements Listener {
                     if (config.getBoolean("Bot.Enable")) Embed.msg(title, description, footer);
 
                 }
-            } else if (entity.getType() == EntityType.BAT) {
+            }
+            if (entity.getType() == EntityType.BAT) {
                 if (config.getBoolean("BAT.Drop") && x <= config.getInt("BAT.Chance")) {
                     event.getDrops().add(LivingEntityHead.BAT);
                     ItemStack.rename(LivingEntityHead.BAT, ChatColor.YELLOW + config.getString("BAT.Name"));
@@ -116,7 +121,8 @@ public class EntityDeath implements Listener {
                 }
 
 
-            } else if (entity.getType() == EntityType.BEE) {
+            }
+            if (entity.getType() == EntityType.BEE) {
                 if (config.getBoolean("BEE.Drop") && x <= config.getInt("BEE.Chance")) {
                     Bee bee = (Bee) event.getEntity();
                     if (bee.getAnger() > 0) {
@@ -131,7 +137,8 @@ public class EntityDeath implements Listener {
                 }
 
 
-            } else if (entity.getType() == EntityType.BLAZE) {
+            }
+            if (entity.getType() == EntityType.BLAZE) {
                 if (config.getBoolean("BLAZE.Drop") && x <= config.getInt("BLAZE.Chance")) {
                     event.getDrops().add(LivingEntityHead.BLAZE);
                     ItemStack.rename(LivingEntityHead.BLAZE, ChatColor.YELLOW + config.getString("BLAZE.Name"));
@@ -139,7 +146,8 @@ public class EntityDeath implements Listener {
                 }
 
 
-            } else if (entity.getType() == EntityType.CAT) {
+            }
+            if (entity.getType() == EntityType.CAT) {
                 if (config.getBoolean("CAT.Drop") && x <= config.getInt("CAT.Chance")) {
                     Cat cat = (Cat) event.getEntity();
                     switch (cat.getCatType()) {
@@ -197,7 +205,8 @@ public class EntityDeath implements Listener {
                 }
 
 
-            } else if (entity.getType() == EntityType.SPIDER) {
+            }
+            if (entity.getType() == EntityType.SPIDER) {
                 if (config.getBoolean("SPIDER.Drop") && x <= config.getInt("SPIDER.Chance")) {
                     event.getDrops().add(LivingEntityHead.SPIDER);
                     ItemStack.rename(LivingEntityHead.SPIDER, ChatColor.YELLOW + config.getString("SPIDER.Name"));
@@ -205,7 +214,8 @@ public class EntityDeath implements Listener {
                 }
 
 
-            } else if (entity.getType() == EntityType.CAVE_SPIDER) {
+            }
+            if (entity.getType() == EntityType.CAVE_SPIDER) {
                 if (config.getBoolean("CAVE_SPIDER.Drop") && x <= config.getInt("CAVE_SPIDER.Chance")) {
                     event.getDrops().add(LivingEntityHead.CAVE_SPIDER);
                     ItemStack.rename(LivingEntityHead.CAVE_SPIDER, ChatColor.YELLOW + config.getString("CAVE_SPIDER.Name"));
@@ -213,7 +223,8 @@ public class EntityDeath implements Listener {
                 }
 
 
-            } else if (entity.getType() == EntityType.CHICKEN) {
+            }
+            if (entity.getType() == EntityType.CHICKEN) {
                 if (config.getBoolean("CHICKEN.Drop") && x <= config.getInt("CHICKEN.Chance")) {
                     event.getDrops().add(LivingEntityHead.CHICKEN);
                     ItemStack.rename(LivingEntityHead.CHICKEN, ChatColor.YELLOW + config.getString("CHICKEN.Name"));
@@ -221,7 +232,8 @@ public class EntityDeath implements Listener {
                 }
 
 
-            } else if (entity.getType() == EntityType.COD) {
+            }
+            if (entity.getType() == EntityType.COD) {
                 if (config.getBoolean("COD.Drop") && x <= config.getInt("COD.Chance")) {
                     event.getDrops().add(LivingEntityHead.COD);
                     ItemStack.rename(LivingEntityHead.COD, ChatColor.YELLOW + config.getString("COD.Name"));
@@ -229,7 +241,8 @@ public class EntityDeath implements Listener {
                 }
 
 
-            } else if (entity.getType() == EntityType.COW) {
+            }
+            if (entity.getType() == EntityType.COW) {
                 if (config.getBoolean("COW.Drop") && x <= config.getInt("COW.Chance")) {
                     event.getDrops().add(LivingEntityHead.COW);
                     ItemStack.rename(LivingEntityHead.COW, ChatColor.YELLOW + config.getString("COW.Name"));
@@ -237,7 +250,8 @@ public class EntityDeath implements Listener {
                 }
 
 
-            } else if (entity.getType() == EntityType.DOLPHIN) {
+            }
+            if (entity.getType() == EntityType.DOLPHIN) {
                 if (config.getBoolean("DOLPHIN.Drop") && x <= config.getInt("DOLPHIN.Chance")) {
                     event.getDrops().add(LivingEntityHead.DOLPHIN);
                     ItemStack.rename(LivingEntityHead.DOLPHIN, ChatColor.YELLOW + config.getString("DOLPHIN.Name"));
@@ -245,7 +259,8 @@ public class EntityDeath implements Listener {
                 }
 
 
-            } else if (entity.getType() == EntityType.DONKEY) {
+            }
+            if (entity.getType() == EntityType.DONKEY) {
                 if (config.getBoolean("DONKEY.Drop") && x <= config.getInt("DONKEY.Chance")) {
                     event.getDrops().add(LivingEntityHead.DONKEY);
                     ItemStack.rename(LivingEntityHead.DONKEY, ChatColor.YELLOW + config.getString("DONKEY.Name"));
@@ -253,7 +268,8 @@ public class EntityDeath implements Listener {
                 }
 
 
-            } else if (entity.getType() == EntityType.DROWNED) {
+            }
+            if (entity.getType() == EntityType.DROWNED) {
                 if (config.getBoolean("DROWNED.Drop") && x <= config.getInt("DROWNED.Chance")) {
                     event.getDrops().add(LivingEntityHead.DROWNED);
                     ItemStack.rename(LivingEntityHead.DROWNED, ChatColor.YELLOW + config.getString("DROWNED.Name"));
@@ -261,7 +277,8 @@ public class EntityDeath implements Listener {
                 }
 
 
-            } else if (entity.getType() == EntityType.ELDER_GUARDIAN) {
+            }
+            if (entity.getType() == EntityType.ELDER_GUARDIAN) {
                 if (config.getBoolean("ELDER_GUARDIAN.Drop") && x <= config.getInt("ELDER_GUARDIAN.Chance")) {
                     event.getDrops().add(LivingEntityHead.ELDER_GUARDIAN);
                     ItemStack.rename(LivingEntityHead.ELDER_GUARDIAN, ChatColor.YELLOW + config.getString("ELDER_GUARDIAN.Name"));
@@ -269,7 +286,8 @@ public class EntityDeath implements Listener {
                 }
 
 
-            } else if (entity.getType() == EntityType.ENDERMAN) {
+            }
+            if (entity.getType() == EntityType.ENDERMAN) {
                 if (config.getBoolean("ENDERMAN.Drop") && x <= config.getInt("ENDERMAN.Chance")) {
                     event.getDrops().add(LivingEntityHead.ENDERMAN);
                     ItemStack.rename(LivingEntityHead.ENDERMAN, ChatColor.YELLOW + config.getString("ENDERMAN.Name"));
@@ -277,7 +295,8 @@ public class EntityDeath implements Listener {
                 }
 
 
-            } else if (entity.getType() == EntityType.ENDERMITE) {
+            }
+            if (entity.getType() == EntityType.ENDERMITE) {
                 if (config.getBoolean("ENDERMITE.Drop") && x <= config.getInt("ENDERMITE.Chance")) {
                     event.getDrops().add(LivingEntityHead.ENDERMITE);
                     ItemStack.rename(LivingEntityHead.ENDERMITE, ChatColor.YELLOW + config.getString("ENDERMITE.Name"));
@@ -285,7 +304,8 @@ public class EntityDeath implements Listener {
                 }
 
 
-            } else if (entity.getType() == EntityType.EVOKER) {
+            }
+            if (entity.getType() == EntityType.EVOKER) {
                 if (config.getBoolean("EVOKER.Drop") && x <= config.getInt("EVOKER.Chance")) {
                     event.getDrops().add(LivingEntityHead.EVOKER);
                     ItemStack.rename(LivingEntityHead.EVOKER, ChatColor.YELLOW + config.getString("EVOKER.Name"));
@@ -293,7 +313,8 @@ public class EntityDeath implements Listener {
                 }
 
 
-            } else if (entity.getType() == EntityType.FOX) {
+            }
+            if (entity.getType() == EntityType.FOX) {
                 if (config.getBoolean("FOX.Drop") && x <= config.getInt("FOX.Chance")) {
                     Fox fox = (Fox) event.getEntity();
 
@@ -313,7 +334,8 @@ public class EntityDeath implements Listener {
                 }
 
 
-            } else if (entity.getType() == EntityType.GIANT) {
+            }
+            if (entity.getType() == EntityType.GIANT) {
                 if (config.getBoolean("GIANT.Drop") && x <= config.getInt("GIANT.Chance")) {
                     event.getDrops().add(LivingEntityHead.GIANT);
                     ItemStack.rename(LivingEntityHead.GIANT, ChatColor.YELLOW + config.getString("GIANT.Name"));
@@ -321,7 +343,8 @@ public class EntityDeath implements Listener {
                 }
 
 
-            } else if (entity.getType() == EntityType.GLOW_SQUID) {
+            }
+            if (entity.getType() == EntityType.GLOW_SQUID) {
                 if (config.getBoolean("GLOW_SQUID.Drop") && x <= config.getInt("GLOW_SQUID.Chance")) {
                     event.getDrops().add(LivingEntityHead.GLOW_SQUID);
                     ItemStack.rename(LivingEntityHead.GLOW_SQUID, ChatColor.YELLOW + config.getString("GLOW_SQUID.Name"));
@@ -329,7 +352,8 @@ public class EntityDeath implements Listener {
                 }
 
 
-            } else if (entity.getType() == EntityType.GOAT) {
+            }
+            if (entity.getType() == EntityType.GOAT) {
                 if (config.getBoolean("GOAT.Drop") && x <= config.getInt("GOAT.Chance")) {
                     event.getDrops().add(LivingEntityHead.GOAT);
                     ItemStack.rename(LivingEntityHead.GOAT, ChatColor.YELLOW + config.getString("GOAT.Name"));
@@ -337,7 +361,8 @@ public class EntityDeath implements Listener {
                 }
 
 
-            } else if (entity.getType() == EntityType.GUARDIAN) {
+            }
+            if (entity.getType() == EntityType.GUARDIAN) {
                 if (config.getBoolean("GUARDIAN.Drop") && x <= config.getInt("GUARDIAN.Chance")) {
                     event.getDrops().add(LivingEntityHead.GUARDIAN);
                     ItemStack.rename(LivingEntityHead.GUARDIAN, ChatColor.YELLOW + config.getString("GUARDIAN.Name"));
@@ -345,7 +370,8 @@ public class EntityDeath implements Listener {
                 }
 
 
-            } else if (entity.getType() == EntityType.HOGLIN) {
+            }
+            if (entity.getType() == EntityType.HOGLIN) {
                 if (config.getBoolean("HOGLIN.Drop") && x <= config.getInt("HOGLIN.Chance")) {
                     event.getDrops().add(LivingEntityHead.HOGLIN);
                     ItemStack.rename(LivingEntityHead.HOGLIN, ChatColor.YELLOW + config.getString("HOGLIN.Name"));
@@ -353,7 +379,8 @@ public class EntityDeath implements Listener {
                 }
 
 
-            } else if (entity.getType() == EntityType.HORSE) {
+            }
+            if (entity.getType() == EntityType.HORSE) {
                 if (config.getBoolean("HORSE.Drop") && x <= config.getInt("HORSE.Chance")) {
                     Horse horse = (Horse) event.getEntity();
 
@@ -397,7 +424,8 @@ public class EntityDeath implements Listener {
                 }
 
 
-            } else if (entity.getType() == EntityType.HUSK) {
+            }
+            if (entity.getType() == EntityType.HUSK) {
                 if (config.getBoolean("HUSK.Drop") && x <= config.getInt("HUSK.Chance")) {
                     event.getDrops().add(LivingEntityHead.HUSK);
                     ItemStack.rename(LivingEntityHead.HUSK, ChatColor.YELLOW + config.getString("HUSK.Name"));
@@ -405,7 +433,8 @@ public class EntityDeath implements Listener {
                 }
 
 
-            } else if (entity.getType() == EntityType.ILLUSIONER) {
+            }
+            if (entity.getType() == EntityType.ILLUSIONER) {
                 if (config.getBoolean("ILLUSIONER.Drop") && x <= config.getInt("ILLUSIONER.Chance")) {
                     event.getDrops().add(LivingEntityHead.ILLUSIONER);
                     ItemStack.rename(LivingEntityHead.ILLUSIONER, ChatColor.YELLOW + config.getString("ILLUSIONER.Name"));
@@ -413,7 +442,8 @@ public class EntityDeath implements Listener {
                 }
 
 
-            } else if (entity.getType() == EntityType.IRON_GOLEM) {
+            }
+            if (entity.getType() == EntityType.IRON_GOLEM) {
                 if (config.getBoolean("IRON_GOLEM.Drop") && x <= config.getInt("IRON_GOLEM.Chance")) {
                     event.getDrops().add(LivingEntityHead.IRON_GOLEM);
                     ItemStack.rename(LivingEntityHead.IRON_GOLEM, ChatColor.YELLOW + config.getString("IRON_GOLEM.Name"));
@@ -421,7 +451,8 @@ public class EntityDeath implements Listener {
                 }
 
 
-            } else if (entity.getType() == EntityType.LLAMA) {
+            }
+            if (entity.getType() == EntityType.LLAMA) {
                 if (config.getBoolean("LLAMA.Drop") && x <= config.getInt("LLAMA.Chance")) {
                     Llama llama = (Llama) event.getEntity();
 
@@ -450,7 +481,8 @@ public class EntityDeath implements Listener {
                 }
 
 
-            } else if (entity.getType() == EntityType.MAGMA_CUBE) {
+            }
+            if (entity.getType() == EntityType.MAGMA_CUBE) {
                 if (config.getBoolean("MAGMA_CUBE.Drop") && x <= config.getInt("MAGMA_CUBE.Chance")) {
                     event.getDrops().add(LivingEntityHead.MAGMA_CUBE);
                     ItemStack.rename(LivingEntityHead.MAGMA_CUBE, ChatColor.YELLOW + config.getString("MAGMA_CUBE.Name"));
@@ -458,7 +490,8 @@ public class EntityDeath implements Listener {
                 }
 
 
-            } else if (entity.getType() == EntityType.MUSHROOM_COW) {
+            }
+            if (entity.getType() == EntityType.MUSHROOM_COW) {
                 if (config.getBoolean("MUSHROOM_COW.Drop") && x <= config.getInt("MUSHROOM_COW.Chance")) {
                     MushroomCow mushroomCow = (MushroomCow) event.getEntity();
 
@@ -477,7 +510,8 @@ public class EntityDeath implements Listener {
                 }
 
 
-            } else if (entity.getType() == EntityType.MULE) {
+            }
+            if (entity.getType() == EntityType.MULE) {
                 if (config.getBoolean("MULE.Drop") && x <= config.getInt("MULE.Chance")) {
                     event.getDrops().add(LivingEntityHead.MULE);
                     ItemStack.rename(LivingEntityHead.MULE, ChatColor.YELLOW + config.getString("MULE.Name"));
@@ -485,7 +519,8 @@ public class EntityDeath implements Listener {
                 }
 
 
-            } else if (entity.getType() == EntityType.OCELOT) {
+            }
+            if (entity.getType() == EntityType.OCELOT) {
                 if (config.getBoolean("OCELOT.Drop") && x <= config.getInt("OCELOT.Chance")) {
                     event.getDrops().add(LivingEntityHead.OCELOT);
                     ItemStack.rename(LivingEntityHead.OCELOT, ChatColor.YELLOW + config.getString("OCELOT.Name"));
@@ -493,7 +528,8 @@ public class EntityDeath implements Listener {
                 }
 
 
-            } else if (entity.getType() == EntityType.PANDA) {
+            }
+            if (entity.getType() == EntityType.PANDA) {
                 if (config.getBoolean("PANDA.Drop") && x <= config.getInt("PANDA.Chance")) {
                     Panda panda = (Panda) event.getEntity();
                     switch (panda.getMainGene()) {
@@ -510,7 +546,8 @@ public class EntityDeath implements Listener {
                 }
 
 
-            } else if (entity.getType() == EntityType.PHANTOM) {
+            }
+            if (entity.getType() == EntityType.PHANTOM) {
                 if (config.getBoolean("PHANTOM.Drop") && x <= config.getInt("PHANTOM.Chance")) {
                     event.getDrops().add(LivingEntityHead.PHANTOM);
                     ItemStack.rename(LivingEntityHead.PHANTOM, ChatColor.YELLOW + config.getString("PHANTOM.Name"));
@@ -518,7 +555,8 @@ public class EntityDeath implements Listener {
                 }
 
 
-            } else if (entity.getType() == EntityType.PIG) {
+            }
+            if (entity.getType() == EntityType.PIG) {
                 if (config.getBoolean("PIG.Drop") && x <= config.getInt("PIG.Chance")) {
                     event.getDrops().add(LivingEntityHead.PIG);
                     ItemStack.rename(LivingEntityHead.PIG, ChatColor.YELLOW + config.getString("PIG.Name"));
@@ -526,7 +564,8 @@ public class EntityDeath implements Listener {
                 }
 
 
-            } else if (entity.getType() == EntityType.PIGLIN) {
+            }
+            if (entity.getType() == EntityType.PIGLIN) {
                 if (config.getBoolean("PIGLIN.Drop") && x <= config.getInt("PIGLIN.Chance")) {
                     event.getDrops().add(LivingEntityHead.PIGLIN);
                     ItemStack.rename(LivingEntityHead.PIGLIN, ChatColor.YELLOW + config.getString("PIGLIN.Name"));
@@ -534,7 +573,8 @@ public class EntityDeath implements Listener {
                 }
 
 
-            } else if (entity.getType() == EntityType.PIGLIN_BRUTE) {
+            }
+            if (entity.getType() == EntityType.PIGLIN_BRUTE) {
                 if (config.getBoolean("PIGLIN_BRUTE.Drop") && x <= config.getInt("PIGLIN_BRUTE.Chance")) {
                     event.getDrops().add(LivingEntityHead.PIGLIN_BRUTE);
                     ItemStack.rename(LivingEntityHead.PIGLIN_BRUTE, ChatColor.YELLOW + config.getString("PIGLIN_BRUTE.Name"));
@@ -542,7 +582,8 @@ public class EntityDeath implements Listener {
                 }
 
 
-            } else if (entity.getType() == EntityType.PILLAGER) {
+            }
+            if (entity.getType() == EntityType.PILLAGER) {
                 if (config.getBoolean("PILLAGER.Drop") && x <= config.getInt("PILLAGER.Chance")) {
                     event.getDrops().add(LivingEntityHead.PILLAGER);
                     ItemStack.rename(LivingEntityHead.PILLAGER, ChatColor.YELLOW + config.getString("PILLAGER.Name"));
@@ -550,7 +591,8 @@ public class EntityDeath implements Listener {
                 }
 
 
-            } else if (entity.getType() == EntityType.POLAR_BEAR) {
+            }
+            if (entity.getType() == EntityType.POLAR_BEAR) {
                 if (config.getBoolean("POLAR_BEAR.Drop") && x <= config.getInt("POLAR_BEAR.Chance")) {
                     event.getDrops().add(LivingEntityHead.POLAR_BEAR);
                     ItemStack.rename(LivingEntityHead.POLAR_BEAR, ChatColor.YELLOW + config.getString("POLAR_BEAR.Name"));
@@ -558,7 +600,8 @@ public class EntityDeath implements Listener {
                 }
 
 
-            } else if (entity.getType() == EntityType.PUFFERFISH) {
+            }
+            if (entity.getType() == EntityType.PUFFERFISH) {
                 if (config.getBoolean("PUFFERFISH.Drop") && x <= config.getInt("PUFFERFISH.Chance")) {
                     event.getDrops().add(LivingEntityHead.PUFFERFISH);
                     ItemStack.rename(LivingEntityHead.PUFFERFISH, ChatColor.YELLOW + config.getString("PUFFERFISH.Name"));
@@ -566,7 +609,8 @@ public class EntityDeath implements Listener {
                 }
 
 
-            } else if (entity.getType() == EntityType.RABBIT) {
+            }
+            if (entity.getType() == EntityType.RABBIT) {
                 if (config.getBoolean("RABBIT.Drop") && x <= config.getInt("RABBIT.Chance")) {
                     Rabbit rabbit = (Rabbit) event.getEntity();
                     switch (rabbit.getRabbitType()) {
@@ -610,7 +654,8 @@ public class EntityDeath implements Listener {
                     if (config.getBoolean("Bot.Enable")) Embed.msg(title, description, footer);
                 }
 
-            } else if (entity.getType() == EntityType.RAVAGER) {
+            }
+            if (entity.getType() == EntityType.RAVAGER) {
                 if (config.getBoolean("RAVAGER.Drop") && x <= config.getInt("RAVAGER.Chance")) {
                     event.getDrops().add(LivingEntityHead.RAVAGER);
                     ItemStack.rename(LivingEntityHead.RAVAGER, ChatColor.YELLOW + config.getString("RAVAGER.Name"));
@@ -618,7 +663,8 @@ public class EntityDeath implements Listener {
                 }
 
 
-            } else if (entity.getType() == EntityType.SALMON) {
+            }
+            if (entity.getType() == EntityType.SALMON) {
                 if (config.getBoolean("SALMON.Drop") && x <= config.getInt("SALMON.Chance")) {
                     event.getDrops().add(LivingEntityHead.SALMON);
                     ItemStack.rename(LivingEntityHead.SALMON, ChatColor.YELLOW + config.getString("SALMON.Name"));
@@ -626,7 +672,8 @@ public class EntityDeath implements Listener {
                 }
 
 
-            } else if (entity.getType() == EntityType.SHEEP) {
+            }
+            if (entity.getType() == EntityType.SHEEP) {
                 if (config.getBoolean("SHEEP.Drop") && x <= config.getInt("SHEEP.Chance")) {
                     Sheep sheep = (Sheep) event.getEntity();
 
@@ -702,7 +749,8 @@ public class EntityDeath implements Listener {
                 }
 
 
-            } else if (entity.getType() == EntityType.SHULKER) {
+            }
+            if (entity.getType() == EntityType.SHULKER) {
                 if (config.getBoolean("SHULKER.Drop") && x <= config.getInt("SHULKER.Chance")) {
                     event.getDrops().add(LivingEntityHead.SHULKER);
                     ItemStack.rename(LivingEntityHead.SHULKER, ChatColor.YELLOW + config.getString("SHULKER.Name"));
@@ -710,7 +758,8 @@ public class EntityDeath implements Listener {
                 }
 
 
-            } else if (entity.getType() == EntityType.SILVERFISH) {
+            }
+            if (entity.getType() == EntityType.SILVERFISH) {
                 if (config.getBoolean("SILVERFISH.Drop") && x <= config.getInt("SILVERFISH.Chance")) {
                     event.getDrops().add(LivingEntityHead.SILVERFISH);
                     ItemStack.rename(LivingEntityHead.SILVERFISH, ChatColor.YELLOW + config.getString("SILVERFISH.Name"));
@@ -718,7 +767,8 @@ public class EntityDeath implements Listener {
                 }
 
 
-            } else if (entity.getType() == EntityType.SKELETON_HORSE) {
+            }
+            if (entity.getType() == EntityType.SKELETON_HORSE) {
                 if (config.getBoolean("SKELETON_HORSE.Drop") && x <= config.getInt("SKELETON_HORSE.Chance")) {
                     event.getDrops().add(LivingEntityHead.SKELETON_HORSE);
                     ItemStack.rename(LivingEntityHead.SKELETON_HORSE, ChatColor.YELLOW + config.getString("SKELETON_HORSE.Name"));
@@ -726,7 +776,8 @@ public class EntityDeath implements Listener {
                 }
 
 
-            } else if (entity.getType() == EntityType.SLIME) {
+            }
+            if (entity.getType() == EntityType.SLIME) {
                 if (config.getBoolean("SLIME.Drop") && x <= config.getInt("SLIME.Chance")) {
                     event.getDrops().add(LivingEntityHead.SLIME);
                     ItemStack.rename(LivingEntityHead.SLIME, ChatColor.YELLOW + config.getString("SLIME.Name"));
@@ -734,7 +785,8 @@ public class EntityDeath implements Listener {
                 }
 
 
-            } else if (entity.getType() == EntityType.SNOWMAN) {
+            }
+            if (entity.getType() == EntityType.SNOWMAN) {
                 if (config.getBoolean("SNOW_GOLEM.Drop") && x <= config.getInt("SNOW_GOLEM.Chance")) {
                     event.getDrops().add(LivingEntityHead.SNOWMAN);
                     ItemStack.rename(LivingEntityHead.SNOWMAN, ChatColor.YELLOW + config.getString("SNOW_GOLEM.Name"));
@@ -742,7 +794,8 @@ public class EntityDeath implements Listener {
                 }
 
 
-            } else if (entity.getType() == EntityType.SQUID) {
+            }
+            if (entity.getType() == EntityType.SQUID) {
                 if (config.getBoolean("SQUID.Drop") && x <= config.getInt("SQUID.Chance")) {
                     event.getDrops().add(LivingEntityHead.SQUID);
                     ItemStack.rename(LivingEntityHead.SQUID, ChatColor.YELLOW + config.getString("SQUID.Name"));
@@ -750,7 +803,8 @@ public class EntityDeath implements Listener {
                 }
 
 
-            } else if (entity.getType() == EntityType.STRAY) {
+            }
+            if (entity.getType() == EntityType.STRAY) {
                 if (config.getBoolean("STRAY.Drop") && x <= config.getInt("STRAY.Chance")) {
                     event.getDrops().add(LivingEntityHead.STRAY);
                     ItemStack.rename(LivingEntityHead.STRAY, ChatColor.YELLOW + config.getString("STRAY.Name"));
@@ -758,7 +812,8 @@ public class EntityDeath implements Listener {
                 }
 
 
-            } else if (entity.getType() == EntityType.STRIDER) {
+            }
+            if (entity.getType() == EntityType.STRIDER) {
                 if (config.getBoolean("STRIDER.Drop") && x <= config.getInt("STRIDER.Chance")) {
                     event.getDrops().add(LivingEntityHead.STRIDER);
                     ItemStack.rename(LivingEntityHead.STRIDER, ChatColor.YELLOW + config.getString("STRIDER.Name"));
@@ -766,7 +821,8 @@ public class EntityDeath implements Listener {
                 }
 
 
-            } else if (entity.getType() == EntityType.TURTLE) {
+            }
+            if (entity.getType() == EntityType.TURTLE) {
                 if (config.getBoolean("TURTLE.Drop") && x <= config.getInt("TURTLE.Chance")) {
                     event.getDrops().add(LivingEntityHead.TURTLE);
                     ItemStack.rename(LivingEntityHead.TURTLE, ChatColor.YELLOW + config.getString("TURTLE.Name"));
@@ -774,7 +830,8 @@ public class EntityDeath implements Listener {
                 }
 
 
-            } else if (entity.getType() == EntityType.WANDERING_TRADER) {
+            }
+            if (entity.getType() == EntityType.WANDERING_TRADER) {
                 if (config.getBoolean("WANDERING_TRADER.Drop") && x <= config.getInt("WANDERING_TRADER.Chance")) {
                     event.getDrops().add(LivingEntityHead.WANDERING_TRADER);
                     ItemStack.rename(LivingEntityHead.WANDERING_TRADER, ChatColor.YELLOW + config.getString("WANDERING_TRADER.Name"));
@@ -782,7 +839,8 @@ public class EntityDeath implements Listener {
                 }
 
 
-            } else if (entity.getType() == EntityType.WITCH) {
+            }
+            if (entity.getType() == EntityType.WITCH) {
                 if (config.getBoolean("WITCH.Drop") && x <= config.getInt("WITCH.Chance")) {
                     event.getDrops().add(LivingEntityHead.WITCH);
                     ItemStack.rename(LivingEntityHead.WITCH, ChatColor.YELLOW + config.getString("WITCH.Name"));
@@ -790,7 +848,8 @@ public class EntityDeath implements Listener {
                 }
 
 
-            } else if (entity.getType() == EntityType.WITHER) {
+            }
+            if (entity.getType() == EntityType.WITHER) {
                 if (config.getBoolean("WITHER.Drop") && x <= config.getInt("WITHER.Chance")) {
                     event.getDrops().add(LivingEntityHead.WITHER);
                     ItemStack.rename(LivingEntityHead.WITHER, ChatColor.YELLOW + config.getString("WITHER.Name"));
@@ -798,7 +857,8 @@ public class EntityDeath implements Listener {
                 }
 
 
-            } else if (entity.getType() == EntityType.ZOGLIN) {
+            }
+            if (entity.getType() == EntityType.ZOGLIN) {
                 if (config.getBoolean("ZOGLIN.Drop") && x <= config.getInt("ZOGLIN.Chance")) {
                     event.getDrops().add(LivingEntityHead.ZOGLIN);
                     ItemStack.rename(LivingEntityHead.ZOGLIN, ChatColor.YELLOW + config.getString("ZOGLIN.Name"));
@@ -806,7 +866,8 @@ public class EntityDeath implements Listener {
                 }
 
 
-            } else if (entity.getType() == EntityType.ZOMBIE_HORSE) {
+            }
+            if (entity.getType() == EntityType.ZOMBIE_HORSE) {
                 if (config.getBoolean("ZOMBIE_HORSE.Drop") && x <= config.getInt("ZOMBIE_HORSE.Chance")) {
                     event.getDrops().add(LivingEntityHead.ZOMBIE_HORSE);
                     ItemStack.rename(LivingEntityHead.ZOMBIE_HORSE, ChatColor.YELLOW + config.getString("ZOMBIE_HORSE.Name"));
@@ -814,7 +875,8 @@ public class EntityDeath implements Listener {
                 }
 
 
-            } else if (entity.getType() == EntityType.ZOMBIFIED_PIGLIN) {
+            }
+            if (entity.getType() == EntityType.ZOMBIFIED_PIGLIN) {
                 if (config.getBoolean("ZOMBIFIED_PIGLIN.Drop") && x <= config.getInt("ZOMBIFIED_PIGLIN.Chance")) {
                     event.getDrops().add(LivingEntityHead.ZOMBIFIED_PIGLIN);
                     ItemStack.rename(LivingEntityHead.ZOMBIFIED_PIGLIN, ChatColor.YELLOW + config.getString("ZOMBIFIED_PIGLIN.Name"));
@@ -822,7 +884,8 @@ public class EntityDeath implements Listener {
                 }
 
 
-            } else if (entity.getType() == EntityType.GHAST) {
+            }
+            if (entity.getType() == EntityType.GHAST) {
                 if (config.getBoolean("GHAST.Drop") && x <= config.getInt("GHAST.Chance")) {
                     event.getDrops().add(LivingEntityHead.GHAST);
                     ItemStack.rename(LivingEntityHead.GHAST, ChatColor.YELLOW + config.getString("GHAST.Name"));
@@ -830,7 +893,8 @@ public class EntityDeath implements Listener {
                 }
 
 
-            } else if (entity.getType() == EntityType.ZOMBIE_VILLAGER) {
+            }
+            if (entity.getType() == EntityType.ZOMBIE_VILLAGER) {
                 if (config.getBoolean("ZOMBIE_VILLAGER.Drop") && x <= config.getInt("ZOMBIE_VILLAGER.Chance")) {
                     ZombieVillager zombieVillager = (ZombieVillager) event.getEntity();
 
@@ -894,7 +958,8 @@ public class EntityDeath implements Listener {
                 }
 
 
-            } else if (entity.getType() == EntityType.VINDICATOR) {
+            }
+            if (entity.getType() == EntityType.VINDICATOR) {
                 if (config.getBoolean("VINDICATOR.Drop") && x <= config.getInt("VINDICATOR.Chance")) {
                     event.getDrops().add(LivingEntityHead.VINDICATOR);
                     ItemStack.rename(LivingEntityHead.VINDICATOR, ChatColor.YELLOW + config.getString("VINDICATOR.Name"));
@@ -902,7 +967,8 @@ public class EntityDeath implements Listener {
                 }
 
 
-            } else if (entity.getType() == EntityType.TRADER_LLAMA) {
+            }
+            if (entity.getType() == EntityType.TRADER_LLAMA) {
                 if (config.getBoolean("TRADER_LLAMA.Drop") && x <= config.getInt("TRADER_LLAMA.Chance.Name")) {
                     TraderLlama traderLlama = (TraderLlama) event.getEntity();
 
@@ -932,7 +998,8 @@ public class EntityDeath implements Listener {
                 }
 
 
-            } else if (entity.getType() == EntityType.WOLF) {
+            }
+            if (entity.getType() == EntityType.WOLF) {
                 if (config.getBoolean("WOLF.Drop") && x <= config.getInt("WOLF.Chance")) {
                     Wolf wolf = (Wolf) event.getEntity();
 
@@ -947,7 +1014,8 @@ public class EntityDeath implements Listener {
                 }
 
 
-            } else if (entity.getType() == EntityType.VEX) {
+            }
+            if (entity.getType() == EntityType.VEX) {
                 if (config.getBoolean("VEX.Drop") && x <= config.getInt("VEX.Chance")) {
 
                     Vex vex = (Vex) event.getEntity();
@@ -962,7 +1030,8 @@ public class EntityDeath implements Listener {
                 }
 
 
-            } else if (event.getEntityType() == EntityType.VILLAGER) {
+            }
+            if (event.getEntityType() == EntityType.VILLAGER) {
                 if (config.getBoolean("VILLAGER.Drop") && x <= config.getInt("VILLAGER.Chance")) {
                     Villager villager = (Villager) event.getEntity();
 
@@ -1026,7 +1095,8 @@ public class EntityDeath implements Listener {
                 }
 
 
-            } else if (event.getEntityType() == EntityType.TROPICAL_FISH) {
+            }
+            if (event.getEntityType() == EntityType.TROPICAL_FISH) {
                 if (config.getBoolean("TROPICAL_FISH.Drop") && x <= config.getInt("TROPICAL_FISH.Chance")) {
 
                     TropicalFish tropicalFish = (TropicalFish) event.getEntity();
@@ -1097,7 +1167,8 @@ public class EntityDeath implements Listener {
                 }
 
 
-            } else if (event.getEntityType() == EntityType.PARROT) {
+            }
+            if (event.getEntityType() == EntityType.PARROT) {
                 if (config.getBoolean("PARROT.Drop") && x <= config.getInt("PARROT.Chance")) {
                     Parrot parrot = (Parrot) event.getEntity();
 
