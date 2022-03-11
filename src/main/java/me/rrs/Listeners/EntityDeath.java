@@ -35,13 +35,10 @@ public class EntityDeath implements Listener {
 
 
 
+
         Entity entity = event.getEntity();
         boolean isInDisabledWorld = false;
         int x = random.nextInt(100) + 1;
-
-        String rawTitle = config.getString("Bot.Title");
-        String rawDescription = config.getString("Bot.Description");
-        String rawFooter = config.getString("Bot.Footer");
 
 
         List<String> worldList = HeadDrop.getInstance().getConfig().getStringList("Config.Disable-Worlds");
@@ -50,14 +47,17 @@ public class EntityDeath implements Listener {
         if (event.getEntity().getKiller() == null) return;
 
 
-        String rawTitle1 = rawTitle.replaceAll("%killer%", event.getEntity().getKiller().getName());
-        title = rawTitle1.replaceAll("%mob%", event.getEntity().getName());
+        title = config.getString("Bot.Title")
+                .replaceAll("%killer%", event.getEntity().getKiller().getName())
+                .replaceAll("%mob%", event.getEntity().getName());
 
-        String rawDescription1 = rawDescription.replaceAll("%killer%", event.getEntity().getKiller().getName());
-        description = rawDescription1.replaceAll("%mob%", event.getEntity().getName());
+        description = config.getString("Bot.Description")
+                .replaceAll("%killer%", event.getEntity().getKiller().getName())
+                .replaceAll("%mob%", event.getEntity().getName());
 
-        String rawFooter1 = rawFooter.replaceAll("%killer%", event.getEntity().getKiller().getName());
-        footer = rawFooter1.replaceAll("%mob%", event.getEntity().getName());
+        footer = config.getString("Bot.Footer")
+                .replaceAll("%killer%", event.getEntity().getKiller().getName())
+                .replaceAll("%mob%", event.getEntity().getName());
 
 
         if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {

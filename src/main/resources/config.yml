@@ -10,7 +10,7 @@
 # %killer% will return player name who killed the mob & %mob% will return mob name which was killed (only work on Bot section)
 
 Config:
-  Version: 3.1
+  Version: 3.2
   Update-Checker: true
   Disable-Worlds:
     - demoWorld

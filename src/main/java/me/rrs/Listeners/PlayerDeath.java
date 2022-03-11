@@ -6,12 +6,12 @@ import me.rrs.Util.SkullCreator;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.List;
 import java.util.Random;
@@ -65,10 +65,13 @@ public class PlayerDeath implements Listener {
             footer = rawFooter1.replaceAll("%mob%", event.getEntity().getName());
 
 
+
+
             if (needPermission) {
                 if (event.getEntity().hasPermission("headdrop.player")) {
                     if (config.getBoolean("PLAYER.Drop") && x <= config.getInt("PLAYER.Chance")) {
                         ItemStack skull = SkullCreator.itemFromName(event.getEntity().getDisplayName());
+                        ItemMeta rawSkull = skull.getItemMeta();
                         event.getDrops().add(skull);
                         if (config.getBoolean("Bot.Enable")) Embed.msg(title, description, footer);
                     }

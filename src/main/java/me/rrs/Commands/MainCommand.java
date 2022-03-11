@@ -30,10 +30,10 @@ public class MainCommand implements CommandExecutor {
                     player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&9>&r &l/customhead <base64>&r -> Get head from base64."));
                     player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&9>&r &l/updatehd&r -> Auto update the plugin."));
 
-                }else if(args[0].equalsIgnoreCase("reload")){
+                }
+                if(args[0].equalsIgnoreCase("reload")){
                     if (player.hasPermission("head.reload")) {
-                        HeadDrop.getInstance().reloadConfig();
-                            Lang.msg("&a&l[HeadDrop]&r", "Reload", player);
+                        player.sendMessage("Can't reload HeadDrop. please restart your server!");
 
 
                     }else{
@@ -45,13 +45,11 @@ public class MainCommand implements CommandExecutor {
                 player.sendMessage(ChatColor.translateAlternateColorCodes('&',"&bHeadDrop "+ HeadDrop.getInstance().getDescription().getVersion()+ "&r by RRS"));
             }
         }else{
-            if (args.length > 0) {
-                if (args[0].equalsIgnoreCase("reload")) {
-                    Bukkit.getLogger().warning("HeadDrop reloaded");
-                }
-            } else {
-                Bukkit.getLogger().warning("&bHeadDrop "+ HeadDrop.getInstance().getDescription().getVersion()+ "&r by RRS");
-            }
+            if (args.length > 0 && args[0].equalsIgnoreCase("reload")){
+                    Bukkit.getLogger().severe("Can't reload HeadDrop. please restart your server!");
+                    HeadDrop.getInstance().reloadConfig();
+
+            }else Bukkit.getLogger().warning("&bHeadDrop "+ HeadDrop.getInstance().getDescription().getVersion()+ "&r by RRS");
 
         }
 
