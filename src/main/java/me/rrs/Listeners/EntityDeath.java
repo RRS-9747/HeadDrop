@@ -1,5 +1,6 @@
 package me.rrs.Listeners;
 
+import dev.dejvokep.boostedyaml.YamlDocument;
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.rrs.Database.LivingEntityHead;
 import me.rrs.HeadDrop;
@@ -9,7 +10,6 @@ import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.DyeColor;
 import org.bukkit.World;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -24,7 +24,7 @@ import java.util.Random;
 public class EntityDeath implements Listener {
 
 
-    final FileConfiguration config = HeadDrop.getInstance().getConfig();
+    final YamlDocument config = HeadDrop.getConfiguration();
     Random random = new Random();
     String description;
     String title;
@@ -41,7 +41,7 @@ public class EntityDeath implements Listener {
         int x = random.nextInt(100) + 1;
 
 
-        List<String> worldList = HeadDrop.getInstance().getConfig().getStringList("Config.Disable-Worlds");
+        List<String> worldList = HeadDrop.getConfiguration().getStringList("Config.Disable-Worlds");
 
 
         if (event.getEntity().getKiller() == null) return;

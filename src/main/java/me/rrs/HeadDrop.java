@@ -1,9 +1,13 @@
 package me.rrs;
 
+import dev.dejvokep.boostedyaml.YamlDocument;
+import dev.dejvokep.boostedyaml.dvs.versioning.BasicVersioning;
+import dev.dejvokep.boostedyaml.settings.dumper.DumperSettings;
+import dev.dejvokep.boostedyaml.settings.general.GeneralSettings;
+import dev.dejvokep.boostedyaml.settings.loader.LoaderSettings;
+import dev.dejvokep.boostedyaml.settings.updater.UpdaterSettings;
 import me.rrs.Commands.*;
 import me.rrs.Listeners.*;
-import me.rrs.Util.Config;
-import me.rrs.Util.LangConfig;
 import me.rrs.Util.Metrics;
 import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
@@ -14,17 +18,18 @@ import org.bukkit.plugin.java.JavaPlugin;
 import javax.security.auth.login.LoginException;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 
 public class HeadDrop extends JavaPlugin {
 
     private static HeadDrop instance;
     private static JDA Bot;
-    private static Config lang;
+    private static YamlDocument lang;
+    private static YamlDocument config;
 
-    public static Config getLang() {
+    public static YamlDocument getConfiguration() {
+        return config;
+    }
+    public static YamlDocument getLang() {
         return lang;
     }
     public static HeadDrop getInstance() {
@@ -39,18 +44,27 @@ public class HeadDrop extends JavaPlugin {
     @Override
     public void onEnable() {
         instance = this;
-        lang = new Config("lang.yml", getDataFolder().getAbsolutePath());
-        LangConfig langConfig = new LangConfig();
+        try {
+            lang = YamlDocument.create(new File(getDataFolder(), "lang.yml"), getResource("lang.yml"),
+                    GeneralSettings.DEFAULT,
+                    LoaderSettings.builder().setAutoUpdate(true).build(),
+                    DumperSettings.DEFAULT,
+                    UpdaterSettings.builder().setVersioning(new BasicVersioning("Version")).build());
+
+            config = YamlDocument.create(new File(getDataFolder(), "config.yml"), getResource("config.yml"),
+                    GeneralSettings.DEFAULT,
+                    LoaderSettings.builder().setAutoUpdate(true).build(),
+                    DumperSettings.DEFAULT,
+                    UpdaterSettings.builder().setVersioning(new BasicVersioning("Config.Version")).build());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         if (!this.getDescription().getName().equals("HeadDrop")){
             Bukkit.getLogger().severe("You can't change my name!");
             Bukkit.getPluginManager().disablePlugin(this);
             return;
         }
-
-        saveDefaultConfig();
-        langConfig.loadLang();
-
 
 
         Metrics metrics = new Metrics(this, 13554);
@@ -86,34 +100,6 @@ public class HeadDrop extends JavaPlugin {
 
     }
 
-    @Override
-    public void onLoad(){
-        if (this.getDataFolder().exists()) {
-
-            File config = new File(this.getDataFolder().getAbsolutePath() + File.separator +"config.yml");
-            File oc = new File(this.getDataFolder().getAbsolutePath() + File.separator +"config.yml.old");
-            double version = this.getConfig().getDouble("Config.Version");
-
-
-            if (config.exists()) {
-                if (version != 3.2) {
-
-                    if (oc.exists()) {
-                        oc.delete();
-                    }
-                    try {
-                        Path oldConfig = Paths.get(this.getDataFolder().getAbsolutePath() + File.separator +"config.yml");
-                        Files.move(oldConfig, oldConfig.resolveSibling("config.yml.old"));
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-
-
-                }
-            }
-        }
-
-    }
 
 
 

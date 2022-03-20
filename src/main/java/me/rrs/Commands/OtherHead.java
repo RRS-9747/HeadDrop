@@ -1,6 +1,5 @@
 package me.rrs.Commands;
 
-import me.rrs.HeadDrop;
 import me.rrs.Util.Lang;
 import me.rrs.Util.SkullCreator;
 import org.bukkit.command.Command;

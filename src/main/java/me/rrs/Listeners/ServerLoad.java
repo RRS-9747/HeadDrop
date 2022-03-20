@@ -17,7 +17,7 @@ public class ServerLoad implements Listener {
 
 
         boolean hasUpdateGitHub = UpdateAPI.hasGithubUpdate("RRS-9747", "HeadDrop");
-        boolean updateChecker = HeadDrop.getInstance().getConfig().getBoolean("Config.Update-Checker");
+        boolean updateChecker = HeadDrop.getConfiguration().getBoolean("Config.Update-Checker");
 
 
 

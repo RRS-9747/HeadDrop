@@ -1,6 +1,5 @@
 package me.rrs.Commands;
 
-import me.clip.placeholderapi.PlaceholderAPI;
 import me.rrs.HeadDrop;
 import me.rrs.Util.Lang;
 import org.bukkit.Bukkit;
@@ -9,6 +8,8 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+
+import java.io.IOException;
 
 public class MainCommand implements CommandExecutor {
     @Override
@@ -33,7 +34,14 @@ public class MainCommand implements CommandExecutor {
                 }
                 if(args[0].equalsIgnoreCase("reload")){
                     if (player.hasPermission("head.reload")) {
-                        player.sendMessage("Can't reload HeadDrop. please restart your server!");
+
+                        try {
+                            HeadDrop.getLang().reload();
+                            HeadDrop.getConfiguration().reload();
+                            player.sendMessage("&a&l[HeadDrop]&r" + HeadDrop.getLang().getString("Reload"));
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
 
 
                     }else{
@@ -46,8 +54,13 @@ public class MainCommand implements CommandExecutor {
             }
         }else{
             if (args.length > 0 && args[0].equalsIgnoreCase("reload")){
-                    Bukkit.getLogger().severe("Can't reload HeadDrop. please restart your server!");
-                    HeadDrop.getInstance().reloadConfig();
+                try {
+                    HeadDrop.getConfiguration().reload();
+                    HeadDrop.getLang().reload();
+                    Bukkit.getLogger().info(HeadDrop.getLang().getString("Reload"));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
 
             }else Bukkit.getLogger().warning("&bHeadDrop "+ HeadDrop.getInstance().getDescription().getVersion()+ "&r by RRS");
 
