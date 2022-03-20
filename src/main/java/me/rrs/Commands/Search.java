@@ -1,12 +1,9 @@
 package me.rrs.Commands;
 
-import me.clip.placeholderapi.PlaceholderAPI;
 import me.rrs.Database.Database;
 import me.rrs.HeadDrop;
 import me.rrs.Util.Lang;
 import me.rrs.Util.SkullRetriever;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -14,7 +11,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitRunnable;
 
-import java.util.logging.Level;
 
 
 public class Search implements CommandExecutor {

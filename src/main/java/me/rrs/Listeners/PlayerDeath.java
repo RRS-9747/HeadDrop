@@ -1,11 +1,11 @@
 package me.rrs.Listeners;
 
+import dev.dejvokep.boostedyaml.YamlDocument;
 import me.rrs.HeadDrop;
 import me.rrs.Util.Embed;
 import me.rrs.Util.SkullCreator;
 import org.bukkit.Bukkit;
 import org.bukkit.World;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -19,7 +19,7 @@ import java.util.Random;
 
 public class PlayerDeath implements Listener {
 
-    final FileConfiguration config = HeadDrop.getInstance().getConfig();
+    final YamlDocument config = HeadDrop.getConfiguration();
     Random random = new Random();
     String description;
     String title;

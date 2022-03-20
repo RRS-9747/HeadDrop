@@ -7,7 +7,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.scheduler.BukkitRunnable;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
@@ -24,16 +23,13 @@ public class PlayerJoin implements Listener {
 
         newVersion = UpdateAPI.getGithubVersion("RRS-9747", "HeadDrop");
         hasUpdateGitHub = UpdateAPI.hasGithubUpdate("RRS-9747", "HeadDrop");
-        updateChecker = HeadDrop.getInstance().getConfig().getBoolean("Config.Update-Checker");
+        updateChecker = HeadDrop.getConfiguration().getBoolean("Config.Update-Checker");
 
         Date date = new Date();
         DateFormat dateFormat = new SimpleDateFormat("dd/MM");
         String currentDate = dateFormat.format(date);
 
 
-        new BukkitRunnable() {
-            @Override
-            public void run() {
                 if (hasUpdateGitHub){
                     if (updateChecker) {
                         if (event.getPlayer().hasPermission("headdrop.notify")) {
@@ -46,8 +42,6 @@ public class PlayerJoin implements Listener {
                         }
                     }
                 }
-            }
-        }.runTaskAsynchronously(HeadDrop.getInstance());
 
 
 

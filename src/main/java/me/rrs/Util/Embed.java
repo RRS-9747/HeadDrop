@@ -11,7 +11,7 @@ public class Embed {
 
     protected static void embed(String Title, String Description, String Footer){
 
-        String serverChannel = HeadDrop.getInstance().getConfig().getString("Bot.Channel");
+        String serverChannel = HeadDrop.getConfiguration().getString("Bot.Channel");
 
         if (serverChannel == null){
             Bukkit.getLogger().severe("Channel can't be null!");

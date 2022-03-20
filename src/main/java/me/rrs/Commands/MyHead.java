@@ -17,7 +17,7 @@ public class MyHead implements CommandExecutor {
         if (sender instanceof Player){
 
             Player player = (Player) sender;
-            ItemStack skull = SkullCreator.itemFromName(player.getDisplayName());
+            ItemStack skull = SkullCreator.itemFromName(player.getName());
 
             if (player.hasPermission("headdrop.ownhead")) {
 
