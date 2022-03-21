@@ -1,16 +1,14 @@
 # Thanks for using HeadDrop.
 # For bug report or suggestion, join https://discord.gg/fV4P2yMSgR
 
-# Don't edit config.version or plugin may break!
 # If Player.Require-Permission = true, player with headdrop.player permission with drop head on death.
 # Chances will not be ignored if you disable drop.
 # Chance is from 1-100. fraction number will not work.
 
-#Get bot token from https://discord.com/developers/applications
 # %killer% will return player name who killed the mob & %mob% will return mob name which was killed (only work on Bot section)
 
 Config:
-  Version: 3.3
+  Version: 3.4
   Update-Checker: true
   Disable-Worlds:
     - demoWorld
@@ -18,11 +16,10 @@ Config:
 
 Bot:
   Enable: false
-  Token: "Bot Token here"
-  Channel: ""
+  WebHook: ""
   Title: "HeadDrop"
   Description: "%killer% killed %mob% and got a Head!"
-  Footer: ""
+  Footer: "HeadDrop by RRS"
 
 PLAYER:
   Drop: true

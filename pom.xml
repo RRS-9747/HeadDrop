@@ -6,7 +6,7 @@
 
     <groupId>me.rrs</groupId>
     <artifactId>HeadDrop</artifactId>
-    <version>3.3</version>
+    <version>3.4</version>
 
     <packaging>jar</packaging>
 
@@ -79,20 +79,14 @@
 
     <dependencies>
         <dependency>
-            <groupId>dev.dejvokep</groupId>
-            <artifactId>boosted-yaml</artifactId>
-            <version>1.0</version>
+            <groupId>com.github.Sal4iDev</groupId>
+            <artifactId>sDiscordWebhookJava</artifactId>
+            <version>1.2</version>
         </dependency>
         <dependency>
-            <groupId>net.dv8tion</groupId>
-            <artifactId>JDA</artifactId>
-            <version>5.0.0-alpha.9</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>club.minnced</groupId>
-                    <artifactId>opus-java</artifactId>
-                </exclusion>
-            </exclusions>
+            <groupId>dev.dejvokep</groupId>
+            <artifactId>boosted-yaml</artifactId>
+            <version>1.1</version>
         </dependency>
         <dependency>
             <groupId>com.googlecode.json-simple</groupId>

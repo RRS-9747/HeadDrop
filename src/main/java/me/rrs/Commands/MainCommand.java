@@ -38,7 +38,7 @@ public class MainCommand implements CommandExecutor {
                         try {
                             HeadDrop.getLang().reload();
                             HeadDrop.getConfiguration().reload();
-                            player.sendMessage("&a&l[HeadDrop]&r" + HeadDrop.getLang().getString("Reload"));
+                            Lang.msg("&a&l[HeadDrop]&r", "Reload", player);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }

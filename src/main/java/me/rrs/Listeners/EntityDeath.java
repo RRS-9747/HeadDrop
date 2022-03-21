@@ -26,38 +26,33 @@ public class EntityDeath implements Listener {
 
     final YamlDocument config = HeadDrop.getConfiguration();
     Random random = new Random();
-    String description;
-    String title;
-    String footer;
+    String title, description, footer;
 
     @EventHandler(priority = EventPriority.NORMAL)
     public void EntityDropHeadEvent(EntityDeathEvent event) {
-
-
 
 
         Entity entity = event.getEntity();
         boolean isInDisabledWorld = false;
         int x = random.nextInt(100) + 1;
 
-
         List<String> worldList = HeadDrop.getConfiguration().getStringList("Config.Disable-Worlds");
-
 
         if (event.getEntity().getKiller() == null) return;
 
 
         title = config.getString("Bot.Title")
                 .replaceAll("%killer%", event.getEntity().getKiller().getName())
-                .replaceAll("%mob%", event.getEntity().getName());
+                .replaceAll("%mob%", entity.getName());
+
 
         description = config.getString("Bot.Description")
                 .replaceAll("%killer%", event.getEntity().getKiller().getName())
-                .replaceAll("%mob%", event.getEntity().getName());
+                .replaceAll("%mob%", entity.getName());
 
         footer = config.getString("Bot.Footer")
                 .replaceAll("%killer%", event.getEntity().getKiller().getName())
-                .replaceAll("%mob%", event.getEntity().getName());
+                .replaceAll("%mob%", entity.getName());
 
 
         if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
@@ -69,7 +64,7 @@ public class EntityDeath implements Listener {
 
         for (String world : worldList) {
             World w = Bukkit.getWorld(world);
-            if (event.getEntity().getWorld().equals(w)) {
+            if (entity.getWorld().equals(w)) {
                 isInDisabledWorld = true;
             }
         }
@@ -78,7 +73,7 @@ public class EntityDeath implements Listener {
         if (!isInDisabledWorld) {
             if (entity.getType() == EntityType.AXOLOTL) {
                 if (config.getBoolean("AXOLOTL.Drop") && x <= config.getInt("AXOLOTL.Chance")) {
-                    Axolotl axolotl = (Axolotl) event.getEntity();
+                    Axolotl axolotl = (Axolotl) entity;
 
                     switch (axolotl.getVariant()) {
                         case LUCY:
@@ -124,7 +119,7 @@ public class EntityDeath implements Listener {
             }
             if (entity.getType() == EntityType.BEE) {
                 if (config.getBoolean("BEE.Drop") && x <= config.getInt("BEE.Chance")) {
-                    Bee bee = (Bee) event.getEntity();
+                    Bee bee = (Bee) entity;
                     if (bee.getAnger() > 0) {
                         event.getDrops().add(LivingEntityHead.BEE_Aware);
                         ItemStack.rename(LivingEntityHead.BEE_Aware, ChatColor.YELLOW + config.getString("BEE.Name"));
@@ -149,7 +144,7 @@ public class EntityDeath implements Listener {
             }
             if (entity.getType() == EntityType.CAT) {
                 if (config.getBoolean("CAT.Drop") && x <= config.getInt("CAT.Chance")) {
-                    Cat cat = (Cat) event.getEntity();
+                    Cat cat = (Cat) entity;
                     switch (cat.getCatType()) {
                         case BLACK:
                             event.getDrops().add(LivingEntityHead.CAT_BLACK);
@@ -316,7 +311,7 @@ public class EntityDeath implements Listener {
             }
             if (entity.getType() == EntityType.FOX) {
                 if (config.getBoolean("FOX.Drop") && x <= config.getInt("FOX.Chance")) {
-                    Fox fox = (Fox) event.getEntity();
+                    Fox fox = (Fox) entity;
 
                     switch (fox.getFoxType()) {
                         case RED:
@@ -382,7 +377,7 @@ public class EntityDeath implements Listener {
             }
             if (entity.getType() == EntityType.HORSE) {
                 if (config.getBoolean("HORSE.Drop") && x <= config.getInt("HORSE.Chance")) {
-                    Horse horse = (Horse) event.getEntity();
+                    Horse horse = (Horse) entity;
 
                     switch (horse.getColor()) {
                         case WHITE:
@@ -454,7 +449,7 @@ public class EntityDeath implements Listener {
             }
             if (entity.getType() == EntityType.LLAMA) {
                 if (config.getBoolean("LLAMA.Drop") && x <= config.getInt("LLAMA.Chance")) {
-                    Llama llama = (Llama) event.getEntity();
+                    Llama llama = (Llama) entity;
 
                     switch (llama.getColor()) {
                         case BROWN:
@@ -493,7 +488,7 @@ public class EntityDeath implements Listener {
             }
             if (entity.getType() == EntityType.MUSHROOM_COW) {
                 if (config.getBoolean("MUSHROOM_COW.Drop") && x <= config.getInt("MUSHROOM_COW.Chance")) {
-                    MushroomCow mushroomCow = (MushroomCow) event.getEntity();
+                    MushroomCow mushroomCow = (MushroomCow) entity;
 
                     switch (mushroomCow.getVariant()) {
                         case RED:
@@ -531,7 +526,7 @@ public class EntityDeath implements Listener {
             }
             if (entity.getType() == EntityType.PANDA) {
                 if (config.getBoolean("PANDA.Drop") && x <= config.getInt("PANDA.Chance")) {
-                    Panda panda = (Panda) event.getEntity();
+                    Panda panda = (Panda) entity;
                     switch (panda.getMainGene()) {
                         case BROWN:
                             event.getDrops().add(LivingEntityHead.PANDA_BROWN);
@@ -612,7 +607,7 @@ public class EntityDeath implements Listener {
             }
             if (entity.getType() == EntityType.RABBIT) {
                 if (config.getBoolean("RABBIT.Drop") && x <= config.getInt("RABBIT.Chance")) {
-                    Rabbit rabbit = (Rabbit) event.getEntity();
+                    Rabbit rabbit = (Rabbit) entity;
                     switch (rabbit.getRabbitType()) {
 
                         case BROWN:
@@ -675,7 +670,7 @@ public class EntityDeath implements Listener {
             }
             if (entity.getType() == EntityType.SHEEP) {
                 if (config.getBoolean("SHEEP.Drop") && x <= config.getInt("SHEEP.Chance")) {
-                    Sheep sheep = (Sheep) event.getEntity();
+                    Sheep sheep = (Sheep) entity;
 
                     if (sheep.getColor() == DyeColor.WHITE) {
                         event.getDrops().add(LivingEntityHead.SHEEP_WHITE);
@@ -896,7 +891,7 @@ public class EntityDeath implements Listener {
             }
             if (entity.getType() == EntityType.ZOMBIE_VILLAGER) {
                 if (config.getBoolean("ZOMBIE_VILLAGER.Drop") && x <= config.getInt("ZOMBIE_VILLAGER.Chance")) {
-                    ZombieVillager zombieVillager = (ZombieVillager) event.getEntity();
+                    ZombieVillager zombieVillager = (ZombieVillager) entity;
 
                     switch (zombieVillager.getVillagerProfession()) {
                         case ARMORER:
@@ -970,7 +965,7 @@ public class EntityDeath implements Listener {
             }
             if (entity.getType() == EntityType.TRADER_LLAMA) {
                 if (config.getBoolean("TRADER_LLAMA.Drop") && x <= config.getInt("TRADER_LLAMA.Chance.Name")) {
-                    TraderLlama traderLlama = (TraderLlama) event.getEntity();
+                    TraderLlama traderLlama = (TraderLlama) entity;
 
                     switch (traderLlama.getColor()) {
                         case BROWN:
@@ -1001,7 +996,7 @@ public class EntityDeath implements Listener {
             }
             if (entity.getType() == EntityType.WOLF) {
                 if (config.getBoolean("WOLF.Drop") && x <= config.getInt("WOLF.Chance")) {
-                    Wolf wolf = (Wolf) event.getEntity();
+                    Wolf wolf = (Wolf) entity;
 
                     if (wolf.isAngry()) {
                         event.getDrops().add(LivingEntityHead.WOLF_ANGRY);
@@ -1018,7 +1013,7 @@ public class EntityDeath implements Listener {
             if (entity.getType() == EntityType.VEX) {
                 if (config.getBoolean("VEX.Drop") && x <= config.getInt("VEX.Chance")) {
 
-                    Vex vex = (Vex) event.getEntity();
+                    Vex vex = (Vex) entity;
                     if (vex.isCharging()) {
                         event.getDrops().add(LivingEntityHead.VEX_CHARGE);
                         ItemStack.rename(LivingEntityHead.VEX_CHARGE, ChatColor.YELLOW + config.getString("VEX.Name"));
@@ -1033,7 +1028,7 @@ public class EntityDeath implements Listener {
             }
             if (event.getEntityType() == EntityType.VILLAGER) {
                 if (config.getBoolean("VILLAGER.Drop") && x <= config.getInt("VILLAGER.Chance")) {
-                    Villager villager = (Villager) event.getEntity();
+                    Villager villager = (Villager) entity;
 
                     switch (villager.getProfession()) {
                         case WEAPONSMITH:
@@ -1099,7 +1094,7 @@ public class EntityDeath implements Listener {
             if (event.getEntityType() == EntityType.TROPICAL_FISH) {
                 if (config.getBoolean("TROPICAL_FISH.Drop") && x <= config.getInt("TROPICAL_FISH.Chance")) {
 
-                    TropicalFish tropicalFish = (TropicalFish) event.getEntity();
+                    TropicalFish tropicalFish = (TropicalFish) entity;
 
                     switch (tropicalFish.getBodyColor()) {
                         case MAGENTA:
@@ -1170,7 +1165,7 @@ public class EntityDeath implements Listener {
             }
             if (event.getEntityType() == EntityType.PARROT) {
                 if (config.getBoolean("PARROT.Drop") && x <= config.getInt("PARROT.Chance")) {
-                    Parrot parrot = (Parrot) event.getEntity();
+                    Parrot parrot = (Parrot) entity;
 
                     switch (parrot.getVariant()) {
                         case BLUE:
