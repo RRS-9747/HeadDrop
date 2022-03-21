@@ -29,7 +29,7 @@ Check [Wiki](https://github.com/RRS-9747/HeadDrop/wiki/HeadDrop-Wiki)
 This plugin (and the source code here) might not be easy to edit for inexperienced programmers. The main purpose of having the source public is to allow others to understand how the plugin works, and to allow those knowledgeable about java. There will not be support provided for people looking to make changes on their own. If you choose to make edits, please do so in accordance with the Apache 2.0 License.
 
 
-##For developer
+## For developer
 #### _Replace [Tag] with the last release tag_
 ### Maven:
 
