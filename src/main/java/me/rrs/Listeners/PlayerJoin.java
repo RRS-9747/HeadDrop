@@ -30,8 +30,8 @@ public class PlayerJoin implements Listener {
         String currentDate = dateFormat.format(date);
 
 
-        if (hasUpdateGitHub && updateChecker) {
-            if (event.getPlayer().hasPermission("headdrop.notify")) {
+        if (event.getPlayer().hasPermission("headdrop.notify")) {
+            if (hasUpdateGitHub && updateChecker) {
                 event.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', "You are using HeadDrop" + HeadDrop.getInstance().getDescription().getVersion()));
                 event.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', "However version " + newVersion + " is available."));
                 event.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', "You can download it from: https://bit.ly/HeadDrop"));
