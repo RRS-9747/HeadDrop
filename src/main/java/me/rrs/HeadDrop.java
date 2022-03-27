@@ -81,13 +81,6 @@ public class HeadDrop extends JavaPlugin {
 
 
     @Override
-    public void onLoad(){
-        Bukkit.getLogger().warning("Join Discord server for support");
-        Bukkit.getLogger().warning("https://discord.gg/fV4P2yMSgR");
-    }
-
-
-    @Override
     public void onDisable() {
         Bukkit.getLogger().warning("HeadDrop Disabled.");
 
