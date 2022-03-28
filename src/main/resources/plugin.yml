@@ -1,0 +1,52 @@
+name: HeadDrop
+version: '${project.version}'
+main: me.rrs.HeadDrop
+api-version: 1.13
+authors: [ RRS ]
+softdepend:
+  - PlaceholderAPI
+  - RRSUpdater
+commands:
+  myhead:
+    aliases:
+      - myskull
+    description: Get your own head.
+    permission: headdrop.ownhead
+    permission-message: You need headdrop.ownhead permission to use this command!
+    usage: /myhead
+
+
+  head:
+    aliases:
+      - skull
+    description: Get Players head
+    permission: headdrop.head
+    permission-message: You need headdrop.head permission to use this command!
+    usage: /head <playername>
+
+
+  search:
+    aliases:
+      - find
+    description: Search for a head in Head_Database website
+    permission: head.search
+    permission-message: You need head.search permission to use this command!
+    usage: search <head name>
+
+
+  headdrop:
+    aliases:
+      - hd
+    description: Main command of HeadDrop plugin
+
+  customhead:
+    aliases:
+      - customskull
+    description: Get custom skull by base64
+    permission: headdrop.customhead
+    permission-message: You need headdrop.customhead permission to use this command!
+    usage: /customskull <base64 code>
+
+
+
+
