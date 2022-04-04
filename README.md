@@ -1,11 +1,11 @@
 # HeadDrop
 
-[![Discord](https://discordapp.com/api/guilds/726505535192694864/widget.png)](https://discord.gg/fV4P2yMSgR)
-[![Release](https://img.shields.io/github/release/RRS-9747/HeadDrop.svg)](https://github.com/RRS-9747/HeadDrop/releases/latest)
-[![Downloads](https://img.shields.io/github/downloads/RRS-9747/HeadDrop/total.svg)](https://github.com/RRS-9747/HeadDrop/releases/latest)
-![](https://img.shields.io/github/languages/code-size/RRS-9747/HeadDrop.svg "Code size in bytes")
-[![CodeFactor](https://www.codefactor.io/repository/github/rrs-9747/HeadDrop/badge)](https://www.codefactor.io/repository/github/rrs-9747/HeadDrop)
-[![License](https://img.shields.io/github/license/RRS-9747/HeadDrop.svg)](https://github.com/RRS-9747/HeadDrop/blob/master/LICENSE)<br>
+[![Discord](https://img.shields.io/discord/726505535192694864?style=for-the-badge)](https://discord.gg/fV4P2yMSgR)
+[![Release](https://img.shields.io/github/v/release/RRS-9747/HeadDrop?style=for-the-badge)](https://github.com/RRS-9747/HeadDrop/releases/latest)
+[![Downloads](https://img.shields.io/spiget/downloads/99976?style=for-the-badge)](https://www.spigotmc.org/resources/%E2%9C%85-headdrop-1-13-1-18-2-fully-customizable.99976/)
+[![Rating](https://img.shields.io/spiget/stars/99976?style=for-the-badge)](https://www.spigotmc.org/resources/%E2%9C%85-headdrop-1-13-1-18-2-fully-customizable.99976/)
+![](https://img.shields.io/github/languages/code-size/RRS-9747/Headdrop?style=for-the-badge "Code size in bytes")
+[![CodeFactor](https://img.shields.io/codefactor/grade/github/RRS-9747/HeadDrop?style=for-the-badge)](https://www.codefactor.io/repository/github/rrs-9747/HeadDrop)<br>
 
 
 A head plugin for minecraft java
