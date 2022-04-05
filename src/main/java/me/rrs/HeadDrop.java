@@ -1,3 +1,6 @@
+//TODO -> add creative block break remove
+//TODO -> Creative middle click fix
+
 package me.rrs;
 
 import dev.dejvokep.boostedyaml.YamlDocument;
@@ -62,12 +65,11 @@ public class HeadDrop extends JavaPlugin {
             e.printStackTrace();
         }
 
-        if (!this.getDescription().getName().equals("HeadDrop")){
+        if (!getDescription().getName().equals("HeadDrop")){
             Bukkit.getLogger().severe("You can't change my name!");
             Bukkit.getPluginManager().disablePlugin(this);
             return;
         }
-
 
         Metrics metrics = new Metrics(this, 13554);
         metrics.addCustomChart(new Metrics.SimplePie("discord_bot", () -> String.valueOf(getConfig().getBoolean("Bot.Enable"))));
@@ -83,7 +85,7 @@ public class HeadDrop extends JavaPlugin {
         getCommand("search").setExecutor(new Search());
         getCommand("customhead").setExecutor(new CustomHead());
         getCommand("headdrop").setTabCompleter(new HeaddropCMD());
-
+        Bukkit.getLogger().info("HeadDrop " + getDescription().getVersion() + " enabled successfully!");
     }
 
 

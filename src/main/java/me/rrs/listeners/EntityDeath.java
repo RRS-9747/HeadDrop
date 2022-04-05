@@ -2,6 +2,7 @@ package me.rrs.listeners;
 
 import de.tr7zw.nbtapi.NBTItem;
 import dev.dejvokep.boostedyaml.YamlDocument;
+import io.lumine.mythic.bukkit.BukkitAPIHelper;
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.rrs.HeadDrop;
 import me.rrs.database.LivingEntityHead;
@@ -27,36 +28,45 @@ public class EntityDeath implements Listener {
     ItemStack item;
     NBTItem nbtItem;
     final YamlDocument config = HeadDrop.getConfiguration();
-    Random random = new Random();
     String title, description, footer;
 
+    Random random = new Random();
     LivingEntityHead entityHead = new LivingEntityHead();
+
 
     @EventHandler(priority = EventPriority.NORMAL)
     public void EntityDropHeadEvent(EntityDeathEvent event) {
-        if (event.getEntity().getKiller() == null) return;
+        LivingEntity entity = event.getEntity();
+
+        if (Bukkit.getPluginManager().isPluginEnabled("MythicMobs")){
+            BukkitAPIHelper mythicMobsAPI = new BukkitAPIHelper();
+            if (mythicMobsAPI.isMythicMob(entity)) return;
+        }
+
+        if (config.getBoolean("Config.Require-Killer-Player")){
+            if (event.getEntity().getKiller() == null) return;
+        }
 
         if (config.getBoolean("Config.Killer-Require-Permission")) {
             if (!event.getEntity().getKiller().hasPermission("headdrop.killer")) return;
         }
 
-        Entity entity = event.getEntity();
         boolean isInDisabledWorld = false;
         int x = random.nextInt(100) + 1;
 
         List<String> worldList = HeadDrop.getConfiguration().getStringList("Config.Disable-Worlds");
 
         title = config.getString("Bot.Title")
-                .replaceAll("%killer%", event.getEntity().getKiller().getName())
+                .replaceAll("%killer%", entity.getKiller().getName())
                 .replaceAll("%mob%", entity.getName());
 
 
         description = config.getString("Bot.Description")
-                .replaceAll("%killer%", event.getEntity().getKiller().getName())
+                .replaceAll("%killer%", entity.getKiller().getName())
                 .replaceAll("%mob%", entity.getName());
 
         footer = config.getString("Bot.Footer")
-                .replaceAll("%killer%", event.getEntity().getKiller().getName())
+                .replaceAll("%killer%", entity.getKiller().getName())
                 .replaceAll("%mob%", entity.getName());
 
 
@@ -76,6 +86,8 @@ public class EntityDeath implements Listener {
 
         if (!isInDisabledWorld) {
             EntityType type = entity.getType();
+
+
             if (type == EntityType.PLAYER) {
                 if (config.getBoolean("PLAYER.Require-Permission")) {
                     if (!event.getEntity().hasPermission("headdrop.player")) return;

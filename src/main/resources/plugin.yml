@@ -2,10 +2,11 @@ name: HeadDrop
 version: '${project.version}'
 main: me.rrs.HeadDrop
 api-version: 1.13
-authors: [ RRS ]
+author: RRS
+prefix: HeadDrop
 softdepend:
   - PlaceholderAPI
-  - NBTAPI
+  - MythicMobs
 commands:
   myhead:
     aliases:

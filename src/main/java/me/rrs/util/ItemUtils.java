@@ -15,12 +15,10 @@ public class ItemUtils {
     }
 
 
-    public static void setLore(org.bukkit.inventory.ItemStack itemStack, String[] lore){
-        ItemMeta m = itemStack.getItemMeta();
-        if (m != null){
-            m.setLore(Arrays.asList(lore));
-        }
-        itemStack.setItemMeta(m);
+    public static void setLore(ItemStack item, String[] lore){
+        ItemMeta m = item.getItemMeta();
+        m.setLore(Arrays.asList(lore));
+        item.setItemMeta(m);
     }
 
 }

@@ -2,6 +2,7 @@
 # For bug report or suggestion, join https://discord.gg/fV4P2yMSgR
 
 # If Player.Require-Permission = true, player with headdrop.player permission will drop head on death.
+# Config.Require-Killer-Player = true means Killer need to be player to drop killed mob head.
 # If Config.Killer-Require-Permission = true, Player need headdrop.killer permission to let entity drop head on death.
 # Chances will not be ignored if you disable drop.
 # Chance is from 1-100. fraction number will not work.
@@ -9,8 +10,9 @@
 # %killer% will return player name who killed the mob & %mob% will return mob name which was killed (only work on Bot section)
 
 Config:
-  Version: 3.8
+  Version: 3.9
   Update-Checker: true
+  Require-Killer-Player: true
   Killer-Require-Permission: false
   Disable-Worlds:
     - demoWorld
