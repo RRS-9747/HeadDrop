@@ -1,5 +1,3 @@
-//TODO -> add creative block break remove
-//TODO -> Creative middle click fix
 
 package me.rrs;
 

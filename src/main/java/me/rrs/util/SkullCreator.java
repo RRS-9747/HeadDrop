@@ -4,7 +4,6 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.SkullType;
 import org.bukkit.block.Block;
 import org.bukkit.block.Skull;
 import org.bukkit.inventory.ItemStack;
@@ -13,9 +12,6 @@ import org.bukkit.inventory.meta.SkullMeta;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
-import java.net.URI;
-import java.net.URISyntaxException;
-import java.util.Base64;
 import java.util.UUID;
 
 public class SkullCreator {
@@ -24,7 +20,6 @@ public class SkullCreator {
 
 	private static boolean warningPosted = false;
 
-	private static Field blockProfileField;
 	private static Method metaSetProfileMethod;
 	private static Field metaProfileField;
 
@@ -61,7 +56,6 @@ public class SkullCreator {
 	}
 
 
-
 	public static ItemStack itemWithBase64(ItemStack item, String base64) {
 		notNull(item, "item");
 		notNull(base64, "base64");
@@ -86,53 +80,10 @@ public class SkullCreator {
 		state.update(false, false);
 	}
 
-
-	public static void blockWithUrl(Block block, String url) {
-		notNull(block, "block");
-		notNull(url, "url");
-
-		blockWithBase64(block, urlToBase64(url));
-	}
-
-	public static void blockWithBase64(Block block, String base64) {
-		notNull(block, "block");
-		notNull(base64, "base64");
-
-		setToSkull(block);
-		Skull state = (Skull) block.getState();
-		mutateBlockState(state, base64);
-		state.update(false, false);
-	}
-
-	private static void setToSkull(Block block) {
-		checkLegacy();
-
-		try {
-			block.setType(Material.valueOf("PLAYER_HEAD"), false);
-		} catch (IllegalArgumentException e) {
-			block.setType(Material.valueOf("SKULL"), false);
-			Skull state = (Skull) block.getState();
-			state.setSkullType(SkullType.PLAYER);
-			state.update(false, false);
-		}
-	}
-
 	private static void notNull(Object o, String name) {
 		if (o == null) {
 			throw new NullPointerException(name + " should not be null!");
 		}
-	}
-
-	private static String urlToBase64(String url) {
-
-		URI actualUrl;
-		try {
-			actualUrl = new URI(url);
-		} catch (URISyntaxException e) {
-			throw new RuntimeException(e);
-		}
-		String toEncode = "{\"textures\":{\"SKIN\":{\"url\":\"" + actualUrl + "\"}}}";
-		return Base64.getEncoder().encodeToString(toEncode.getBytes());
 	}
 
 	private static GameProfile makeProfile(String b64) {
@@ -143,18 +94,6 @@ public class SkullCreator {
 		GameProfile profile = new GameProfile(id, "Player");
 		profile.getProperties().put("textures", new Property("textures", b64));
 		return profile;
-	}
-
-	private static void mutateBlockState(Skull block, String b64) {
-		try {
-			if (blockProfileField == null) {
-				blockProfileField = block.getClass().getDeclaredField("profile");
-				blockProfileField.setAccessible(true);
-			}
-			blockProfileField.set(block, makeProfile(b64));
-		} catch (NoSuchFieldException | IllegalAccessException e) {
-			e.printStackTrace();
-		}
 	}
 
 	private static void mutateItemMeta(SkullMeta meta, String b64) {

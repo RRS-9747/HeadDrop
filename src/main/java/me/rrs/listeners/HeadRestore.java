@@ -34,12 +34,12 @@ public class HeadRestore implements Listener {
     @EventHandler
     public void onHeadBreak(BlockBreakEvent event) {
 
-        NBTBlock headblock = new NBTBlock(event.getBlock());
+        NBTBlock headBlock = new NBTBlock(event.getBlock());
         World world = event.getBlock().getWorld();
-        if (!headblock.getData().getString("HeadDrop").isEmpty()) {
+        if (!headBlock.getData().getString("HeadDrop").isEmpty()) {
             event.getBlock().getDrops().clear();
 
-            switch (headblock.getData().getString("HeadDrop")) {
+            switch (headBlock.getData().getString("HeadDrop")) {
                 case "BEE":
                     item = ItemUtils.rename(entityHead.BEE, ChatColor.YELLOW + config.getString("BEE.Name"));
                     nbtItem = new NBTItem(item);

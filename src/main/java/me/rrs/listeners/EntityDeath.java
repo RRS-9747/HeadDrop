@@ -2,6 +2,7 @@ package me.rrs.listeners;
 
 import de.tr7zw.nbtapi.NBTItem;
 import dev.dejvokep.boostedyaml.YamlDocument;
+import dev.lone.itemsadder.api.CustomEntity;
 import io.lumine.mythic.bukkit.BukkitAPIHelper;
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.rrs.HeadDrop;
@@ -34,46 +35,49 @@ public class EntityDeath implements Listener {
     LivingEntityHead entityHead = new LivingEntityHead();
 
 
-    @EventHandler(priority = EventPriority.NORMAL)
+    @EventHandler(priority = EventPriority.HIGH)
     public void EntityDropHeadEvent(EntityDeathEvent event) {
+
         LivingEntity entity = event.getEntity();
+        boolean isInDisabledWorld = false;
+        int x = random.nextInt(100) + 1;
+        List<String> worldList = HeadDrop.getConfiguration().getStringList("Config.Disable-Worlds");
+
+        if (config.getBoolean("Bot.Enable")){
+            title = config.getString("Bot.Title")
+                    .replaceAll("%killer%", entity.getKiller().getName())
+                    .replaceAll("%mob%", entity.getName());
+
+            description = config.getString("Bot.Description")
+                    .replaceAll("%killer%", entity.getKiller().getName())
+                    .replaceAll("%mob%", entity.getName());
+
+            footer = config.getString("Bot.Footer")
+                    .replaceAll("%killer%", entity.getKiller().getName())
+                    .replaceAll("%mob%", entity.getName());
+
+
+            if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+                title = PlaceholderAPI.setPlaceholders(entity.getKiller(), title);
+                description = PlaceholderAPI.setPlaceholders(entity.getKiller(), description);
+                footer = PlaceholderAPI.setPlaceholders(entity.getKiller(), footer);
+            }
+        }
 
         if (Bukkit.getPluginManager().isPluginEnabled("MythicMobs")){
             BukkitAPIHelper mythicMobsAPI = new BukkitAPIHelper();
             if (mythicMobsAPI.isMythicMob(entity)) return;
         }
+        if (Bukkit.getPluginManager().isPluginEnabled("ItemsAdder")){
+            if (CustomEntity.isCustomEntity(entity)) return;
+        }
 
         if (config.getBoolean("Config.Require-Killer-Player")){
-            if (event.getEntity().getKiller() == null) return;
+            if (entity.getKiller() == null) return;
         }
 
         if (config.getBoolean("Config.Killer-Require-Permission")) {
-            if (!event.getEntity().getKiller().hasPermission("headdrop.killer")) return;
-        }
-
-        boolean isInDisabledWorld = false;
-        int x = random.nextInt(100) + 1;
-
-        List<String> worldList = HeadDrop.getConfiguration().getStringList("Config.Disable-Worlds");
-
-        title = config.getString("Bot.Title")
-                .replaceAll("%killer%", entity.getKiller().getName())
-                .replaceAll("%mob%", entity.getName());
-
-
-        description = config.getString("Bot.Description")
-                .replaceAll("%killer%", entity.getKiller().getName())
-                .replaceAll("%mob%", entity.getName());
-
-        footer = config.getString("Bot.Footer")
-                .replaceAll("%killer%", entity.getKiller().getName())
-                .replaceAll("%mob%", entity.getName());
-
-
-        if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-            title = PlaceholderAPI.setPlaceholders(event.getEntity().getKiller(), title);
-            description = PlaceholderAPI.setPlaceholders(event.getEntity().getKiller(), description);
-            footer = PlaceholderAPI.setPlaceholders(event.getEntity().getKiller(), footer);
+            if (!entity.getKiller().hasPermission("headdrop.killer")) return;
         }
 
 
@@ -87,17 +91,17 @@ public class EntityDeath implements Listener {
         if (!isInDisabledWorld) {
             EntityType type = entity.getType();
 
-
             if (type == EntityType.PLAYER) {
                 if (config.getBoolean("PLAYER.Require-Permission")) {
-                    if (!event.getEntity().hasPermission("headdrop.player")) return;
+                    if (!entity.hasPermission("headdrop.player")) return;
                 }
 
                 if (config.getBoolean("PLAYER.Drop") && x <= config.getInt("PLAYER.Chance")) {
-                    ItemStack skull = SkullCreator.itemFromName(event.getEntity().getName());
+                    ItemStack skull = SkullCreator.itemFromName(entity.getName());
                     event.getDrops().add(skull);
                     if (config.getBoolean("Bot.Enable")) Embed.msg(title, description, footer);
                 }
+
             } else if (type == EntityType.BAT) {
                 if (config.getBoolean("BAT.Drop") && x <= config.getInt("BAT.Chance")) {
 
@@ -107,6 +111,7 @@ public class EntityDeath implements Listener {
                     event.getDrops().add(nbtItem.getItem());
                     if (config.getBoolean("Bot.Enable")) Embed.msg(title, description, footer);
                 }
+
             } else if (type == EntityType.BLAZE) {
                 if (config.getBoolean("BLAZE.Drop") && x <= config.getInt("BLAZE.Chance")) {
 
@@ -117,6 +122,7 @@ public class EntityDeath implements Listener {
 
                     if (config.getBoolean("Bot.Enable")) Embed.msg(title, description, footer);
                 }
+
             } else if (type == EntityType.SPIDER) {
                 if (config.getBoolean("SPIDER.Drop") && x <= config.getInt("SPIDER.Chance")) {
 
@@ -127,6 +133,7 @@ public class EntityDeath implements Listener {
 
                     if (config.getBoolean("Bot.Enable")) Embed.msg(title, description, footer);
                 }
+
             } else if (type == EntityType.CAVE_SPIDER) {
                 if (config.getBoolean("CAVE_SPIDER.Drop") && x <= config.getInt("CAVE_SPIDER.Chance")) {
 
@@ -137,6 +144,7 @@ public class EntityDeath implements Listener {
 
                     if (config.getBoolean("Bot.Enable")) Embed.msg(title, description, footer);
                 }
+
             } else if (type == EntityType.CHICKEN) {
                 if (config.getBoolean("CHICKEN.Drop") && x <= config.getInt("CHICKEN.Chance")) {
 
@@ -147,6 +155,7 @@ public class EntityDeath implements Listener {
 
                     if (config.getBoolean("Bot.Enable")) Embed.msg(title, description, footer);
                 }
+
             } else if (type == EntityType.COW) {
                 if (config.getBoolean("COW.Drop") && x <= config.getInt("COW.Chance")) {
 
@@ -157,6 +166,7 @@ public class EntityDeath implements Listener {
 
                     if (config.getBoolean("Bot.Enable")) Embed.msg(title, description, footer);
                 }
+
             } else if (type == EntityType.ENDERMAN) {
                 if (config.getBoolean("ENDERMAN.Drop") && x <= config.getInt("ENDERMAN.Chance")) {
 
@@ -167,6 +177,7 @@ public class EntityDeath implements Listener {
 
                     if (config.getBoolean("Bot.Enable")) Embed.msg(title, description, footer);
                 }
+
             } else if (type == EntityType.GIANT) {
                 if (config.getBoolean("GIANT.Drop") && x <= config.getInt("GIANT.Chance")) {
 
@@ -177,6 +188,7 @@ public class EntityDeath implements Listener {
 
                     if (config.getBoolean("Bot.Enable")) Embed.msg(title, description, footer);
                 }
+
             } else if (type == EntityType.HORSE) {
                 if (config.getBoolean("HORSE.Drop") && x <= config.getInt("HORSE.Chance")) {
                     Horse horse = (Horse) entity;
@@ -235,6 +247,7 @@ public class EntityDeath implements Listener {
                     }
                     if (config.getBoolean("Bot.Enable")) Embed.msg(title, description, footer);
                 }
+
             } else if (type == EntityType.ILLUSIONER) {
                 if (config.getBoolean("ILLUSIONER.Drop") && x <= config.getInt("ILLUSIONER.Chance")) {
                     item = ItemUtils.rename(entityHead.ILLUSIONER, ChatColor.YELLOW + config.getString("ILLUSIONER.Name"));
@@ -244,6 +257,7 @@ public class EntityDeath implements Listener {
 
                     if (config.getBoolean("Bot.Enable")) Embed.msg(title, description, footer);
                 }
+
             } else if (type == EntityType.IRON_GOLEM) {
                 if (config.getBoolean("IRON_GOLEM.Drop") && x <= config.getInt("IRON_GOLEM.Chance")) {
                     item = ItemUtils.rename(entityHead.IRON_GOLEM, ChatColor.YELLOW + config.getString("IRON_GOLEM.Name"));
@@ -253,6 +267,7 @@ public class EntityDeath implements Listener {
 
                     if (config.getBoolean("Bot.Enable")) Embed.msg(title, description, footer);
                 }
+
             } else if (type == EntityType.MAGMA_CUBE) {
                 if (config.getBoolean("MAGMA_CUBE.Drop") && x <= config.getInt("MAGMA_CUBE.Chance")) {
                     item = ItemUtils.rename(entityHead.MAGMA_CUBE, ChatColor.YELLOW + config.getString("MAGMA_CUBE.Name"));
@@ -262,6 +277,7 @@ public class EntityDeath implements Listener {
 
                     if (config.getBoolean("Bot.Enable")) Embed.msg(title, description, footer);
                 }
+
             } else if (type == EntityType.MUSHROOM_COW) {
                 if (config.getBoolean("MUSHROOM_COW.Drop") && x <= config.getInt("MUSHROOM_COW.Chance")) {
                     MushroomCow mushroomCow = (MushroomCow) entity;
@@ -283,6 +299,7 @@ public class EntityDeath implements Listener {
                     }
                     if (config.getBoolean("Bot.Enable")) Embed.msg(title, description, footer);
                 }
+
             } else if (type == EntityType.OCELOT) {
                 if (config.getBoolean("OCELOT.Drop") && x <= config.getInt("OCELOT.Chance")) {
                     item = ItemUtils.rename(entityHead.OCELOT, ChatColor.YELLOW + config.getString("OCELOT.Name"));
@@ -292,6 +309,7 @@ public class EntityDeath implements Listener {
 
                     if (config.getBoolean("Bot.Enable")) Embed.msg(title, description, footer);
                 }
+
             } else if (type == EntityType.PIG) {
                 if (config.getBoolean("PIG.Drop") && x <= config.getInt("PIG.Chance")) {
                     item = ItemUtils.rename(entityHead.PIG, ChatColor.YELLOW + config.getString("PIG.Name"));
@@ -301,6 +319,7 @@ public class EntityDeath implements Listener {
 
                     if (config.getBoolean("Bot.Enable")) Embed.msg(title, description, footer);
                 }
+
             } else if (type == EntityType.SHEEP) {
                 if (config.getBoolean("SHEEP.Drop") && x <= config.getInt("SHEEP.Chance")) {
                     Sheep sheep = (Sheep) entity;
@@ -419,9 +438,13 @@ public class EntityDeath implements Listener {
                             event.getDrops().add(nbtItem.getItem());
 
                             break;
+                        default:
+                            Bukkit.getLogger().severe("If you notice this error, pls report it to plugin author");
+                            throw new IllegalStateException("Unexpected value: " + sheep.getColor());
                     }
                     if (config.getBoolean("Bot.Enable")) Embed.msg(title, description, footer);
                 }
+
             } else if (type == EntityType.SILVERFISH) {
                 if (config.getBoolean("SILVERFISH.Drop") && x <= config.getInt("SILVERFISH.Chance")) {
                     item = ItemUtils.rename(entityHead.SILVERFISH, ChatColor.YELLOW + config.getString("SILVERFISH.Name"));
@@ -430,6 +453,7 @@ public class EntityDeath implements Listener {
                     event.getDrops().add(nbtItem.getItem());
                     if (config.getBoolean("Bot.Enable")) Embed.msg(title, description, footer);
                 }
+
             } else if (type == EntityType.SLIME) {
                 if (config.getBoolean("SLIME.Drop") && x <= config.getInt("SLIME.Chance")) {
                     item = ItemUtils.rename(entityHead.SLIME, ChatColor.YELLOW + config.getString("SLIME.Name"));
@@ -438,6 +462,7 @@ public class EntityDeath implements Listener {
                     event.getDrops().add(nbtItem.getItem());
                     if (config.getBoolean("Bot.Enable")) Embed.msg(title, description, footer);
                 }
+
             } else if (type == EntityType.SNOWMAN) {
                 if (config.getBoolean("SNOW_GOLEM.Drop") && x <= config.getInt("SNOW_GOLEM.Chance")) {
                     item = ItemUtils.rename(entityHead.SNOWMAN, ChatColor.YELLOW + config.getString("SNOW_GOLEM.Name"));
@@ -446,6 +471,7 @@ public class EntityDeath implements Listener {
                     event.getDrops().add(nbtItem.getItem());
                     if (config.getBoolean("Bot.Enable")) Embed.msg(title, description, footer);
                 }
+
             } else if (type == EntityType.SQUID) {
                 if (config.getBoolean("SQUID.Drop") && x <= config.getInt("SQUID.Chance")) {
                     item = ItemUtils.rename(entityHead.SQUID, ChatColor.YELLOW + config.getString("SQUID.Name"));
@@ -454,6 +480,7 @@ public class EntityDeath implements Listener {
                     event.getDrops().add(nbtItem.getItem());
                     if (config.getBoolean("Bot.Enable")) Embed.msg(title, description, footer);
                 }
+
             } else if (type == EntityType.WITCH) {
                 if (config.getBoolean("WITCH.Drop") && x <= config.getInt("WITCH.Chance")) {
                     item = ItemUtils.rename(entityHead.WITCH, ChatColor.YELLOW + config.getString("WITCH.Name"));
@@ -462,6 +489,7 @@ public class EntityDeath implements Listener {
                     event.getDrops().add(nbtItem.getItem());
                     if (config.getBoolean("Bot.Enable")) Embed.msg(title, description, footer);
                 }
+
             } else if (type == EntityType.WITHER) {
                 if (config.getBoolean("WITHER.Drop") && x <= config.getInt("WITHER.Chance")) {
                     item = ItemUtils.rename(entityHead.WITHER, ChatColor.YELLOW + config.getString("WITHER.Name"));
@@ -470,6 +498,7 @@ public class EntityDeath implements Listener {
                     event.getDrops().add(nbtItem.getItem());
                     if (config.getBoolean("Bot.Enable")) Embed.msg(title, description, footer);
                 }
+
             } else if (type == EntityType.ZOMBIFIED_PIGLIN) {
                 if (config.getBoolean("ZOMBIFIED_PIGLIN.Drop") && x <= config.getInt("ZOMBIFIED_PIGLIN.Chance")) {
                     item = ItemUtils.rename(entityHead.ZOMBIFIED_PIGLIN, ChatColor.YELLOW + config.getString("ZOMBIFIED_PIGLIN.Name"));
@@ -478,6 +507,7 @@ public class EntityDeath implements Listener {
                     event.getDrops().add(nbtItem.getItem());
                     if (config.getBoolean("Bot.Enable")) Embed.msg(title, description, footer);
                 }
+
             } else if (type == EntityType.GHAST) {
                 if (config.getBoolean("GHAST.Drop") && x <= config.getInt("GHAST.Chance")) {
                     item = ItemUtils.rename(entityHead.GHAST, ChatColor.YELLOW + config.getString("GHAST.Name"));
@@ -486,6 +516,7 @@ public class EntityDeath implements Listener {
                     event.getDrops().add(nbtItem.getItem());
                     if (config.getBoolean("Bot.Enable")) Embed.msg(title, description, footer);
                 }
+
             } else if (type == EntityType.WOLF) {
                 if (config.getBoolean("WOLF.Drop") && x <= config.getInt("WOLF.Chance")) {
                     Wolf wolf = (Wolf) entity;
@@ -503,6 +534,7 @@ public class EntityDeath implements Listener {
                     }
                     if (config.getBoolean("Bot.Enable")) Embed.msg(title, description, footer);
                 }
+
             } else if (type == EntityType.VILLAGER) {
                 if (config.getBoolean("VILLAGER.Drop") && x <= config.getInt("VILLAGER.Chance")) {
                     Villager villager = (Villager) entity;
@@ -646,6 +678,7 @@ public class EntityDeath implements Listener {
                     }
                     if (config.getBoolean("Bot.Enable")) Embed.msg(title, description, footer);
                 }
+
             } else if (type == EntityType.ENDERMITE) {
                 if (config.getBoolean("ENDERMITE.Drop") && x <= config.getInt("ENDERMITE.Chance")) {
 
@@ -666,6 +699,7 @@ public class EntityDeath implements Listener {
 
                     if (config.getBoolean("Bot.Enable")) Embed.msg(title, description, footer);
                 }
+
                 //1.9 Mob
             } else if (type == EntityType.SHULKER) {
                 if (config.getBoolean("SHULKER.Drop") && x <= config.getInt("SHULKER.Chance")) {
@@ -686,6 +720,7 @@ public class EntityDeath implements Listener {
                     if (config.getBoolean("Bot.Enable")) Embed.msg(title, description, footer);
                 }
                 //1.11 Mob
+
             } else if (type == EntityType.ZOMBIE_VILLAGER) {
                 if (config.getBoolean("ZOMBIE_VILLAGER.Drop") && x <= config.getInt("ZOMBIE_VILLAGER.Chance")) {
                     ZombieVillager zombieVillager = (ZombieVillager) entity;
@@ -770,6 +805,7 @@ public class EntityDeath implements Listener {
                     }
                     if (config.getBoolean("Bot.Enable")) Embed.msg(title, description, footer);
                 }
+
             } else if (type == EntityType.VINDICATOR) {
                 if (config.getBoolean("VINDICATOR.Drop") && x <= config.getInt("VINDICATOR.Chance")) {
                     item = ItemUtils.rename(entityHead.VINDICATOR, ChatColor.YELLOW + config.getString("VINDICATOR.Name"));
@@ -778,6 +814,7 @@ public class EntityDeath implements Listener {
                     event.getDrops().add(nbtItem.getItem());
                     if (config.getBoolean("Bot.Enable")) Embed.msg(title, description, footer);
                 }
+
             } else if (type == EntityType.VEX) {
                 if (config.getBoolean("VEX.Drop") && x <= config.getInt("VEX.Chance")) {
 
@@ -795,6 +832,7 @@ public class EntityDeath implements Listener {
                     }
                     if (config.getBoolean("Bot.Enable")) Embed.msg(title, description, footer);
                 }
+
             } else if (type == EntityType.EVOKER) {
                 if (config.getBoolean("EVOKER.Drop") && x <= config.getInt("EVOKER.Chance")) {
 
@@ -805,6 +843,7 @@ public class EntityDeath implements Listener {
 
                     if (config.getBoolean("Bot.Enable")) Embed.msg(title, description, footer);
                 }
+
             } else if (type == EntityType.HUSK) {
                 if (config.getBoolean("HUSK.Drop") && x <= config.getInt("HUSK.Chance")) {
                     item = ItemUtils.rename(entityHead.HUSK, ChatColor.YELLOW + config.getString("HUSK.Name"));
@@ -814,6 +853,7 @@ public class EntityDeath implements Listener {
 
                     if (config.getBoolean("Bot.Enable")) Embed.msg(title, description, footer);
                 }
+
             } else if (type == EntityType.STRAY) {
                 if (config.getBoolean("STRAY.Drop") && x <= config.getInt("STRAY.Chance")) {
                     item = ItemUtils.rename(entityHead.STRAY, ChatColor.YELLOW + config.getString("STRAY.Name"));
@@ -822,6 +862,7 @@ public class EntityDeath implements Listener {
                     event.getDrops().add(nbtItem.getItem());
                     if (config.getBoolean("Bot.Enable")) Embed.msg(title, description, footer);
                 }
+
             } else if (type == EntityType.ELDER_GUARDIAN) {
                 if (config.getBoolean("ELDER_GUARDIAN.Drop") && x <= config.getInt("ELDER_GUARDIAN.Chance")) {
 
@@ -832,6 +873,7 @@ public class EntityDeath implements Listener {
 
                     if (config.getBoolean("Bot.Enable")) Embed.msg(title, description, footer);
                 }
+
             } else if (type == EntityType.DONKEY) {
                 if (config.getBoolean("DONKEY.Drop") && x <= config.getInt("DONKEY.Chance")) {
 
@@ -842,6 +884,7 @@ public class EntityDeath implements Listener {
 
                     if (config.getBoolean("Bot.Enable")) Embed.msg(title, description, footer);
                 }
+
             } else if (type == EntityType.ZOMBIE_HORSE) {
                 if (config.getBoolean("ZOMBIE_HORSE.Drop") && x <= config.getInt("ZOMBIE_HORSE.Chance")) {
                     item = ItemUtils.rename(entityHead.ZOMBIE_HORSE, ChatColor.YELLOW + config.getString("ZOMBIE_HORSE.Name"));
@@ -850,6 +893,7 @@ public class EntityDeath implements Listener {
                     event.getDrops().add(nbtItem.getItem());
                     if (config.getBoolean("Bot.Enable")) Embed.msg(title, description, footer);
                 }
+
             } else if (type == EntityType.SKELETON_HORSE) {
                 if (config.getBoolean("SKELETON_HORSE.Drop") && x <= config.getInt("SKELETON_HORSE.Chance")) {
                     item = ItemUtils.rename(entityHead.SKELETON_HORSE, ChatColor.YELLOW + config.getString("SKELETON_HORSE.Name"));
@@ -858,6 +902,7 @@ public class EntityDeath implements Listener {
                     event.getDrops().add(nbtItem.getItem());
                     if (config.getBoolean("Bot.Enable")) Embed.msg(title, description, footer);
                 }
+
             } else if (type == EntityType.MULE) {
                 if (config.getBoolean("MULE.Drop") && x <= config.getInt("MULE.Chance")) {
                     item = ItemUtils.rename(entityHead.MULE, ChatColor.YELLOW + config.getString("MULE.Name"));
