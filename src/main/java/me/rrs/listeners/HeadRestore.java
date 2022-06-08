@@ -46,7 +46,6 @@ public class HeadRestore implements Listener {
         NBTBlock headBlock = new NBTBlock(event.getBlock());
         World world = event.getBlock().getWorld();
         if (headBlock.getData().getString("HeadDrop").isEmpty()) return;
-
         switch (headBlock.getData().getString("HeadDrop")) {
             case "BEE":
                 item = ItemUtils.rename(head.BEE, ChatColor.YELLOW + config.getString("BEE.Name"));
@@ -971,6 +970,42 @@ public class HeadRestore implements Listener {
                 item = ItemUtils.rename(head.SHEEP_BLACK, ChatColor.YELLOW + config.getString("SHEEP.Name"));
                 nbtItem = new NBTItem(item);
                 nbtItem.setString("HeadDrop", "SHEEP_BLACK");
+
+                break;
+            case "ALLAY":
+                item = ItemUtils.rename(head.ALLAY, ChatColor.YELLOW + config.getString("ALLAY.Name"));
+                nbtItem = new NBTItem(item);
+                nbtItem.setString("HeadDrop", "ALLAY");
+
+                break;
+            case "TADPOLE":
+                item = ItemUtils.rename(head.TADPOLE, ChatColor.YELLOW + config.getString("TADPOLE.Name"));
+                nbtItem = new NBTItem(item);
+                nbtItem.setString("HeadDrop", "TADPOLE");
+
+                break;
+            case "WARDEN":
+                item = ItemUtils.rename(head.WARDEN, ChatColor.YELLOW + config.getString("WARDEN.Name"));
+                nbtItem = new NBTItem(item);
+                nbtItem.setString("HeadDrop", "WARDEN");
+
+                break;
+            case "FROG_TEMPERATE":
+                item = ItemUtils.rename(head.FROG_TEMPERATE, ChatColor.YELLOW + config.getString("FROG.Name"));
+                nbtItem = new NBTItem(item);
+                nbtItem.setString("HeadDrop", "FROG_TEMPERATE");
+
+                break;
+            case "FROG_WARM":
+                item = ItemUtils.rename(head.FROG_WARM, ChatColor.YELLOW + config.getString("FROG.Name"));
+                nbtItem = new NBTItem(item);
+                nbtItem.setString("HeadDrop", "FROG_WARM");
+
+                break;
+            case "FROG_COLD":
+                item = ItemUtils.rename(head.FROG_COLD, ChatColor.YELLOW + config.getString("FROG.Name"));
+                nbtItem = new NBTItem(item);
+                nbtItem.setString("HeadDrop", "FROG_COLD");
 
                 break;
         }
