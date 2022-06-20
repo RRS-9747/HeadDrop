@@ -6,7 +6,7 @@
 
     <groupId>me.rrs</groupId>
     <artifactId>HeadDrop</artifactId>
-    <version>4.2</version>
+    <version>4.3</version>
 
     <packaging>jar</packaging>
 
@@ -22,7 +22,7 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
-                <version>3.8.1</version>
+                <version>3.10.1</version>
                 <configuration>
                     <source>8</source>
                     <target>8</target>
@@ -31,18 +31,23 @@
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-shade-plugin</artifactId>
-                <version>3.2.4</version>
+                <version>3.3.0</version>
                 <executions>
                     <execution>
                         <phase>package</phase>
                         <goals>
                             <goal>shade</goal>
                         </goals>
-                        <configuration>
-                            <createDependencyReducedPom>false</createDependencyReducedPom>
-                        </configuration>
                     </execution>
                 </executions>
+                <configuration>
+                    <relocations>
+                        <relocation>
+                            <pattern>de.tr7zw.changeme.nbtapi</pattern>
+                            <shadedPattern>me.rrs.lib.nbtapi</shadedPattern>
+                        </relocation>
+                    </relocations>
+                </configuration>
             </plugin>
         </plugins>
         <resources>
@@ -93,12 +98,6 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.jeff_media</groupId>
-            <artifactId>CustomBlockData</artifactId>
-            <version>1.0.5</version>
-            <scope>compile</scope>
-        </dependency>
-        <dependency>
             <groupId>com.github.LoneDev6</groupId>
             <artifactId>api-itemsadder</artifactId>
             <version>3.1.6</version>
@@ -112,8 +111,8 @@
         </dependency>
         <dependency>
             <groupId>de.tr7zw</groupId>
-            <artifactId>item-nbt-api-plugin</artifactId>
-            <version>2.10.0-SNAPSHOT</version>
+            <artifactId>item-nbt-api</artifactId>
+            <version>2.10.0</version>
             <scope>compile</scope>
         </dependency>
         <dependency>

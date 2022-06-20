@@ -1,7 +1,7 @@
 package me.rrs.listeners;
 
-import de.tr7zw.nbtapi.NBTBlock;
-import de.tr7zw.nbtapi.NBTItem;
+import de.tr7zw.changeme.nbtapi.NBTBlock;
+import de.tr7zw.changeme.nbtapi.NBTItem;
 import dev.dejvokep.boostedyaml.YamlDocument;
 import me.rrs.HeadDrop;
 import me.rrs.database.head;

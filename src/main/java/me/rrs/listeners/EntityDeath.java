@@ -1,6 +1,6 @@
 package me.rrs.listeners;
 
-import de.tr7zw.nbtapi.NBTItem;
+import de.tr7zw.changeme.nbtapi.NBTItem;
 import dev.dejvokep.boostedyaml.YamlDocument;
 import dev.lone.itemsadder.api.CustomEntity;
 import io.lumine.mythic.bukkit.BukkitAPIHelper;

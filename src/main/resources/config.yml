@@ -10,7 +10,7 @@
 # %killer% will return player name who killed the mob & %mob% will return mob name which was killed (only work on Bot section)
 
 Config:
-  Version: 4.2
+  Version: 4.3
   Update-Checker: true
   Require-Killer-Player: true
   Killer-Require-Permission: false
@@ -375,5 +375,9 @@ FROG:
   Drop: true
   Chance: 100
 
+WARDEN:
+  Name: "Warden Head"
+  Drop: true
+  Chance: 100
 
 

@@ -74,7 +74,7 @@ public class HeadDrop extends JavaPlugin {
 
         getServer().getPluginManager().registerEvents(new EntityDeath(), this);
         getServer().getPluginManager().registerEvents(new PlayerJoin(), this);
-        if (version.contains("1.16.4") || version.contains("1.16.5")  || version.contains("1.17") || version.contains("1.18")){
+        if (version.contains("1.16.4") || version.contains("1.16.5")  || version.contains("1.17") || version.contains("1.18") || version.contains("1.19")){
             getServer().getPluginManager().registerEvents(new HeadRestore(), this);
         }
         getCommand("myhead").setExecutor(new MyHead());

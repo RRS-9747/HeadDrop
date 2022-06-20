@@ -1,4 +1,4 @@
-Version: 4.2
+Version: 4.3
 MyHead-Success: "Your Head added in your inventory!"
 Head-Success: "%player%'s Head added in your inventory"
 Head-Error: "You Need to give a player name to get head!"

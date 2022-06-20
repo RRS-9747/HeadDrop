@@ -19,10 +19,10 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="Maven: com.jeff_media:CustomBlockData:1.0.5" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: com.github.LoneDev6:api-itemsadder:3.1.6" level="project" />
     <orderEntry type="library" scope="PROVIDED" name="Maven: io.lumine:Mythic-Dist:5.0.3-SNAPSHOT" level="project" />
-    <orderEntry type="library" name="Maven: de.tr7zw:item-nbt-api-plugin:2.10.0-SNAPSHOT" level="project" />
+    <orderEntry type="library" name="Maven: de.tr7zw:item-nbt-api:2.10.0" level="project" />
+    <orderEntry type="library" name="Maven: de.tr7zw:functional-annotations:0.1-SNAPSHOT" level="project" />
     <orderEntry type="library" name="Maven: com.github.Sal4iDev:sDiscordWebhookJava:1.2" level="project" />
     <orderEntry type="library" name="Maven: dev.dejvokep:boosted-yaml:1.2" level="project" />
     <orderEntry type="library" name="Maven: com.googlecode.json-simple:json-simple:1.1.1" level="project" />
