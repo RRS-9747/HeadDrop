@@ -10,7 +10,6 @@ import dev.dejvokep.boostedyaml.settings.loader.LoaderSettings;
 import dev.dejvokep.boostedyaml.settings.updater.UpdaterSettings;
 import me.rrs.commands.*;
 import me.rrs.listeners.EntityDeath;
-import me.rrs.listeners.HeadRestore;
 import me.rrs.listeners.PlayerJoin;
 import me.rrs.tab.HeaddropCMD;
 import me.rrs.util.Metrics;
@@ -41,7 +40,6 @@ public class HeadDrop extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        String version = getServer().getVersion();
         instance = this;
         try {
             lang = YamlDocument.create(new File(getDataFolder(), "lang.yml"), getResource("lang.yml"),
@@ -74,9 +72,6 @@ public class HeadDrop extends JavaPlugin {
 
         getServer().getPluginManager().registerEvents(new EntityDeath(), this);
         getServer().getPluginManager().registerEvents(new PlayerJoin(), this);
-       if (version.contains("1.16.4") || version.contains("1.16.5")  || version.contains("1.17") || version.contains("1.18") || version.contains("1.19")){
-            getServer().getPluginManager().registerEvents(new HeadRestore(), this);
-        }
 
 
         getCommand("myhead").setExecutor(new MyHead());

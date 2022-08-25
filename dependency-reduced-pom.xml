@@ -4,7 +4,7 @@
   <groupId>me.rrs</groupId>
   <artifactId>HeadDrop</artifactId>
   <name>HeadDrop</name>
-  <version>4.4</version>
+  <version>4.5</version>
   <build>
     <resources>
       <resource>

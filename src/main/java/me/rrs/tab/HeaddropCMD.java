@@ -11,7 +11,7 @@ import java.util.List;
 
 public class HeaddropCMD implements TabCompleter {
 
-    List< String > results = new ArrayList< >();
+    final List< String > results = new ArrayList< >();
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command cmd, String alias, String[] args) {
