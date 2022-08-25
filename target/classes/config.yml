@@ -1,0 +1,383 @@
+# Thanks for using HeadDrop.
+# For bug report or suggestion, join https://discord.gg/fV4P2yMSgR
+
+# If Player.Require-Permission = true, player with headdrop.player permission will drop head on death.
+# Config.Require-Killer-Player = true means Killer need to be player to drop killed mob head.
+# If Config.Killer-Require-Permission = true, Player need headdrop.killer permission to let entity drop head on death.
+# Chances will not be ignored if you disable drop.
+# Chance is from 1-100. fraction number will not work.
+
+# %killer% will return player name who killed the mob & %mob% will return mob name which was killed (only work on Bot section)
+
+Config:
+  Version: 4.4
+  Update-Checker: true
+  Require-Killer-Player: true
+  Killer-Require-Permission: false
+  Disable-Worlds:
+    - demoWorld
+    - demoWorld2
+
+Bot:
+  Enable: false
+  WebHook: ""
+  Title: "HeadDrop"
+  Description: "%killer% killed %mob% and got a Head!"
+  Footer: "HeadDrop by RRS"
+
+PLAYER:
+  Drop: true
+  Chance: 100
+  Require-Permission: false
+
+AXOLOTL:
+  Name: "Axolotl Head"
+  Drop: true
+  Chance: 100
+
+BAT:
+  Name: "Bat Head"
+  Drop: true
+  Chance: 100
+
+BEE:
+  Name: "Bee Head"
+  Drop: true
+  Chance: 100
+
+BLAZE:
+  Name: "Blaze Head"
+  Drop: true
+  Chance: 100
+
+CAT:
+  Name: "Cat Head"
+  Drop: true
+  Chance: 100
+
+DOLPHIN:
+  Name: "Dolphin Head"
+  Drop: true
+  Chance: 100
+
+DROWNED:
+  Name: "Drowned Head"
+  Drop: true
+  Chance: 100
+
+SPIDER:
+  Name: "Spider Head"
+  Drop: true
+  Chance: 100
+
+CAVE_SPIDER:
+  Name: "Cave Spider Head"
+  Drop: true
+  Chance: 100
+
+CHICKEN:
+  Name: "Chicken Head"
+  Drop: true
+  Chance: 100
+
+ENDERMAN:
+  Name: "EnderMan Head"
+  Drop: true
+  Chance: 100
+
+COW:
+  Name: "Cow Head"
+  Drop: true
+  Chance: 100
+
+ENDERMITE:
+  Name: "EnderMite Head"
+  Drop: true
+  Chance: 100
+
+EVOKER:
+  Name: "Evoker Head"
+  Drop: true
+  Chance: 100
+
+DONKEY:
+  Name: "Donkey Head"
+  Drop: true
+  Chance: 100
+
+FOX:
+  Name: "Fox Head"
+  Drop: true
+  Chance: 100
+
+SHEEP:
+    Name: "Sheep Head"
+    Drop: true
+    Chance: 100
+
+GIANT:
+  Name: "Giant Head"
+  Drop: true
+  Chance: 100
+
+HOGLIN:
+  Name: "Hoglin Head"
+  Drop: true
+  Chance: 100
+
+HUSK:
+  Name: "Husk Head"
+  Drop: true
+  Chance: 100
+
+GOAT:
+  Name: "Goat Head"
+  Drop: true
+  Chance: 100
+
+IRON_GOLEM:
+  Name: "Iron Golem Head"
+  Drop: true
+  Chance: 100
+
+ILLUSIONER:
+  Name: "Illusioner Head"
+  Drop: true
+  Chance: 100
+
+HORSE:
+  Name: "Horse Head"
+  Drop: true
+  Chance: 100
+
+GUARDIAN:
+  Name: "Guardian Head"
+  Drop: true
+  Chance: 100
+
+MUSHROOM_COW:
+  Name: "Mushroom Cow Head"
+  Drop: true
+  Chance: 100
+
+OCELOT:
+  Name: "Ocelot Head"
+  Drop: true
+  Chance: 100
+
+PHANTOM:
+  Name: "Phantom Head"
+  Drop: true
+  Chance: 100
+
+GLOW_SQUID:
+  Name: "Glow Squid Head"
+  Drop: true
+  Chance: 100
+
+PIG:
+  Name: "Pig Head"
+  Drop: true
+  Chance: 100
+
+LLAMA:
+  Name: "LLAMA Head"
+  Drop: true
+  Chance: 100
+
+MULE:
+  Name: "Mule Head"
+  Drop: true
+  Chance: 100
+
+PIGLIN:
+  Name: "Piglin Head"
+  Drop: true
+  Chance: 100
+
+PIGLIN_BRUTE:
+  Name: "Piglin Brute Head"
+  Drop: true
+  Chance: 100
+
+ELDER_GUARDIAN:
+  Name: "Elder Guardian Head"
+  Drop: true
+  Chance: 100
+
+PUFFERFISH:
+  Name: "Puffer Fish Head"
+  Drop: true
+  Chance: 100
+
+SILVERFISH:
+  Name: "Silver Fish Head"
+  Drop: true
+  Chance: 100
+
+POLAR_BEAR:
+  Name: "Polar Bear Head"
+  Drop: true
+  Chance: 100
+
+SALMON:
+  Name: "Salmon Head"
+  Drop: true
+  Chance: 100
+
+SHULKER:
+  Name: "Shulker Head"
+  Drop: true
+  Chance: 100
+
+STRAY:
+  Name: "Stray Head"
+  Drop: true
+  Chance: 100
+
+STRIDER:
+  Name: "Strider Head"
+  Drop: true
+  Chance: 100
+
+SKELETON_HORSE:
+  Name: "Skeleton Horse Head"
+  Drop: true
+  Chance: 100
+
+PILLAGER:
+  Name: "Pillager Head"
+  Drop: true
+  Chance: 100
+
+SQUID:
+  Name: "Squid Head"
+  Drop: true
+  Chance: 100
+
+WANDERING_TRADER:
+  Name: "Wandering Trader Head"
+  Drop: true
+  Chance: 100
+
+TURTLE:
+  Name: "Turtle Head"
+  Drop: true
+  Chance: 100
+
+SLIME:
+  Name: "Slime Head"
+  Drop: true
+  Chance: 100
+
+COD:
+  Name: "Cod Head"
+  Drop: true
+  Chance: 100
+
+RAVAGER:
+  Name: "Ravager Head"
+  Drop: true
+  Chance: 100
+
+WITCH:
+  Name: "Witch Head"
+  Drop: true
+  Chance: 100
+
+GHAST:
+  Name: "Ghast Head"
+  Drop: true
+  Chance: 100
+
+ZOMBIE_HORSE:
+  Name: "Zombie Horse Head"
+  Drop: true
+  Chance: 100
+
+WOLF:
+  Name: "Wolf Head"
+  Drop: true
+  Chance: 100
+
+VINDICATOR:
+  Name: "Vindicator Head"
+  Drop: true
+  Chance: 100
+
+ZOGLIN:
+  Name: "Zoglin Head"
+  Drop: true
+  Chance: 100
+
+TRADER_LLAMA:
+  Name: "LLama Head"
+  Drop: true
+  Chance: 100
+
+ZOMBIE_VILLAGER:
+  Name: "Zombie Villager Head"
+  Drop: true
+  Chance: 100
+
+WITHER:
+  Name: "Witch Head"
+  Drop: true
+  Chance: 100
+
+VILLAGER:
+  Name: "Villager Head"
+  Drop: true
+  Chance: 100
+
+PARROT:
+  Name: "Parrot Head"
+  Drop: true
+  Chance: 100
+
+TROPICAL_FISH:
+  Name: "Tropical Fish Head"
+  Drop: true
+  Chance: 100
+
+VEX:
+  Name: "Vex Head"
+  Drop: true
+  Chance: 100
+
+ZOMBIFIED_PIGLIN:
+  Name: "Zombified Piglin Head"
+  Drop: true
+  Chance: 100
+
+SNOW_GOLEM:
+  Name: "Snow Golem Head"
+  Drop: true
+  Chance: 100
+
+RABBIT:
+  Name: "Rabbit Head"
+  Drop: true
+  Chance: 100
+
+ALLAY:
+  Name: "Allay Head"
+  Drop: true
+  Chance: 100
+
+TADPOLE:
+  Name: "Tadpole Head"
+  Drop: true
+  Chance: 100
+
+FROG:
+  Name: "Frog Head"
+  Drop: true
+  Chance: 100
+
+WARDEN:
+  Name: "Warden Head"
+  Drop: true
+  Chance: 100
+
+

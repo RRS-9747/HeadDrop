@@ -4,7 +4,7 @@
   <groupId>me.rrs</groupId>
   <artifactId>HeadDrop</artifactId>
   <name>HeadDrop</name>
-  <version>4.3</version>
+  <version>4.4</version>
   <build>
     <resources>
       <resource>
@@ -105,7 +105,7 @@
     <dependency>
       <groupId>org.spigotmc</groupId>
       <artifactId>spigot-api</artifactId>
-      <version>1.19-R0.1-SNAPSHOT</version>
+      <version>1.19.2-R0.1-SNAPSHOT</version>
       <scope>provided</scope>
     </dependency>
   </dependencies>

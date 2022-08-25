@@ -11,10 +11,10 @@ import org.bukkit.World;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockDropItemEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.inventory.ItemStack;
+
 
 public class HeadRestore implements Listener {
     YamlDocument config = HeadDrop.getConfiguration();
@@ -26,26 +26,21 @@ public class HeadRestore implements Listener {
     public void onHeadPlace(BlockPlaceEvent event) {
         NBTItem item = new NBTItem(event.getItemInHand());
         if (!item.getString("HeadDrop").isEmpty()) {
-                NBTBlock headBlock = new NBTBlock(event.getBlock());
-                headBlock.getData().setString("HeadDrop", item.getString("HeadDrop"));
+            NBTBlock headBlock = new NBTBlock(event.getBlock());
+            headBlock.getData().setString("HeadDrop", item.getString("HeadDrop"));
         }
 
     }
 
     @EventHandler(priority = EventPriority.HIGHEST)
-    public void onHeadDrop(BlockDropItemEvent event){
-        NBTBlock headBlock = new NBTBlock(event.getBlock());
-        if (!headBlock.getData().getString("HeadDrop").isEmpty()){
-            event.setCancelled(true);
-        }
-    }
-
-    @EventHandler(priority = EventPriority.HIGHEST)
-    public void onHeadBreak(BlockBreakEvent event) {
-
-        NBTBlock headBlock = new NBTBlock(event.getBlock());
+    public void onHeadDrop(BlockDropItemEvent event) {
         World world = event.getBlock().getWorld();
-        if (headBlock.getData().getString("HeadDrop").isEmpty()) return;
+        NBTBlock headBlock = new NBTBlock(event.getBlock());
+        if (headBlock.getData().getString("HeadDrop").isEmpty()){
+            return;
+        }else event.setCancelled(true);
+
+
         switch (headBlock.getData().getString("HeadDrop")) {
             case "BEE":
                 item = ItemUtils.rename(head.BEE, ChatColor.YELLOW + config.getString("BEE.Name"));
@@ -1008,7 +1003,14 @@ public class HeadRestore implements Listener {
                 nbtItem.setString("HeadDrop", "FROG_COLD");
 
                 break;
-        }
-        world.dropItemNaturally(event.getBlock().getLocation(), nbtItem.getItem());
+
+
+
+
+            }
+            world.dropItemNaturally(event.getBlock().getLocation(), nbtItem.getItem());
     }
 }
+
+
+
