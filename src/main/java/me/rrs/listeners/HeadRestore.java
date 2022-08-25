@@ -7,7 +7,6 @@ import me.rrs.HeadDrop;
 import me.rrs.database.head;
 import me.rrs.util.ItemUtils;
 import org.bukkit.ChatColor;
-import org.bukkit.World;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -34,7 +33,7 @@ public class HeadRestore implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onHeadDrop(BlockDropItemEvent event) {
-        World world = event.getBlock().getWorld();
+
         NBTBlock headBlock = new NBTBlock(event.getBlock());
 
         if (!headBlock.getData().getString("HeadDrop").isEmpty()) {
@@ -1002,7 +1001,6 @@ public class HeadRestore implements Listener {
                     nbtItem.setString("HeadDrop", "FROG_COLD");
 
                     break;
-
             }
 
 //            world.dropItemNaturally(event.getBlock().getLocation(), nbtItem.getItem());
