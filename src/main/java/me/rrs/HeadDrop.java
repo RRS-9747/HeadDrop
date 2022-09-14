@@ -11,7 +11,6 @@ import dev.dejvokep.boostedyaml.settings.updater.UpdaterSettings;
 import me.rrs.commands.*;
 import me.rrs.listeners.EntityDeath;
 import me.rrs.listeners.PlayerJoin;
-import me.rrs.tab.HeaddropCMD;
 import me.rrs.util.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -79,7 +78,7 @@ public class HeadDrop extends JavaPlugin {
         getCommand("headdrop").setExecutor(new MainCommand());
         getCommand("search").setExecutor(new Search());
         getCommand("customhead").setExecutor(new CustomHead());
-        getCommand("headdrop").setTabCompleter(new HeaddropCMD());
+        getCommand("headdrop").setTabCompleter(new TabComplete());
         Bukkit.getLogger().info("HeadDrop " + getDescription().getVersion() + " enabled successfully!");
     }
 

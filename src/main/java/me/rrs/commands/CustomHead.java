@@ -13,7 +13,7 @@ public class CustomHead implements CommandExecutor {
 
 
     @Override
-    public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if (sender instanceof Player){
             Player player = (Player) sender;
 
