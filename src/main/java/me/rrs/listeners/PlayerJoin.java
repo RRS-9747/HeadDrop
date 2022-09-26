@@ -19,7 +19,7 @@ public class PlayerJoin implements Listener {
     boolean hasUpdateGitHub, updateChecker;
 
     @EventHandler(priority = EventPriority.LOWEST)
-    public void onPlayerJoin(PlayerJoinEvent event) {
+    public void onPlayerJoin(final PlayerJoinEvent event) {
 
         newVersion = UpdateAPI.getGithubVersion("RRS-9747", "HeadDrop");
         hasUpdateGitHub = UpdateAPI.hasGithubUpdate("RRS-9747", "HeadDrop");

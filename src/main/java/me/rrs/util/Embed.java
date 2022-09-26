@@ -30,6 +30,5 @@ public class Embed {
         if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")){
             embed(title, description, footer);
         }else embed(title, description, footer);
-
     }
 }

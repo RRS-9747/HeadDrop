@@ -8,12 +8,13 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 
 public class MainCommand implements CommandExecutor {
     @Override
-    public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, String[] args) {
         if (sender instanceof Player){
 
             Player player = (Player) sender;
@@ -34,7 +35,6 @@ public class MainCommand implements CommandExecutor {
                 }
                 if(args[0].equalsIgnoreCase("reload")){
                     if (player.hasPermission("head.reload")) {
-
                         try {
                             HeadDrop.getLang().reload();
                             HeadDrop.getConfiguration().reload();
@@ -42,16 +42,9 @@ public class MainCommand implements CommandExecutor {
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-
-
-                    }else{
-                            Lang.noPerm(player);
-
-                    }
+                    }else Lang.noPerm(player);
                 }
-            }else{
-                player.sendMessage(ChatColor.translateAlternateColorCodes('&',"&bHeadDrop "+ HeadDrop.getInstance().getDescription().getVersion()+ "&r by RRS"));
-            }
+            }else player.sendMessage(ChatColor.translateAlternateColorCodes('&',"&bHeadDrop "+ HeadDrop.getInstance().getDescription().getVersion()+ "&r by RRS"));
         }else{
             if (args.length > 0 && args[0].equalsIgnoreCase("reload")){
                 try {
@@ -61,9 +54,7 @@ public class MainCommand implements CommandExecutor {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-
             }else Bukkit.getLogger().warning("&bHeadDrop "+ HeadDrop.getInstance().getDescription().getVersion()+ "&r by RRS");
-
         }
 
 

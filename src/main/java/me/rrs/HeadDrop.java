@@ -54,14 +54,12 @@ public class HeadDrop extends JavaPlugin {
                     DumperSettings.DEFAULT,
                     UpdaterSettings.builder().setAutoSave(true).setVersioning(new Pattern(Segment.range(1, Integer.MAX_VALUE),
                             Segment.literal("."), Segment.range(0, 10)), "Config.Version").build());
-            
-
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         if (!getDescription().getName().equals("HeadDrop")){
-            Bukkit.getLogger().severe("You can't change my name!");
+            Bukkit.getLogger().severe("Please Download a fresh jar from https://www.spigotmc.org/resources/99976/");
             Bukkit.getPluginManager().disablePlugin(this);
             return;
         }
@@ -72,12 +70,9 @@ public class HeadDrop extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new EntityDeath(), this);
         getServer().getPluginManager().registerEvents(new PlayerJoin(), this);
 
-
         getCommand("myhead").setExecutor(new MyHead());
         getCommand("head").setExecutor(new OtherHead());
         getCommand("headdrop").setExecutor(new MainCommand());
-        getCommand("search").setExecutor(new Search());
-        getCommand("customhead").setExecutor(new CustomHead());
         getCommand("headdrop").setTabCompleter(new TabComplete());
         Bukkit.getLogger().info("HeadDrop " + getDescription().getVersion() + " enabled successfully!");
     }
@@ -85,7 +80,7 @@ public class HeadDrop extends JavaPlugin {
 
     @Override
     public void onDisable() {
-        Bukkit.getLogger().warning("HeadDrop Disabled.");
+        Bukkit.getLogger().info("HeadDrop Disabled.");
 
     }
 

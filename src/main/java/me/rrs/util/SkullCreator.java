@@ -2,10 +2,9 @@ package me.rrs.util;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
+import me.rrs.HeadDrop;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
-import org.bukkit.block.Block;
-import org.bukkit.block.Skull;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 
@@ -16,8 +15,6 @@ import java.util.UUID;
 
 public class SkullCreator {
 
-	private SkullCreator() {}
-
 	private static boolean warningPosted = false;
 
 	private static Method metaSetProfileMethod;
@@ -25,14 +22,12 @@ public class SkullCreator {
 
 	public static ItemStack createSkull() {
 		checkLegacy();
-
 		try {
 			return new ItemStack(Material.valueOf("PLAYER_HEAD"));
 		} catch (IllegalArgumentException e) {
 			return new ItemStack(Material.valueOf("SKULL_ITEM"), 1, (byte) 3);
 		}
 	}
-
 
 	public static ItemStack itemFromName(String name) {
 		return itemWithName(createSkull(), name);
@@ -43,11 +38,7 @@ public class SkullCreator {
 		return itemWithBase64(createSkull(), base64);
 	}
 
-	@Deprecated
-	public static ItemStack itemWithName(ItemStack item, String name) {
-		notNull(item, "item");
-		notNull(name, "name");
-
+	private static ItemStack itemWithName(ItemStack item, String name) {
 		SkullMeta meta = (SkullMeta) item.getItemMeta();
 		meta.setOwner(name);
 		item.setItemMeta(meta);
@@ -55,8 +46,7 @@ public class SkullCreator {
 		return item;
 	}
 
-
-	public static ItemStack itemWithBase64(ItemStack item, String base64) {
+	private static ItemStack itemWithBase64(ItemStack item, String base64) {
 		notNull(item, "item");
 		notNull(base64, "base64");
 
@@ -68,16 +58,6 @@ public class SkullCreator {
 		item.setItemMeta(meta);
 
 		return item;
-	}
-
-	@Deprecated
-	public static void blockWithName(Block block, String name) {
-		notNull(block, "block");
-		notNull(name, "name");
-
-		Skull state = (Skull) block.getState();
-		state.setOwningPlayer(Bukkit.getOfflinePlayer(name));
-		state.update(false, false);
 	}
 
 	private static void notNull(Object o, String name) {
