@@ -2,7 +2,6 @@ package me.rrs.util;
 
 import com.mojang.authlib.GameProfile;
 import com.mojang.authlib.properties.Property;
-import me.rrs.HeadDrop;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
@@ -15,11 +14,11 @@ import java.util.UUID;
 
 public class SkullCreator {
 
-	private static boolean warningPosted = false;
+	private SkullCreator() {}
 
+	private static boolean warningPosted = false;
 	private static Method metaSetProfileMethod;
 	private static Field metaProfileField;
-
 	public static ItemStack createSkull() {
 		checkLegacy();
 		try {
@@ -33,12 +32,14 @@ public class SkullCreator {
 		return itemWithName(createSkull(), name);
 	}
 
-
 	public static ItemStack itemFromBase64(String base64) {
 		return itemWithBase64(createSkull(), base64);
 	}
+	@Deprecated
+	public static ItemStack itemWithName(ItemStack item, String name) {
+		notNull(item, "item");
+		notNull(name, "name");
 
-	private static ItemStack itemWithName(ItemStack item, String name) {
 		SkullMeta meta = (SkullMeta) item.getItemMeta();
 		meta.setOwner(name);
 		item.setItemMeta(meta);
@@ -46,7 +47,7 @@ public class SkullCreator {
 		return item;
 	}
 
-	private static ItemStack itemWithBase64(ItemStack item, String base64) {
+	public static ItemStack itemWithBase64(ItemStack item, String base64) {
 		notNull(item, "item");
 		notNull(base64, "base64");
 
@@ -77,6 +78,7 @@ public class SkullCreator {
 	}
 
 	private static void mutateItemMeta(SkullMeta meta, String b64) {
+
 		try {
 			if (metaSetProfileMethod == null) {
 				metaSetProfileMethod = meta.getClass().getDeclaredMethod("setProfile", GameProfile.class);
@@ -103,7 +105,7 @@ public class SkullCreator {
 			Material.valueOf("SKULL");
 
 			if (!warningPosted) {
-				Bukkit.getLogger().warning("HeadDrop - Using the legacy bukkit API with 1.13+ bukkit versions is not supported!");
+				Bukkit.getLogger().warning("[HeadDrop] - Using the legacy bukkit API with 1.13+ bukkit versions is not supported!");
 				warningPosted = true;
 			}
 		} catch (NoSuchFieldException | IllegalArgumentException ignored) {}

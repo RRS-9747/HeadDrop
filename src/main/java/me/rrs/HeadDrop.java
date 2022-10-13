@@ -12,8 +12,11 @@ import me.rrs.commands.*;
 import me.rrs.listeners.EntityDeath;
 import me.rrs.listeners.PlayerJoin;
 import me.rrs.util.Metrics;
+import me.rrs.util.UpdateAPI;
 import org.bukkit.Bukkit;
+import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
 import java.io.IOException;
@@ -38,7 +41,7 @@ public class HeadDrop extends JavaPlugin {
 
 
     @Override
-    public void onEnable() {
+    public void onLoad(){
         instance = this;
         try {
             lang = YamlDocument.create(new File(getDataFolder(), "lang.yml"), getResource("lang.yml"),
@@ -57,12 +60,26 @@ public class HeadDrop extends JavaPlugin {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+    @Override
+    public void onEnable() {
 
         if (!getDescription().getName().equals("HeadDrop")){
             Bukkit.getLogger().severe("Please Download a fresh jar from https://www.spigotmc.org/resources/99976/");
             Bukkit.getPluginManager().disablePlugin(this);
             return;
         }
+
+        Bukkit.getLogger().info("");
+        Bukkit.getLogger().info("██╗  ██╗███████╗ █████╗ ██████╗ ██████╗ ██████╗  █████╗ ██████╗ ");
+        Bukkit.getLogger().info("██║  ██║██╔════╝██╔══██╗██╔══██╗██╔══██╗██╔══██╗██╔══██╗██╔══██╗");
+        Bukkit.getLogger().info("███████║█████╗  ███████║██║  ██║██║  ██║██████╔╝██║  ██║██████╔╝");
+        Bukkit.getLogger().info("██╔══██║██╔══╝  ██╔══██║██║  ██║██║  ██║██╔══██╗██║  ██║██╔═══╝ ");
+        Bukkit.getLogger().info("██║  ██║███████╗██║  ██║██████╔╝██████╔╝██║  ██║╚█████╔╝██║     ");
+        Bukkit.getLogger().info("╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝ ╚═════╝ ╚═╝  ╚═╝ ╚════╝ ╚═╝     ");
+        Bukkit.getLogger().info("");
+        Bukkit.getLogger().info("--------------------------------------------------------------------------");
+        Bukkit.getLogger().info("[HeadDrop] HeadDrop " + getDescription().getVersion()+ " by RRS");
 
         Metrics metrics = new Metrics(this, 13554);
         metrics.addCustomChart(new Metrics.SimplePie("discord_bot", () -> String.valueOf(getConfig().getBoolean("Bot.Enable"))));
@@ -75,15 +92,37 @@ public class HeadDrop extends JavaPlugin {
         getCommand("headdrop").setExecutor(new MainCommand());
         getCommand("headdrop").setTabCompleter(new TabComplete());
         Bukkit.getLogger().info("HeadDrop " + getDescription().getVersion() + " enabled successfully!");
-    }
+        updateChecker();
 
+        Bukkit.getLogger().info("[HeadDrop] Enabled successfully!");
+        Bukkit.getLogger().info("--------------------------------------------------------------------------");
+    }
 
     @Override
     public void onDisable() {
         Bukkit.getLogger().info("HeadDrop Disabled.");
-
     }
 
+    public void updateChecker(){
+        UpdateAPI updateAPI = new UpdateAPI();
+        new BukkitRunnable(){
+            @Override
+            public void run() {
+                if (updateAPI.hasGithubUpdate("RRS-9747", "HeadDrop")) {
+                    for (Player p : Bukkit.getOnlinePlayers()) {
+                        if (p.hasPermission("headdrop.notify")) {
+                            p.sendMessage("--------------------------------");
+                            p.sendMessage("You are using HeadDrop " + getDescription().getVersion());
+                            p.sendMessage("However version " + updateAPI.getGithubVersion("RRS-9747", "HeadDrop") + " is available.");
+                            p.sendMessage("You can download it from: " + "https://www.spigotmc.org/resources/99976/");
+                            p.sendMessage("--------------------------------");
+                        }
+                    }
+                }
+
+            }
+        }.runTaskTimerAsynchronously(this, 0L, 20L * 60 * config.getInt("Config.Update-Checker-Interval"));
+    }
 
 
 }

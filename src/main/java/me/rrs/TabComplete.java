@@ -17,12 +17,10 @@ public class TabComplete implements TabCompleter {
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, Command cmd, @NotNull String alias, @NotNull String[] args) {
 
-        if (cmd.getName().equals("headdrop")){
-            if (args.length == 1) {
+        if (cmd.getName().equals("headdrop") && args.length ==1){
                 results.clear();
                 results.add("help");
                 results.add("reload");
-            }
         }
         return sortedResults(args[0]);
     }

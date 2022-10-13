@@ -11,7 +11,7 @@
 
 Config:
   Version: ${project.version}
-  Update-Checker: true
+  Update-Checker-Interval: 10 # In Minute.
   Require-Killer-Player: true
   Killer-Require-Permission: false
   Disable-Worlds:
@@ -30,6 +30,22 @@ PLAYER:
   Drop: true
   Chance: 100
   Require-Permission: false
+
+ZOMBIE:
+  Drop: true
+  Chance: 100
+
+WITHER_SKELETON:
+  Drop: true
+  Chance: 100
+
+CREEPER:
+  Drop: true
+  Chance: 100
+
+SKELETON:
+  Drop: true
+  Chance: 100
 
 AXOLOTL:
   Name: "Axolotl"

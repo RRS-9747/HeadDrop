@@ -32,8 +32,7 @@ public class MainCommand implements CommandExecutor {
                     player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&9>&r &l/customhead <base64>&r -> Get head from base64."));
                     player.sendMessage(ChatColor.translateAlternateColorCodes('&', "&9>&r &l/updatehd&r -> Auto update the plugin."));
 
-                }
-                if(args[0].equalsIgnoreCase("reload")){
+                }else if (args[0].equalsIgnoreCase("reload")) {
                     if (player.hasPermission("head.reload")) {
                         try {
                             HeadDrop.getLang().reload();
@@ -56,8 +55,6 @@ public class MainCommand implements CommandExecutor {
                 }
             }else Bukkit.getLogger().warning("&bHeadDrop "+ HeadDrop.getInstance().getDescription().getVersion()+ "&r by RRS");
         }
-
-
         return true;
     }
 }
