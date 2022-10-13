@@ -20,10 +20,8 @@ public class PlayerJoin implements Listener {
         DateFormat dateFormat = new SimpleDateFormat("dd/MM");
         String currentDate = dateFormat.format(date);
 
-        if (currentDate.equals("12/12")){
-            if (event.getPlayer().hasPermission("HeadDrop.notify")){
-                event.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', "&a&l[HeadDrop]&r Today is my Birthday :D Leave a review on spigot as a gift :3"));
-            }
+        if (currentDate.equals("12/12") && event.getPlayer().hasPermission("HeadDrop.notify")){
+            event.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', "&a&l[HeadDrop]&r Today is my Birthday :D Leave a review on spigot as a gift :3"));
         }
     }
 }

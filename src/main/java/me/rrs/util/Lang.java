@@ -9,13 +9,13 @@ import org.bukkit.entity.Player;
 public class Lang {
 
 
-    public static void msg(String prefix, String path, Player player){
+    public void msg(String prefix, String path, Player player){
         if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")){
             player.sendMessage(PlaceholderAPI.setPlaceholders(player, ChatColor.translateAlternateColorCodes('&', prefix + " " + HeadDrop.getLang().getString(path))));
         }else player.sendMessage(ChatColor.translateAlternateColorCodes('&',prefix + " " + HeadDrop.getLang().getString(path)));
     }
 
-    public static void msg(String prefix, String path, String placeholder, String obj, Player player){
+    public void msg(String prefix, String path, String placeholder, String obj, Player player){
         String s = HeadDrop.getLang().getString(path).replaceAll(placeholder, obj);
         if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")){
             player.sendMessage(PlaceholderAPI.setPlaceholders(player, ChatColor.translateAlternateColorCodes('&', prefix + " " + s)));
@@ -23,11 +23,11 @@ public class Lang {
     }
 
 
-    public static void noPerm(Player player){
+    public void noPerm(Player player){
         msg("&c&l[HeadDrop]&r", "Permission-Error", player);
     }
 
-    public static void pcmd(){
+    public void pcmd(){
         Bukkit.getLogger().severe(ChatColor.translateAlternateColorCodes('&', HeadDrop.getLang().getString("Player-Command")));
 
     }

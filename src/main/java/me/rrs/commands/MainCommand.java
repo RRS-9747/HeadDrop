@@ -13,6 +13,8 @@ import org.jetbrains.annotations.NotNull;
 import java.io.IOException;
 
 public class MainCommand implements CommandExecutor {
+
+    Lang lang = new Lang();
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, String[] args) {
         if (sender instanceof Player){
@@ -37,11 +39,11 @@ public class MainCommand implements CommandExecutor {
                         try {
                             HeadDrop.getLang().reload();
                             HeadDrop.getConfiguration().reload();
-                            Lang.msg("&a&l[HeadDrop]&r", "Reload", player);
+                            lang.msg("&a&l[HeadDrop]&r", "Reload", player);
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-                    }else Lang.noPerm(player);
+                    }else lang.noPerm(player);
                 }
             }else player.sendMessage(ChatColor.translateAlternateColorCodes('&',"&bHeadDrop "+ HeadDrop.getInstance().getDescription().getVersion()+ "&r by RRS"));
         }else{

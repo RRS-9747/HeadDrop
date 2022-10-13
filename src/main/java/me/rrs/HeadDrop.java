@@ -109,11 +109,12 @@ public class HeadDrop extends JavaPlugin {
             @Override
             public void run() {
                 if (updateAPI.hasGithubUpdate("RRS-9747", "HeadDrop")) {
+                    String newVersion = updateAPI.getGithubVersion("RRS-9747", "HeadDrop");
                     for (Player p : Bukkit.getOnlinePlayers()) {
                         if (p.hasPermission("headdrop.notify")) {
                             p.sendMessage("--------------------------------");
                             p.sendMessage("You are using HeadDrop " + getDescription().getVersion());
-                            p.sendMessage("However version " + updateAPI.getGithubVersion("RRS-9747", "HeadDrop") + " is available.");
+                            p.sendMessage("However version " + newVersion + " is available.");
                             p.sendMessage("You can download it from: " + "https://www.spigotmc.org/resources/99976/");
                             p.sendMessage("--------------------------------");
                         }

@@ -10,7 +10,7 @@ import java.io.IOException;
 
 public class Embed {
 
-    protected static void embed(String Title, String Description, String Footer){
+    private void embed(String Title, String Description, String Footer){
 
         SDiscordWebhook webhook = new SDiscordWebhook(HeadDrop.getConfiguration().getString("Bot.WebHook"));
 
@@ -26,7 +26,7 @@ public class Embed {
         }
     }
 
-    public static void msg(String title, String description, String footer) {
+    public void msg(String title, String description, String footer) {
         if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")){
             embed(title, description, footer);
         }else embed(title, description, footer);

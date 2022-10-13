@@ -9,8 +9,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-
 public class MyHead implements CommandExecutor {
+
+    Lang lang = new Lang();
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, String[] args) {
@@ -21,9 +22,9 @@ public class MyHead implements CommandExecutor {
 
             if (player.hasPermission("headdrop.ownhead")) {
                 player.getInventory().addItem(skull);
-                Lang.msg("&a&l[HeadDrop]&r", "MyHead-Success", player);
-            }else Lang.noPerm(player);
-        }else Lang.pcmd();
+                lang.msg("&a&l[HeadDrop]&r", "MyHead-Success", player);
+            }else lang.noPerm(player);
+        }else lang.pcmd();
 
 
         return true;

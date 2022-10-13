@@ -108,6 +108,6 @@ public class SkullCreator {
 				Bukkit.getLogger().warning("[HeadDrop] - Using the legacy bukkit API with 1.13+ bukkit versions is not supported!");
 				warningPosted = true;
 			}
-		} catch (NoSuchFieldException | IllegalArgumentException ignored) {}
+		} catch (NoSuchFieldException | IllegalArgumentException ignored){}
 	}
 }
