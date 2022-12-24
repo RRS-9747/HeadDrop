@@ -1,6 +1,6 @@
 name: HeadDrop
 version: '${project.version}'
-main: me.rrs.HeadDrop
+main: me.rrs.headdrop.HeadDrop
 api-version: 1.13
 author: RRS
 prefix: HeadDrop
