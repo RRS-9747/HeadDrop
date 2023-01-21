@@ -7,10 +7,6 @@
  ![](https://img.shields.io/github/languages/code-size/RRS-9747/Headdrop?style=for-the-badge "Code size in bytes")
 [![CodeFactor](https://img.shields.io/codefactor/grade/github/RRS-9747/HeadDrop?style=for-the-badge)](https://www.codefactor.io/repository/github/rrs-9747/HeadDrop)<br>
 
-### Sonar Status
-
-[![](https://sonarcloud.io/api/project_badges/measure?project=RRS-9747_HeadDrop&metric=alert_status)](https://sonarcloud.io/dashboard?id=RRS-9747_HeadDrop)[![](https://sonarcloud.io/api/project_badges/measure?project=RRS-9747_HeadDrop&metric=ncloc)](https://sonarcloud.io/dashboard?id=RRS-9747_HeadDrop)[![](https://sonarcloud.io/api/project_badges/measure?project=RRS-9747_HeadDrop&metric=duplicated_lines_density)](https://sonarcloud.io/dashboard?id=RRS-9747_HeadDrop)[![](https://sonarcloud.io/api/project_badges/measure?project=RRS-9747_HeadDrop&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=RRS-9747_HeadDrop)
-
 A head plugin for minecraft java
 
 
