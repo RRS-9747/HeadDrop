@@ -337,6 +337,10 @@ ZOMBIE_VILLAGER:
   Drop: true
   Chance: 100
 
+ENDER_DRAGON:
+  Drop: true
+  Chance: 100
+
 WITHER:
   Name: "Witch"
   Drop: true

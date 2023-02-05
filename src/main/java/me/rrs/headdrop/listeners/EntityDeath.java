@@ -12,7 +12,6 @@ import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.*;
-import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -29,9 +28,7 @@ public class EntityDeath implements Listener {
 
     final Random random = new Random();
     final YamlDocument config = HeadDrop.getConfiguration();
-    String title;
-    String description;
-    String footer;
+    String description, footer, title;
     ItemUtils utils = new ItemUtils();
     Embed embed = new Embed();
     PersistentDataContainer container;
@@ -71,7 +68,7 @@ public class EntityDeath implements Listener {
                 entity.getKiller().getInventory().getItemInMainHand().getEnchantmentLevel(Enchantment.LOOT_BONUS_MOBS) : 0;
 
 
-        if (!entity.getPersistentDataContainer().getKeys().isEmpty()) return;
+        if (!entity.getPersistentDataContainer().getKeys().isEmpty() && entity.getType() != EntityType.PLAYER) return;
 
         if (config.getBoolean("Config.Require-Killer-Player") && entity.getKiller() == null) return;
 
@@ -87,9 +84,9 @@ public class EntityDeath implements Listener {
         int x = this.random.nextInt(100) + 1;
         ItemStack item;
 
-        if (type == EntityType.PLAYER) {
-            if ((config.getBoolean("PLAYER.Require-Permission"))
-                    && !entity.hasPermission("headdrop.player")){
+
+        if (type.equals(EntityType.valueOf("PLAYER"))) {
+            if ((config.getBoolean("PLAYER.Require-Permission")) && !entity.hasPermission("headdrop.player")){
                 return;
             }
             if ((config.getBoolean("PLAYER.Drop")) && x <= config.getInt("PLAYER.Chance") + lootLvl) {
@@ -105,6 +102,14 @@ public class EntityDeath implements Listener {
             if ((config.getBoolean("BAT.Drop")) && x <= config.getInt("BAT.Chance") + lootLvl) {
                 item = utils.rename(EntityHead.BAT.getItemStack(), config.getString("BAT.Name"));
                 event.getDrops().add(item);
+                if (killerExist){
+                    updatePDC(entity.getKiller());
+                }
+                if ((config.getBoolean("Bot.Enable"))) embed.msg(title, description, footer);
+            }
+        }else if (type == EntityType.ENDER_DRAGON) {
+            if ((config.getBoolean("ENDER_DRAGON.Drop")) && x <= config.getInt("ENDER_DRAGON.Chance") + lootLvl) {
+                event.getDrops().add(new ItemStack(Material.DRAGON_HEAD));
                 if (killerExist){
                     updatePDC(entity.getKiller());
                 }
