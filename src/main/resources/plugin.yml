@@ -6,6 +6,7 @@ author: RRS
 prefix: HeadDrop
 softdepend:
   - PlaceholderAPI
+  - CentralBot
 commands:
   head:
     aliases:

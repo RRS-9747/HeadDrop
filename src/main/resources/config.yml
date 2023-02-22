@@ -7,7 +7,7 @@
 # Chances will be ignored if you disable drop.
 # Chance is from 1-100. fraction number will not work.
 
-# %killer% will return player name who killed the mob & %mob% will return mob name which was killed (only work on Bot section)
+# {KILLER} will return player name who killed the mob, {MOB} will return mob name which was killed (only work on Bot section)
 
 Config:
   Version: ${project.version}
@@ -21,9 +21,9 @@ Config:
 
 Bot:
   Enable: false
-  WebHook: ""
+  Channel: ""
   Title: "HeadDrop"
-  Description: "%killer% killed %mob% and got a!"
+  Description: "{KILLER} killed {MOB} and got a head!"
   Footer: "HeadDrop by RRS"
 
 PLAYER:

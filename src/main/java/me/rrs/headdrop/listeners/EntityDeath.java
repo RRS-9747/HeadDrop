@@ -26,11 +26,8 @@ import java.util.Random;
 
 public class EntityDeath implements Listener {
 
-    final Random random = new Random();
     final YamlDocument config = HeadDrop.getConfiguration();
-    String description, footer, title;
     ItemUtils utils = new ItemUtils();
-    Embed embed = new Embed();
     PersistentDataContainer container;
 
     private void updatePDC(Player player){
@@ -45,6 +42,12 @@ public class EntityDeath implements Listener {
     @EventHandler(priority = EventPriority.HIGH)
     public void entityDropHeadEvent(final EntityDeathEvent event) {
 
+        Embed embed = new Embed();
+
+        String description = null, footer = null, title = null;
+        final Random random = new Random();
+        int x = random.nextInt(101);
+
         final LivingEntity entity = event.getEntity();
         boolean killerExist = entity.getKiller() != null;
 
@@ -53,9 +56,9 @@ public class EntityDeath implements Listener {
             String killerName = entity.getKiller().getName();
             String mobName = entity.getName();
 
-            title = config.getString("Bot.Title").replace("%killer%", killerName).replace("%mob%", mobName);
-            description = config.getString("Bot.Description").replace("%killer%", killerName).replace("%mob%", mobName);
-            footer = config.getString("Bot.Footer").replace("%killer%", killerName).replace("%mob%", mobName);
+            title = config.getString("Bot.Title").replace("{KILLER}", killerName).replace("{MOB}", mobName);
+            description = config.getString("Bot.Description").replace("{KILLER}", killerName).replace("{MOB}", mobName);
+            footer = config.getString("Bot.Footer").replace("{KILLER}", killerName).replace("{MOB}", mobName);
 
             boolean placeholdersEnabled = Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI");
 
@@ -81,7 +84,6 @@ public class EntityDeath implements Listener {
 
         EntityType type = entity.getType();
 
-        int x = this.random.nextInt(100) + 1;
         ItemStack item;
 
 
@@ -95,8 +97,7 @@ public class EntityDeath implements Listener {
                 if (killerExist){
                     updatePDC(entity.getKiller());
                 }
-
-                if ((config.getBoolean("Bot.Enable"))) embed.msg(title, description, footer);
+                if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) embed.msg(title, description, footer);
                 }
         }else if (type == EntityType.BAT) {
             if ((config.getBoolean("BAT.Drop")) && x <= config.getInt("BAT.Chance") + lootLvl) {
@@ -105,7 +106,7 @@ public class EntityDeath implements Listener {
                 if (killerExist){
                     updatePDC(entity.getKiller());
                 }
-                if ((config.getBoolean("Bot.Enable"))) embed.msg(title, description, footer);
+                if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) embed.msg(title, description, footer);
             }
         }else if (type == EntityType.ENDER_DRAGON) {
             if ((config.getBoolean("ENDER_DRAGON.Drop")) && x <= config.getInt("ENDER_DRAGON.Chance") + lootLvl) {
@@ -113,7 +114,7 @@ public class EntityDeath implements Listener {
                 if (killerExist){
                     updatePDC(entity.getKiller());
                 }
-                if ((config.getBoolean("Bot.Enable"))) embed.msg(title, description, footer);
+                if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) embed.msg(title, description, footer);
             }
         }else if(type == EntityType.ZOMBIE){
             if ((config.getBoolean("ZOMBIE.Drop")) && x <= config.getInt("ZOMBIE.Chance") + lootLvl) {
@@ -122,7 +123,7 @@ public class EntityDeath implements Listener {
                 if (killerExist){
                     updatePDC(entity.getKiller());
                 }
-                if ((config.getBoolean("Bot.Enable"))) embed.msg(title, description, footer);
+                if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) embed.msg(title, description, footer);
             }
         }else if(type == EntityType.WITHER_SKELETON){
                 if ((config.getBoolean("WITHER_SKELETON.Drop")) && x <= config.getInt("WITHER_SKELETON.Chance") + lootLvl) {
@@ -132,7 +133,7 @@ public class EntityDeath implements Listener {
                         updatePDC(entity.getKiller());
                     }
 
-                    if ((config.getBoolean("Bot.Enable"))) embed.msg(title, description, footer);
+                    if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) embed.msg(title, description, footer);
                 }
         }else if(type == EntityType.CREEPER){
             if ((config.getBoolean("CREEPER.Drop")) && x <= config.getInt("CREEPER.Chance") + lootLvl) {
@@ -142,7 +143,7 @@ public class EntityDeath implements Listener {
                     updatePDC(entity.getKiller());
                 }
 
-                if ((config.getBoolean("Bot.Enable"))) embed.msg(title, description, footer);
+                if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) embed.msg(title, description, footer);
             }
         }else if(type == EntityType.SKELETON){
             if ((config.getBoolean("SKELETON.Drop")) && x <= config.getInt("SKELETON.Chance") + lootLvl) {
@@ -152,7 +153,7 @@ public class EntityDeath implements Listener {
                     updatePDC(entity.getKiller());
                 }
 
-                if ((config.getBoolean("Bot.Enable"))) embed.msg(title, description, footer);
+                if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) embed.msg(title, description, footer);
             }
         }else if (type == EntityType.BLAZE) {
             if ((config.getBoolean("BLAZE.Drop")) && x <= config.getInt("BLAZE.Chance") + lootLvl) {
@@ -162,7 +163,7 @@ public class EntityDeath implements Listener {
                     updatePDC(entity.getKiller());
                 }
 
-                if ((config.getBoolean("Bot.Enable"))) embed.msg(title, description, footer);
+                if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) embed.msg(title, description, footer);
             }
         }else if (type == EntityType.SPIDER) {
             if ((config.getBoolean("SPIDER.Drop")) && x <= config.getInt("SPIDER.Chance") + lootLvl) {
@@ -172,7 +173,7 @@ public class EntityDeath implements Listener {
                     updatePDC(entity.getKiller());
                 }
 
-                if ((config.getBoolean("Bot.Enable"))) embed.msg(title, description, footer);
+                if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) embed.msg(title, description, footer);
             }
         }else if (type == EntityType.CAVE_SPIDER) {
             if ((config.getBoolean("CAVE_SPIDER.Drop")) && x <= config.getInt("CAVE_SPIDER.Chance") + lootLvl) {
@@ -182,7 +183,7 @@ public class EntityDeath implements Listener {
                     updatePDC(entity.getKiller());
                 }
 
-                if ((config.getBoolean("Bot.Enable"))) embed.msg(title, description, footer);
+                if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) embed.msg(title, description, footer);
             }
         } else if (type == EntityType.CHICKEN) {
             if ((config.getBoolean("CHICKEN.Drop")) && x <= config.getInt("CHICKEN.Chance") + lootLvl) {
@@ -192,7 +193,7 @@ public class EntityDeath implements Listener {
                     updatePDC(entity.getKiller());
                 }
 
-                if ((config.getBoolean("Bot.Enable"))) embed.msg(title, description, footer);
+                if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) embed.msg(title, description, footer);
             }
         } else if (type == EntityType.COW) {
             if ((config.getBoolean("COW.Drop")) && x <= config.getInt("COW.Chance") + lootLvl) {
@@ -202,7 +203,7 @@ public class EntityDeath implements Listener {
                     updatePDC(entity.getKiller());
                 }
 
-                if ((config.getBoolean("Bot.Enable"))) embed.msg(title, description, footer);
+                if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) embed.msg(title, description, footer);
             }
         } else if (type == EntityType.ENDERMAN) {
             if ((config.getBoolean("ENDERMAN.Drop")) && x <= config.getInt("ENDERMAN.Chance") + lootLvl) {
@@ -212,7 +213,7 @@ public class EntityDeath implements Listener {
                     updatePDC(entity.getKiller());
                 }
 
-                if ((config.getBoolean("Bot.Enable"))) embed.msg(title, description, footer);
+                if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) embed.msg(title, description, footer);
             }
         } else if (type == EntityType.GIANT) {
             if ((config.getBoolean("GIANT.Drop")) && x <= config.getInt("GIANT.Chance") + lootLvl) {
@@ -222,7 +223,7 @@ public class EntityDeath implements Listener {
                     updatePDC(entity.getKiller());
                 }
 
-                if ((config.getBoolean("Bot.Enable"))) embed.msg(title, description, footer);
+                if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) embed.msg(title, description, footer);
             }
         } else if (type == EntityType.HORSE) {
             if ((config.getBoolean("HORSE.Drop")) && x <= config.getInt("HORSE.Chance") + lootLvl) {
@@ -287,7 +288,7 @@ public class EntityDeath implements Listener {
 
                         break;
                 }
-                if ((config.getBoolean("Bot.Enable"))) embed.msg(title, description, footer);
+                if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) embed.msg(title, description, footer);
             }
         } else if (type == EntityType.ILLUSIONER) {
             if ((config.getBoolean("ILLUSIONER.Drop")) && x <= config.getInt("ILLUSIONER.Chance") + lootLvl) {
@@ -297,7 +298,7 @@ public class EntityDeath implements Listener {
                     updatePDC(entity.getKiller());
                 }
 
-                if ((config.getBoolean("Bot.Enable"))) embed.msg(title, description, footer);
+                if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) embed.msg(title, description, footer);
             }
         } else if (type == EntityType.IRON_GOLEM) {
             if ((config.getBoolean("IRON_GOLEM.Drop")) && x <= config.getInt("IRON_GOLEM.Chance") + lootLvl) {
@@ -307,7 +308,7 @@ public class EntityDeath implements Listener {
                     updatePDC(entity.getKiller());
                 }
 
-                if ((config.getBoolean("Bot.Enable"))) embed.msg(title, description, footer);
+                if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) embed.msg(title, description, footer);
             }
         } else if (type == EntityType.MAGMA_CUBE) {
             if ((config.getBoolean("MAGMA_CUBE.Drop")) && x <= config.getInt("MAGMA_CUBE.Chance") + lootLvl) {
@@ -317,7 +318,7 @@ public class EntityDeath implements Listener {
                     updatePDC(entity.getKiller());
                 }
 
-                if ((config.getBoolean("Bot.Enable"))) embed.msg(title, description, footer);
+                if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) embed.msg(title, description, footer);
             }
         } else if (type == EntityType.MUSHROOM_COW) {
             if ((config.getBoolean("MUSHROOM_COW.Drop")) && x <= config.getInt("MUSHROOM_COW.Chance") + lootLvl) {
@@ -335,7 +336,7 @@ public class EntityDeath implements Listener {
                         updatePDC(entity.getKiller());
                     }
                 }
-                if ((config.getBoolean("Bot.Enable"))) embed.msg(title, description, footer);
+                if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) embed.msg(title, description, footer);
             }
         } else if (type == EntityType.OCELOT) {
             if ((config.getBoolean("OCELOT.Drop")) && x <= config.getInt("OCELOT.Chance") + lootLvl) {
@@ -345,7 +346,7 @@ public class EntityDeath implements Listener {
                     updatePDC(entity.getKiller());
                 }
 
-                if ((config.getBoolean("Bot.Enable"))) embed.msg(title, description, footer);
+                if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) embed.msg(title, description, footer);
             }
         } else if (type == EntityType.PIG) {
             if ((config.getBoolean("PIG.Drop")) && x <= config.getInt("PIG.Chance") + lootLvl) {
@@ -355,7 +356,7 @@ public class EntityDeath implements Listener {
                     updatePDC(entity.getKiller());
                 }
 
-                if ((config.getBoolean("Bot.Enable"))) embed.msg(title, description, footer);
+                if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) embed.msg(title, description, footer);
             }
         } else if (type == EntityType.SHEEP) {
             if ((config.getBoolean("SHEEP.Drop")) && x <= config.getInt("SHEEP.Chance") + lootLvl) {
@@ -496,7 +497,7 @@ public class EntityDeath implements Listener {
                         Bukkit.getLogger().severe("If you notice this error, pls report it to plugin author");
                         throw new IllegalStateException("Unexpected value: " + sheep.getColor());
                 }
-                if ((config.getBoolean("Bot.Enable"))) embed.msg(title, description, footer);
+                if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) embed.msg(title, description, footer);
             }
         } else if (type == EntityType.SILVERFISH) {
             if ((config.getBoolean("SILVERFISH.Drop")) && x <= config.getInt("SILVERFISH.Chance") + lootLvl) {
@@ -505,7 +506,7 @@ public class EntityDeath implements Listener {
                 if (killerExist){
                     updatePDC(entity.getKiller());
                 }
-                if ((config.getBoolean("Bot.Enable"))) embed.msg(title, description, footer);
+                if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) embed.msg(title, description, footer);
             }
         } else if (type == EntityType.SLIME) {
             if ((config.getBoolean("SLIME.Drop")) && x <= config.getInt("SLIME.Chance") + lootLvl) {
@@ -514,7 +515,7 @@ public class EntityDeath implements Listener {
                 if (killerExist){
                     updatePDC(entity.getKiller());
                 }
-                if ((config.getBoolean("Bot.Enable"))) embed.msg(title, description, footer);
+                if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) embed.msg(title, description, footer);
             }
         } else if (type == EntityType.SNOWMAN) {
             if ((config.getBoolean("SNOW_GOLEM.Drop")) && x <= config.getInt("SNOW_GOLEM.Chance") + lootLvl) {
@@ -523,7 +524,7 @@ public class EntityDeath implements Listener {
                 if (killerExist){
                     updatePDC(entity.getKiller());
                 }
-                if ((config.getBoolean("Bot.Enable"))) embed.msg(title, description, footer);
+                if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) embed.msg(title, description, footer);
             }
         } else if (type == EntityType.SQUID) {
             if ((config.getBoolean("SQUID.Drop")) && x <= config.getInt("SQUID.Chance") + lootLvl) {
@@ -532,7 +533,7 @@ public class EntityDeath implements Listener {
                 if (killerExist){
                     updatePDC(entity.getKiller());
                 }
-                if ((config.getBoolean("Bot.Enable"))) embed.msg(title, description, footer);
+                if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) embed.msg(title, description, footer);
             }
         } else if (type == EntityType.WITCH) {
             if ((config.getBoolean("WITCH.Drop")) && x <= config.getInt("WITCH.Chance") + lootLvl) {
@@ -541,7 +542,7 @@ public class EntityDeath implements Listener {
                 if (killerExist){
                     updatePDC(entity.getKiller());
                 }
-                if ((config.getBoolean("Bot.Enable"))) embed.msg(title, description, footer);
+                if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) embed.msg(title, description, footer);
             }
         } else if (type == EntityType.WITHER) {
             if ((config.getBoolean("WITHER.Drop")) && x <= config.getInt("WITHER.Chance") + lootLvl) {
@@ -550,7 +551,7 @@ public class EntityDeath implements Listener {
                 if (killerExist){
                     updatePDC(entity.getKiller());
                 }
-                if ((config.getBoolean("Bot.Enable"))) embed.msg(title, description, footer);
+                if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) embed.msg(title, description, footer);
             }
         } else if (type == EntityType.ZOMBIFIED_PIGLIN) {
             if ((config.getBoolean("ZOMBIFIED_PIGLIN.Drop")) && x <= config.getInt("ZOMBIFIED_PIGLIN.Chance") + lootLvl) {
@@ -559,7 +560,7 @@ public class EntityDeath implements Listener {
                 if (killerExist){
                     updatePDC(entity.getKiller());
                 }
-                if ((config.getBoolean("Bot.Enable"))) embed.msg(title, description, footer);
+                if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) embed.msg(title, description, footer);
             }
         } else if (type == EntityType.GHAST) {
             if ((config.getBoolean("GHAST.Drop")) && x <= config.getInt("GHAST.Chance") + lootLvl) {
@@ -568,7 +569,7 @@ public class EntityDeath implements Listener {
                 if (killerExist){
                     updatePDC(entity.getKiller());
                 }
-                if ((config.getBoolean("Bot.Enable"))) embed.msg(title, description, footer);
+                if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) embed.msg(title, description, footer);
             }
         } else if (type == EntityType.WOLF) {
             if ((config.getBoolean("WOLF.Drop")) && x <= config.getInt("WOLF.Chance") + lootLvl) {
@@ -583,7 +584,7 @@ public class EntityDeath implements Listener {
                 if (killerExist){
                     updatePDC(entity.getKiller());
                 }
-                if ((config.getBoolean("Bot.Enable"))) embed.msg(title, description, footer);
+                if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) embed.msg(title, description, footer);
             }
         } else if (type == EntityType.VILLAGER) {
             if ((config.getBoolean("VILLAGER.Drop")) && x <= config.getInt("VILLAGER.Chance") + lootLvl) {
@@ -679,7 +680,7 @@ public class EntityDeath implements Listener {
                         }
                         break;
                 }
-                if ((config.getBoolean("Bot.Enable"))) embed.msg(title, description, footer);
+                if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) embed.msg(title, description, footer);
             }
 
             //1.8 Mob
@@ -747,7 +748,7 @@ public class EntityDeath implements Listener {
 
                         break;
                 }
-                if ((config.getBoolean("Bot.Enable"))) embed.msg(title, description, footer);
+                if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) embed.msg(title, description, footer);
             }
         } else if (type == EntityType.ENDERMITE) {
             if ((config.getBoolean("ENDERMITE.Drop")) && x <= config.getInt("ENDERMITE.Chance") + lootLvl) {
@@ -758,7 +759,7 @@ public class EntityDeath implements Listener {
                     updatePDC(entity.getKiller());
                 }
 
-                if ((config.getBoolean("Bot.Enable"))) embed.msg(title, description, footer);
+                if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) embed.msg(title, description, footer);
             }
         } else if (type == EntityType.GUARDIAN) {
             if ((config.getBoolean("GUARDIAN.Drop")) && x <= config.getInt("GUARDIAN.Chance") + lootLvl) {
@@ -769,7 +770,7 @@ public class EntityDeath implements Listener {
                     updatePDC(entity.getKiller());
                 }
 
-                if ((config.getBoolean("Bot.Enable"))) embed.msg(title, description, footer);
+                if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) embed.msg(title, description, footer);
             }
 
             //1.9 Mob
@@ -780,7 +781,7 @@ public class EntityDeath implements Listener {
                 if (killerExist){
                     updatePDC(entity.getKiller());
                 }
-                if ((config.getBoolean("Bot.Enable"))) embed.msg(title, description, footer);
+                if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) embed.msg(title, description, footer);
             }
             //1.10 Mob
         } else if (type == EntityType.POLAR_BEAR) {
@@ -791,7 +792,7 @@ public class EntityDeath implements Listener {
                     updatePDC(entity.getKiller());
                 }
 
-                if ((config.getBoolean("Bot.Enable"))) embed.msg(title, description, footer);
+                if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) embed.msg(title, description, footer);
             }
             //1.11 Mob
         } else if (type == EntityType.ZOMBIE_VILLAGER) {
@@ -888,7 +889,7 @@ public class EntityDeath implements Listener {
                         }
                         break;
                 }
-                if ((config.getBoolean("Bot.Enable"))) embed.msg(title, description, footer);
+                if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) embed.msg(title, description, footer);
             }
         } else if (type == EntityType.VINDICATOR) {
             if ((config.getBoolean("VINDICATOR.Drop")) && x <= config.getInt("VINDICATOR.Chance") + lootLvl) {
@@ -897,7 +898,7 @@ public class EntityDeath implements Listener {
                 if (killerExist){
                     updatePDC(entity.getKiller());
                 }
-                if ((config.getBoolean("Bot.Enable"))) embed.msg(title, description, footer);
+                if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) embed.msg(title, description, footer);
             }
         } else if (type == EntityType.VEX) {
             if ((config.getBoolean("VEX.Drop")) && x <= config.getInt("VEX.Chance") + lootLvl) {
@@ -913,7 +914,7 @@ public class EntityDeath implements Listener {
                 if (killerExist){
                     updatePDC(entity.getKiller());
                 }
-                if ((config.getBoolean("Bot.Enable"))) embed.msg(title, description, footer);
+                if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) embed.msg(title, description, footer);
             }
         } else if (type == EntityType.EVOKER) {
             if ((config.getBoolean("EVOKER.Drop")) && x <= config.getInt("EVOKER.Chance") + lootLvl) {
@@ -924,7 +925,7 @@ public class EntityDeath implements Listener {
                     updatePDC(entity.getKiller());
                 }
 
-                if ((config.getBoolean("Bot.Enable"))) embed.msg(title, description, footer);
+                if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) embed.msg(title, description, footer);
             }
         } else if (type == EntityType.HUSK) {
             if ((config.getBoolean("HUSK.Drop")) && x <= config.getInt("HUSK.Chance") + lootLvl) {
@@ -934,7 +935,7 @@ public class EntityDeath implements Listener {
                     updatePDC(entity.getKiller());
                 }
 
-                if ((config.getBoolean("Bot.Enable"))) embed.msg(title, description, footer);
+                if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) embed.msg(title, description, footer);
             }
         } else if (type == EntityType.STRAY) {
             if ((config.getBoolean("STRAY.Drop")) && x <= config.getInt("STRAY.Chance") + lootLvl) {
@@ -943,7 +944,7 @@ public class EntityDeath implements Listener {
                 if (killerExist){
                     updatePDC(entity.getKiller());
                 }
-                if ((config.getBoolean("Bot.Enable"))) embed.msg(title, description, footer);
+                if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) embed.msg(title, description, footer);
             }
         } else if (type == EntityType.ELDER_GUARDIAN) {
             if ((config.getBoolean("ELDER_GUARDIAN.Drop")) && x <= config.getInt("ELDER_GUARDIAN.Chance") + lootLvl) {
@@ -954,7 +955,7 @@ public class EntityDeath implements Listener {
                     updatePDC(entity.getKiller());
                 }
 
-                if ((config.getBoolean("Bot.Enable"))) embed.msg(title, description, footer);
+                if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) embed.msg(title, description, footer);
             }
         } else if (type == EntityType.DONKEY) {
             if ((config.getBoolean("DONKEY.Drop")) && x <= config.getInt("DONKEY.Chance") + lootLvl) {
@@ -965,7 +966,7 @@ public class EntityDeath implements Listener {
                     updatePDC(entity.getKiller());
                 }
 
-                if ((config.getBoolean("Bot.Enable"))) embed.msg(title, description, footer);
+                if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) embed.msg(title, description, footer);
             }
         } else if (type == EntityType.ZOMBIE_HORSE) {
             if ((config.getBoolean("ZOMBIE_HORSE.Drop")) && x <= config.getInt("ZOMBIE_HORSE.Chance") + lootLvl) {
@@ -974,7 +975,7 @@ public class EntityDeath implements Listener {
                 if (killerExist){
                     updatePDC(entity.getKiller());
                 }
-                if ((config.getBoolean("Bot.Enable"))) embed.msg(title, description, footer);
+                if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) embed.msg(title, description, footer);
             }
         } else if (type == EntityType.SKELETON_HORSE) {
             if ((config.getBoolean("SKELETON_HORSE.Drop")) && x <= config.getInt("SKELETON_HORSE.Chance") + lootLvl) {
@@ -983,7 +984,7 @@ public class EntityDeath implements Listener {
                 if (killerExist){
                     updatePDC(entity.getKiller());
                 }
-                if ((config.getBoolean("Bot.Enable"))) embed.msg(title, description, footer);
+                if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) embed.msg(title, description, footer);
             }
         } else if (type == EntityType.MULE) {
             if ((config.getBoolean("MULE.Drop")) && x <= config.getInt("MULE.Chance") + lootLvl) {
@@ -995,7 +996,7 @@ public class EntityDeath implements Listener {
                     updatePDC(entity.getKiller());
                 }
 
-                if ((config.getBoolean("Bot.Enable"))) embed.msg(title, description, footer);
+                if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) embed.msg(title, description, footer);
             }
             //1.12 Mob
         } else if (type == EntityType.PARROT) {
@@ -1043,7 +1044,7 @@ public class EntityDeath implements Listener {
                         }
                         break;
                 }
-                if ((config.getBoolean("Bot.Enable"))) embed.msg(title, description, footer);
+                if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) embed.msg(title, description, footer);
             }
 
             //1.13 Mob
@@ -1151,7 +1152,7 @@ public class EntityDeath implements Listener {
                             updatePDC(entity.getKiller());
                         }
                 }
-                if ((config.getBoolean("Bot.Enable"))) embed.msg(title, description, footer);
+                if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) embed.msg(title, description, footer);
             }
         } else if (type == EntityType.PUFFERFISH) {
             if ((config.getBoolean("PUFFERFISH.Drop")) && x <= config.getInt("PUFFERFISH.Chance") + lootLvl) {
@@ -1161,7 +1162,7 @@ public class EntityDeath implements Listener {
                     updatePDC(entity.getKiller());
                 }
 
-                if ((config.getBoolean("Bot.Enable"))) embed.msg(title, description, footer);
+                if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) embed.msg(title, description, footer);
             }
         } else if (type == EntityType.SALMON) {
             if ((config.getBoolean("SALMON.Drop")) && x <= config.getInt("SALMON.Chance") + lootLvl) {
@@ -1171,7 +1172,7 @@ public class EntityDeath implements Listener {
                     updatePDC(entity.getKiller());
                 }
 
-                if ((config.getBoolean("Bot.Enable"))) embed.msg(title, description, footer);
+                if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) embed.msg(title, description, footer);
             }
         } else if (type == EntityType.COD) {
             if ((config.getBoolean("COD.Drop")) && x <= config.getInt("COD.Chance") + lootLvl) {
@@ -1182,7 +1183,7 @@ public class EntityDeath implements Listener {
                     updatePDC(entity.getKiller());
                 }
 
-                if ((config.getBoolean("Bot.Enable"))) embed.msg(title, description, footer);
+                if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) embed.msg(title, description, footer);
             }
         } else if (type == EntityType.TURTLE) {
             if ((config.getBoolean("TURTLE.Drop")) && x <= config.getInt("TURTLE.Chance") + lootLvl) {
@@ -1191,7 +1192,7 @@ public class EntityDeath implements Listener {
                 if (killerExist){
                     updatePDC(entity.getKiller());
                 }
-                if ((config.getBoolean("Bot.Enable"))) embed.msg(title, description, footer);
+                if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) embed.msg(title, description, footer);
             }
         } else if (type == EntityType.DOLPHIN) {
             if ((config.getBoolean("DOLPHIN.Drop")) && x <= config.getInt("DOLPHIN.Chance") + lootLvl) {
@@ -1202,7 +1203,7 @@ public class EntityDeath implements Listener {
                     updatePDC(entity.getKiller());
                 }
 
-                if ((config.getBoolean("Bot.Enable"))) embed.msg(title, description, footer);
+                if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) embed.msg(title, description, footer);
             }
         } else if (type == EntityType.PHANTOM) {
             if ((config.getBoolean("PHANTOM.Drop")) && x <= config.getInt("PHANTOM.Chance") + lootLvl) {
@@ -1213,7 +1214,7 @@ public class EntityDeath implements Listener {
                 if (killerExist){
                     updatePDC(entity.getKiller());
                 }
-                if ((config.getBoolean("Bot.Enable"))) embed.msg(title, description, footer);
+                if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) embed.msg(title, description, footer);
             }
         } else if (type == EntityType.DROWNED) {
             if ((config.getBoolean("DROWNED.Drop")) && x <= config.getInt("DROWNED.Chance") + lootLvl) {
@@ -1224,7 +1225,7 @@ public class EntityDeath implements Listener {
                     updatePDC(entity.getKiller());
                 }
 
-                if ((config.getBoolean("Bot.Enable"))) embed.msg(title, description, footer);
+                if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) embed.msg(title, description, footer);
             }
 
             //1.14 Mob
@@ -1237,7 +1238,7 @@ public class EntityDeath implements Listener {
                 if (killerExist){
                     updatePDC(entity.getKiller());
                 }
-                if ((config.getBoolean("Bot.Enable"))) embed.msg(title, description, footer);
+                if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) embed.msg(title, description, footer);
             }
         } else if (type == EntityType.TRADER_LLAMA) {
             if ((config.getBoolean("TRADER_LLAMA.Drop")) && x <= config.getInt("TRADER_LLAMA.Chance.Name")) {
@@ -1278,7 +1279,7 @@ public class EntityDeath implements Listener {
 
                         break;
                 }
-                if ((config.getBoolean("Bot.Enable"))) embed.msg(title, description, footer);
+                if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) embed.msg(title, description, footer);
             }
         } else if (type == EntityType.LLAMA) {
             if ((config.getBoolean("LLAMA.Drop")) && x <= config.getInt("LLAMA.Chance") + lootLvl) {
@@ -1318,7 +1319,7 @@ public class EntityDeath implements Listener {
 
                         break;
                 }
-                if ((config.getBoolean("Bot.Enable"))) embed.msg(title, description, footer);
+                if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) embed.msg(title, description, footer);
             }
         } else if (type == EntityType.RAVAGER) {
             if ((config.getBoolean("RAVAGER.Drop")) && x <= config.getInt("RAVAGER.Chance") + lootLvl) {
@@ -1327,7 +1328,7 @@ public class EntityDeath implements Listener {
                 if (killerExist){
                     updatePDC(entity.getKiller());
                 }
-                if ((config.getBoolean("Bot.Enable"))) embed.msg(title, description, footer);
+                if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) embed.msg(title, description, footer);
             }
         } else if (type == EntityType.PILLAGER) {
             if ((config.getBoolean("PILLAGER.Drop")) && x <= config.getInt("PILLAGER.Chance") + lootLvl) {
@@ -1336,7 +1337,7 @@ public class EntityDeath implements Listener {
                 if (killerExist){
                     updatePDC(entity.getKiller());
                 }
-                if ((config.getBoolean("Bot.Enable"))) embed.msg(title, description, footer);
+                if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) embed.msg(title, description, footer);
             }
         } else if (type == EntityType.PANDA) {
             if ((config.getBoolean("PANDA.Drop")) && x <= config.getInt("PANDA.Chance") + lootLvl) {
@@ -1350,7 +1351,7 @@ public class EntityDeath implements Listener {
                 if (killerExist){
                     updatePDC(entity.getKiller());
                 }
-                if ((config.getBoolean("Bot.Enable"))) embed.msg(title, description, footer);
+                if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) embed.msg(title, description, footer);
             }
         } else if (type == EntityType.FOX) {
             if ((config.getBoolean("FOX.Drop")) && x <= config.getInt("FOX.Chance") + lootLvl) {
@@ -1376,7 +1377,7 @@ public class EntityDeath implements Listener {
 
                         break;
                 }
-                if ((config.getBoolean("Bot.Enable"))) embed.msg(title, description, footer);
+                if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) embed.msg(title, description, footer);
             }
         } else if (type == EntityType.CAT) {
             if ((config.getBoolean("CAT.Drop")) && x <= config.getInt("CAT.Chance") + lootLvl) {
@@ -1462,7 +1463,7 @@ public class EntityDeath implements Listener {
                         }
                         break;
                 }
-                if ((config.getBoolean("Bot.Enable"))) embed.msg(title, description, footer);
+                if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) embed.msg(title, description, footer);
             }
 
             //1.15 Mob
@@ -1478,7 +1479,7 @@ public class EntityDeath implements Listener {
                 if (killerExist){
                     updatePDC(entity.getKiller());
                 }
-                if ((config.getBoolean("Bot.Enable"))) embed.msg(title, description, footer);
+                if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) embed.msg(title, description, footer);
             }
             //1.16 Mob
         } else if (type == EntityType.ZOGLIN) {
@@ -1488,7 +1489,7 @@ public class EntityDeath implements Listener {
                 if (killerExist){
                     updatePDC(entity.getKiller());
                 }
-                if ((config.getBoolean("Bot.Enable"))) embed.msg(title, description, footer);
+                if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) embed.msg(title, description, footer);
             }
         } else if (type == EntityType.STRIDER) {
             if ((config.getBoolean("STRIDER.Drop")) && x <= config.getInt("STRIDER.Chance") + lootLvl) {
@@ -1497,7 +1498,7 @@ public class EntityDeath implements Listener {
                 if (killerExist){
                     updatePDC(entity.getKiller());
                 }
-                if ((config.getBoolean("Bot.Enable"))) embed.msg(title, description, footer);
+                if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) embed.msg(title, description, footer);
             }
         } else if (type == EntityType.PIGLIN) {
             if ((config.getBoolean("PIGLIN.Drop")) && x <= config.getInt("PIGLIN.Chance") + lootLvl) {
@@ -1506,7 +1507,7 @@ public class EntityDeath implements Listener {
                 if (killerExist){
                     updatePDC(entity.getKiller());
                 }
-                if ((config.getBoolean("Bot.Enable"))) embed.msg(title, description, footer);
+                if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) embed.msg(title, description, footer);
             }
         } else if (type == EntityType.HOGLIN) {
             if ((config.getBoolean("HOGLIN.Drop")) && x <= config.getInt("HOGLIN.Chance") + lootLvl) {
@@ -1516,7 +1517,7 @@ public class EntityDeath implements Listener {
                 if (killerExist){
                     updatePDC(entity.getKiller());
                 }
-                if ((config.getBoolean("Bot.Enable"))) embed.msg(title, description, footer);
+                if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) embed.msg(title, description, footer);
             }
         } else if (type == EntityType.PIGLIN_BRUTE) {
             if ((config.getBoolean("PIGLIN_BRUTE.Drop")) && x <= config.getInt("PIGLIN_BRUTE.Chance") + lootLvl) {
@@ -1525,7 +1526,7 @@ public class EntityDeath implements Listener {
                 if (killerExist){
                     updatePDC(entity.getKiller());
                 }
-                if ((config.getBoolean("Bot.Enable"))) embed.msg(title, description, footer);
+                if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) embed.msg(title, description, footer);
             }
 
             // 1.17 Mob
@@ -1537,7 +1538,7 @@ public class EntityDeath implements Listener {
                 if (killerExist){
                     updatePDC(entity.getKiller());
                 }
-                if ((config.getBoolean("Bot.Enable"))) embed.msg(title, description, footer);
+                if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) embed.msg(title, description, footer);
             }
         } else if (type == EntityType.GOAT) {
             if ((config.getBoolean("GOAT.Drop")) && x <= config.getInt("GOAT.Chance") + lootLvl) {
@@ -1547,7 +1548,7 @@ public class EntityDeath implements Listener {
                     updatePDC(entity.getKiller());
                 }
 
-                if ((config.getBoolean("Bot.Enable"))) embed.msg(title, description, footer);
+                if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) embed.msg(title, description, footer);
             }
         } else if (type == EntityType.AXOLOTL) {
             if ((config.getBoolean("AXOLOTL.Drop")) && x <= config.getInt("AXOLOTL.Chance") + lootLvl) {
@@ -1591,7 +1592,7 @@ public class EntityDeath implements Listener {
                         }
                         break;
                 }
-                if ((config.getBoolean("Bot.Enable"))) embed.msg(title, description, footer);
+                if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) embed.msg(title, description, footer);
             }
 
             //1.19 Mob
@@ -1604,7 +1605,7 @@ public class EntityDeath implements Listener {
                     updatePDC(entity.getKiller());
                 }
 
-                if ((config.getBoolean("Bot.Enable"))) embed.msg(title, description, footer);
+                if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) embed.msg(title, description, footer);
             }
 
         } else if (type == EntityType.FROG) {
@@ -1636,7 +1637,7 @@ public class EntityDeath implements Listener {
                         }
                         break;
                 }
-                if ((config.getBoolean("Bot.Enable"))) embed.msg(title, description, footer);
+                if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) embed.msg(title, description, footer);
             }
         } else if (type == EntityType.TADPOLE) {
             if ((config.getBoolean("TADPOLE.Drop")) && x <= config.getInt("TADPOLE.Chance") + lootLvl) {
@@ -1647,7 +1648,7 @@ public class EntityDeath implements Listener {
                     updatePDC(entity.getKiller());
                 }
 
-                if ((config.getBoolean("Bot.Enable"))) embed.msg(title, description, footer);
+                if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) embed.msg(title, description, footer);
             }
 
         } else if (type == EntityType.WARDEN) {
@@ -1659,7 +1660,7 @@ public class EntityDeath implements Listener {
                     updatePDC(entity.getKiller());
                 }
 
-                if ((config.getBoolean("Bot.Enable"))) embed.msg(title, description, footer);
+                if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) embed.msg(title, description, footer);
             }
         } else if (type == EntityType.CAMEL) {
             if ((config.getBoolean("CAMEL.Drop")) && x <= config.getInt("CAMEL.Chance") + lootLvl) {
@@ -1670,18 +1671,7 @@ public class EntityDeath implements Listener {
                     updatePDC(entity.getKiller());
                 }
 
-                if ((config.getBoolean("Bot.Enable"))) embed.msg(title, description, footer);
-            }
-        } else if (type == EntityType.valueOf("SNIFFER")) {
-            if ((config.getBoolean("SNIFFER.Drop")) && x <= config.getInt("SNIFFER.Chance") + lootLvl) {
-
-                item = utils.rename(EntityHead.SNIFFER.getItemStack(), config.getString("SNIFFER.Name"));
-                event.getDrops().add(item);
-                if (killerExist){
-                    updatePDC(entity.getKiller());
-                }
-
-                if ((config.getBoolean("Bot.Enable"))) embed.msg(title, description, footer);
+                if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) embed.msg(title, description, footer);
             }
         }
 
