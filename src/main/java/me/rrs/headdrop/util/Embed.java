@@ -1,6 +1,6 @@
 package me.rrs.headdrop.util;
 
-import me.rrs.centralbot.CentralBotAPI;
+import me.rrs.centralbot.spigot.CentralBotAPI;
 import me.rrs.headdrop.HeadDrop;
 import net.dv8tion.jda.api.EmbedBuilder;
 
