@@ -1,7 +1,6 @@
 package me.rrs.headdrop.commands;
 
 import me.rrs.headdrop.HeadDrop;
-import me.rrs.headdrop.database.EntityHead;
 import me.rrs.headdrop.util.Lang;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -10,10 +9,6 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
-import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
@@ -27,43 +22,46 @@ public class MainCommand implements CommandExecutor {
     Lang lang = new Lang();
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, String[] args) {
-        switch (args[0].toLowerCase()) {
-            case "help":
-                if (sender instanceof Player) {
-                    Player player = (Player) sender;
-                    player.sendMessage(ChatColor.DARK_GREEN + "HeadDrop" + ChatColor.RESET + " plugin by RRS.");
-                    player.sendMessage(ChatColor.AQUA + "> " + ChatColor.LIGHT_PURPLE + "/headdrop help" + ChatColor.RESET + " -> you already discovered it!");
-                    player.sendMessage(ChatColor.AQUA + "> " + ChatColor.LIGHT_PURPLE + "/headdrop reload" + ChatColor.RESET + " -> reload plugin config.");
-                    player.sendMessage(ChatColor.AQUA + "> " + ChatColor.LIGHT_PURPLE + "/myhead" + ChatColor.RESET + " -> Get your head.");
-                    player.sendMessage(ChatColor.AQUA + "> " + ChatColor.LIGHT_PURPLE + "/head <player Name>" + ChatColor.RESET + " -> Get another player head");
-                }
-                break;
-            case "reload":
-                if (sender instanceof Player) {
-                    Player player = (Player) sender;
-                    if (player.hasPermission("head.reload")) {
+        if (args.length == 0){
+            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "HeadDrop by RRS"));
+
+        }else {
+            switch (args[0].toLowerCase()) {
+                case "help":
+                    if (sender instanceof Player) {
+                        Player player = (Player) sender;
+                        player.sendMessage(ChatColor.DARK_GREEN + "HeadDrop" + ChatColor.RESET + " plugin by RRS.");
+                        player.sendMessage(ChatColor.AQUA + "> " + ChatColor.LIGHT_PURPLE + "/headdrop help" + ChatColor.RESET + " -> you already discovered it!");
+                        player.sendMessage(ChatColor.AQUA + "> " + ChatColor.LIGHT_PURPLE + "/headdrop reload" + ChatColor.RESET + " -> reload plugin config.");
+                        player.sendMessage(ChatColor.AQUA + "> " + ChatColor.LIGHT_PURPLE + "/myhead" + ChatColor.RESET + " -> Get your head.");
+                        player.sendMessage(ChatColor.AQUA + "> " + ChatColor.LIGHT_PURPLE + "/head <player Name>" + ChatColor.RESET + " -> Get another player head");
+                    }
+                    break;
+                case "reload":
+                    if (sender instanceof Player) {
+                        Player player = (Player) sender;
+                        if (player.hasPermission("headdrop.reload")) {
+                            try {
+                                HeadDrop.getLang().reload();
+                                HeadDrop.getConfiguration().reload();
+                                lang.msg(ChatColor.GREEN + "HeadDrop" + ChatColor.RESET, "Reload", player);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
+                        } else {
+                            lang.noPerm(player);
+                        }
+                    } else {
                         try {
-                            HeadDrop.getLang().reload();
                             HeadDrop.getConfiguration().reload();
-                            lang.msg(ChatColor.GREEN + "HeadDrop" + ChatColor.RESET, "Reload", player);
+                            HeadDrop.getLang().reload();
+                            Bukkit.getLogger().info(HeadDrop.getLang().getString("Reload"));
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
-                    } else {
-                        lang.noPerm(player);
                     }
-                } else {
-                    try {
-                        HeadDrop.getConfiguration().reload();
-                        HeadDrop.getLang().reload();
-                        Bukkit.getLogger().info(HeadDrop.getLang().getString("Reload"));
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-                break;
-            case "leaderboard":
-                if (!Bukkit.getPluginManager().isPluginEnabled("HD_LB_GUI")) {
+                    break;
+                case "leaderboard":
                     List<Player> topPlayers = getTopPlayers();
                     sender.sendMessage(ChatColor.GOLD + "---- Top Online HeadHunter ----");
                     for (int i = 0; i < topPlayers.size(); i++) {
@@ -72,7 +70,8 @@ public class MainCommand implements CommandExecutor {
                         int headDropCount = container.get(new NamespacedKey(HeadDrop.getInstance(), "HeadDrop"), PersistentDataType.INTEGER);
                         sender.sendMessage(ChatColor.YELLOW.toString() + (i + 1) + ". " + player.getName() + " - " + headDropCount + " Head(s)");
                     }
-                }
+
+            }
         }
         return true;
     }
