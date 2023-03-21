@@ -43,9 +43,17 @@ public class HeadDrop extends JavaPlugin {
     }
 
 
-
     @Override
-    public void onLoad(){
+    public void onEnable() {
+
+        String version = Bukkit.getServer().getBukkitVersion();
+
+        if (!getDescription().getName().equals("HeadDrop")){
+            Bukkit.getLogger().severe("Please Download a fresh jar from https://www.spigotmc.org/resources/99976/");
+            Bukkit.getPluginManager().disablePlugin(this);
+            return;
+        }
+
         instance = this;
         try {
             lang = YamlDocument.create(new File(getDataFolder(), "lang.yml"), getResource("lang.yml"),
@@ -53,25 +61,16 @@ public class HeadDrop extends JavaPlugin {
                     LoaderSettings.builder().setAutoUpdate(true).build(),
                     DumperSettings.DEFAULT,
                     UpdaterSettings.builder().setAutoSave(true).setVersioning(new Pattern(Segment.range(1, Integer.MAX_VALUE),
-                            Segment.literal("."), Segment.range(0, 10)), "Version").build());
+                            Segment.literal("."), Segment.range(0, 100)), "Version").build());
 
             config = YamlDocument.create(new File(getDataFolder(), "config.yml"), getResource("config.yml"),
                     GeneralSettings.DEFAULT,
                     LoaderSettings.builder().setAutoUpdate(true).build(),
                     DumperSettings.DEFAULT,
                     UpdaterSettings.builder().setAutoSave(true).setVersioning(new Pattern(Segment.range(1, Integer.MAX_VALUE),
-                            Segment.literal("."), Segment.range(0, 10)), "Config.Version").build());
+                            Segment.literal("."), Segment.range(0, 100)), "Config.Version").build());
         } catch (IOException e) {
             e.printStackTrace();
-        }
-    }
-    @Override
-    public void onEnable() {
-
-        if (!getDescription().getName().equals("HeadDrop")){
-            Bukkit.getLogger().severe("Please Download a fresh jar from https://www.spigotmc.org/resources/99976/");
-            Bukkit.getPluginManager().disablePlugin(this);
-            return;
         }
 
         Bukkit.getLogger().info("");
