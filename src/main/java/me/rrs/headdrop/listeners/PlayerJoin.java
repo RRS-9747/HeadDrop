@@ -27,10 +27,5 @@ public class PlayerJoin implements Listener {
         if (currentDate.equals("12/12") && event.getPlayer().hasPermission("HeadDrop.notify")){
             event.getPlayer().sendMessage(ChatColor.translateAlternateColorCodes('&', "&a&l[HeadDrop]&r Today is my Birthday :D Leave a review on spigot as a gift :3"));
         }
-
-        PersistentDataContainer container = event.getPlayer().getPersistentDataContainer();
-        if (!container.has(new NamespacedKey(HeadDrop.getInstance(), "HeadDrop"), PersistentDataType.INTEGER)) {
-            container.set(new NamespacedKey(HeadDrop.getInstance(), "HeadDrop"), PersistentDataType.INTEGER, 0);
-        }
     }
 }

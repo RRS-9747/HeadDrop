@@ -3,6 +3,7 @@ package me.rrs.headdrop.listeners;
 import dev.dejvokep.boostedyaml.YamlDocument;
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.rrs.headdrop.HeadDrop;
+import me.rrs.headdrop.database.Database;
 import me.rrs.headdrop.database.EntityHead;
 import me.rrs.headdrop.util.Embed;
 import me.rrs.headdrop.util.ItemUtils;
@@ -22,7 +23,6 @@ import org.bukkit.persistence.PersistentDataType;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Objects;
 import java.util.Random;
 import java.util.stream.Collectors;
 
@@ -31,13 +31,17 @@ public class EntityDeath implements Listener {
 
     final YamlDocument config = HeadDrop.getConfiguration();
     ItemUtils utils = new ItemUtils();
-    PersistentDataContainer container;
 
-    private void updatePDC(Player player){
-        container = player.getPersistentDataContainer();
-        int currentValue = container.get(new NamespacedKey(HeadDrop.getInstance(), "HeadDrop"), PersistentDataType.INTEGER);
-        int newValue = currentValue + 1;
-        container.set(new NamespacedKey(HeadDrop.getInstance(), "HeadDrop"), PersistentDataType.INTEGER, newValue);
+    boolean online = config.getBoolean("Database.Online");
+
+    private void updateDB(Player player){
+        if (online){
+            int count = HeadDrop.getDatabase().getDataByUuid(player.getUniqueId().toString());
+            HeadDrop.getDatabase().updateDataByUuid(player.getUniqueId().toString(), player.getName(), count+1);
+        }else {
+            int count = HeadDrop.getDatabase().getDataByName(player.getName());
+            HeadDrop.getDatabase().updateDataByName(player.getName(), count+1);
+        }
     }
 
 
@@ -105,7 +109,7 @@ public class EntityDeath implements Listener {
                 utils.rename(skull, loreList);
                 event.getDrops().add(skull);
                 if (killerExist) {
-                    updatePDC(entity.getKiller());
+                    updateDB(entity.getKiller());
                 }
                 if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) {
                     embed.msg(title, description, footer);
@@ -121,7 +125,7 @@ public class EntityDeath implements Listener {
                 item = utils.rename(EntityHead.BAT.getItemStack(), config.getString("BAT.Name"), loreList);
                 event.getDrops().add(item);
                 if (killerExist) {
-                    updatePDC(entity.getKiller());
+                    updateDB(entity.getKiller());
                 }
                 if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) {
                     embed.msg(title, description, footer);
@@ -140,7 +144,7 @@ public class EntityDeath implements Listener {
                 event.getDrops().add(skull);
 
                 if (killerExist) {
-                    updatePDC(entity.getKiller());
+                    updateDB(entity.getKiller());
                 }
                 if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) {
                     embed.msg(title, description, footer);
@@ -160,7 +164,7 @@ public class EntityDeath implements Listener {
 
                 event.getDrops().add(skull);
                 if (killerExist) {
-                    updatePDC(entity.getKiller());
+                    updateDB(entity.getKiller());
                 }
                 if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) {
                     embed.msg(title, description, footer);
@@ -180,7 +184,7 @@ public class EntityDeath implements Listener {
                 event.getDrops().add(skull);
 
                 if (killerExist) {
-                    updatePDC(entity.getKiller());
+                    updateDB(entity.getKiller());
                 }
 
                 if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) {
@@ -201,7 +205,7 @@ public class EntityDeath implements Listener {
                 event.getDrops().add(skull);
 
                 if (killerExist) {
-                    updatePDC(entity.getKiller());
+                    updateDB(entity.getKiller());
                 }
 
                 if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) {
@@ -222,7 +226,7 @@ public class EntityDeath implements Listener {
                 event.getDrops().add(skull);
 
                 if (killerExist) {
-                    updatePDC(entity.getKiller());
+                    updateDB(entity.getKiller());
                 }
 
                 if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) {
@@ -239,7 +243,7 @@ public class EntityDeath implements Listener {
                 item = utils.rename(EntityHead.BLAZE.getItemStack(), config.getString("BLAZE.Name"), loreList);
                 event.getDrops().add(item);
                 if (killerExist) {
-                    updatePDC(entity.getKiller());
+                    updateDB(entity.getKiller());
                 }
 
                 if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) {
@@ -256,7 +260,7 @@ public class EntityDeath implements Listener {
                 item = utils.rename(EntityHead.SPIDER.getItemStack(), config.getString("SPIDER.Name"), loreList);
                 event.getDrops().add(item);
                 if (killerExist) {
-                    updatePDC(entity.getKiller());
+                    updateDB(entity.getKiller());
                 }
 
                 if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) {
@@ -273,7 +277,7 @@ public class EntityDeath implements Listener {
                 item = utils.rename(EntityHead.CAVE_SPIDER.getItemStack(), config.getString("CAVE_SPIDER.Name"), loreList);
                 event.getDrops().add(item);
                 if (killerExist) {
-                    updatePDC(entity.getKiller());
+                    updateDB(entity.getKiller());
                 }
 
                 if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) {
@@ -290,7 +294,7 @@ public class EntityDeath implements Listener {
                 item = utils.rename(EntityHead.CHICKEN.getItemStack(), config.getString("CHICKEN.Name"), loreList);
                 event.getDrops().add(item);
                 if (killerExist) {
-                    updatePDC(entity.getKiller());
+                    updateDB(entity.getKiller());
                 }
 
                 if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) {
@@ -307,7 +311,7 @@ public class EntityDeath implements Listener {
                 item = utils.rename(EntityHead.COW.getItemStack(), config.getString("COW.Name"), loreList);
                 event.getDrops().add(item);
                 if (killerExist) {
-                    updatePDC(entity.getKiller());
+                    updateDB(entity.getKiller());
                 }
 
                 if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) {
@@ -324,7 +328,7 @@ public class EntityDeath implements Listener {
                 item = utils.rename(EntityHead.ENDERMAN.getItemStack(), config.getString("ENDERMAN.Name"), loreList);
                 event.getDrops().add(item);
                 if (killerExist) {
-                    updatePDC(entity.getKiller());
+                    updateDB(entity.getKiller());
                 }
 
                 if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) {
@@ -341,7 +345,7 @@ public class EntityDeath implements Listener {
                 item = utils.rename(EntityHead.GIANT.getItemStack(), config.getString("GIANT.Name"), loreList);
                 event.getDrops().add(item);
                 if (killerExist) {
-                    updatePDC(entity.getKiller());
+                    updateDB(entity.getKiller());
                 }
 
                 if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) {
@@ -363,7 +367,7 @@ public class EntityDeath implements Listener {
                         item = utils.rename(EntityHead.HORSE_WHITE.getItemStack(), name, loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
 
                         break;
@@ -371,7 +375,7 @@ public class EntityDeath implements Listener {
                         item = utils.rename(EntityHead.HORSE_CREAMY.getItemStack(), name, loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
 
                         break;
@@ -379,7 +383,7 @@ public class EntityDeath implements Listener {
                         item = utils.rename(EntityHead.HORSE_CHESTNUT.getItemStack(), name, loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
 
                         break;
@@ -387,7 +391,7 @@ public class EntityDeath implements Listener {
                         item = utils.rename(EntityHead.HORSE_BROWN.getItemStack(), name, loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
 
                         break;
@@ -395,7 +399,7 @@ public class EntityDeath implements Listener {
                         item = utils.rename(EntityHead.HORSE_BLACK.getItemStack(), name, loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
 
                         break;
@@ -403,7 +407,7 @@ public class EntityDeath implements Listener {
                         item = utils.rename(EntityHead.HORSE_GRAY.getItemStack(), name, loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
 
                         break;
@@ -411,7 +415,7 @@ public class EntityDeath implements Listener {
                         item = utils.rename(EntityHead.HORSE_DARK_BROWN.getItemStack(), name, loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
 
                         break;
@@ -430,7 +434,7 @@ public class EntityDeath implements Listener {
                 item = utils.rename(EntityHead.ILLUSIONER.getItemStack(), config.getString("ILLUSIONER.Name"), loreList);
                 event.getDrops().add(item);
                 if (killerExist) {
-                    updatePDC(entity.getKiller());
+                    updateDB(entity.getKiller());
                 }
 
                 if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) {
@@ -447,7 +451,7 @@ public class EntityDeath implements Listener {
                 item = utils.rename(EntityHead.IRON_GOLEM.getItemStack(), config.getString("IRON_GOLEM.Name"), loreList);
                 event.getDrops().add(item);
                 if (killerExist) {
-                    updatePDC(entity.getKiller());
+                    updateDB(entity.getKiller());
                 }
 
                 if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) {
@@ -464,7 +468,7 @@ public class EntityDeath implements Listener {
                 item = utils.rename(EntityHead.MAGMA_CUBE.getItemStack(), config.getString("MAGMA_CUBE.Name"), loreList);
                 event.getDrops().add(item);
                 if (killerExist) {
-                    updatePDC(entity.getKiller());
+                    updateDB(entity.getKiller());
                 }
 
                 if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) {
@@ -483,13 +487,13 @@ public class EntityDeath implements Listener {
                     item = utils.rename(EntityHead.MUSHROOM_COW_RED.getItemStack(), config.getString("MUSHROOM_COW.Name"), loreList);
                     event.getDrops().add(item);
                     if (killerExist) {
-                        updatePDC(entity.getKiller());
+                        updateDB(entity.getKiller());
                     }
                 } else if (mushroomCow.getVariant().equals(MushroomCow.Variant.BROWN)) {
                     item = utils.rename(EntityHead.MUSHROOM_COW_BROWN.getItemStack(), config.getString("MUSHROOM_COW.Name"), loreList);
                     event.getDrops().add(item);
                     if (killerExist) {
-                        updatePDC(entity.getKiller());
+                        updateDB(entity.getKiller());
                     }
                 }
                 if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) {
@@ -506,7 +510,7 @@ public class EntityDeath implements Listener {
                 item = utils.rename(EntityHead.OCELOT.getItemStack(), config.getString("OCELOT.Name"), loreList);
                 event.getDrops().add(item);
                 if (killerExist) {
-                    updatePDC(entity.getKiller());
+                    updateDB(entity.getKiller());
                 }
 
                 if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) {
@@ -523,7 +527,7 @@ public class EntityDeath implements Listener {
                 item = utils.rename(EntityHead.PIG.getItemStack(), config.getString("PIG.Name"), loreList);
                 event.getDrops().add(item);
                 if (killerExist) {
-                    updatePDC(entity.getKiller());
+                    updateDB(entity.getKiller());
                 }
 
                 if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) {
@@ -547,7 +551,7 @@ public class EntityDeath implements Listener {
                         item = utils.rename(EntityHead.SHEEP_WHITE.getItemStack(), name, loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
                         break;
 
@@ -555,7 +559,7 @@ public class EntityDeath implements Listener {
                         item = utils.rename(EntityHead.SHEEP_ORANGE.getItemStack(), name, loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
 
                         break;
@@ -563,7 +567,7 @@ public class EntityDeath implements Listener {
                         item = utils.rename(EntityHead.SHEEP_MAGENTA.getItemStack(), name, loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
 
                         break;
@@ -571,7 +575,7 @@ public class EntityDeath implements Listener {
                         item = utils.rename(EntityHead.SHEEP_LIGHT_BLUE.getItemStack(), name, loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
 
                         break;
@@ -579,7 +583,7 @@ public class EntityDeath implements Listener {
                         item = utils.rename(EntityHead.SHEEP_YELLOW.getItemStack(), name, loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
 
                         break;
@@ -587,7 +591,7 @@ public class EntityDeath implements Listener {
                         item = utils.rename(EntityHead.SHEEP_LIME.getItemStack(), name, loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
 
                         break;
@@ -595,7 +599,7 @@ public class EntityDeath implements Listener {
                         item = utils.rename(EntityHead.SHEEP_PINK.getItemStack(), name, loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
 
                         break;
@@ -603,7 +607,7 @@ public class EntityDeath implements Listener {
                         item = utils.rename(EntityHead.SHEEP_GRAY.getItemStack(), name, loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
 
                         break;
@@ -611,7 +615,7 @@ public class EntityDeath implements Listener {
                         item = utils.rename(EntityHead.SHEEP_LIGHT_GRAY.getItemStack(), name, loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
 
                         break;
@@ -619,7 +623,7 @@ public class EntityDeath implements Listener {
                         item = utils.rename(EntityHead.SHEEP_CYAN.getItemStack(), name, loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
 
                         break;
@@ -627,7 +631,7 @@ public class EntityDeath implements Listener {
                         item = utils.rename(EntityHead.SHEEP_PURPLE.getItemStack(), name, loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
 
                         break;
@@ -635,7 +639,7 @@ public class EntityDeath implements Listener {
                         item = utils.rename(EntityHead.SHEEP_BLUE.getItemStack(), name, loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
 
                         break;
@@ -643,7 +647,7 @@ public class EntityDeath implements Listener {
                         item = utils.rename(EntityHead.SHEEP_BROWN.getItemStack(), name, loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
 
                         break;
@@ -651,7 +655,7 @@ public class EntityDeath implements Listener {
                         item = utils.rename(EntityHead.SHEEP_GREEN.getItemStack(), name, loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
 
                         break;
@@ -659,7 +663,7 @@ public class EntityDeath implements Listener {
                         item = utils.rename(EntityHead.SHEEP_RED.getItemStack(), name, loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
 
                         break;
@@ -667,7 +671,7 @@ public class EntityDeath implements Listener {
                         item = utils.rename(EntityHead.SHEEP_BLACK.getItemStack(), name, loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
 
                         break;
@@ -689,7 +693,7 @@ public class EntityDeath implements Listener {
                 item = utils.rename(EntityHead.SILVERFISH.getItemStack(), config.getString("SILVERFISH.Name"), loreList);
                 event.getDrops().add(item);
                 if (killerExist) {
-                    updatePDC(entity.getKiller());
+                    updateDB(entity.getKiller());
                 }
                 if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) {
                     embed.msg(title, description, footer);
@@ -705,7 +709,7 @@ public class EntityDeath implements Listener {
                 item = utils.rename(EntityHead.SLIME.getItemStack(), config.getString("SLIME.Name"), loreList);
                 event.getDrops().add(item);
                 if (killerExist) {
-                    updatePDC(entity.getKiller());
+                    updateDB(entity.getKiller());
                 }
                 if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) {
                     embed.msg(title, description, footer);
@@ -721,7 +725,7 @@ public class EntityDeath implements Listener {
                 item = utils.rename(EntityHead.SNOWMAN.getItemStack(), config.getString("SNOW_GOLEM.Name"), loreList);
                 event.getDrops().add(item);
                 if (killerExist) {
-                    updatePDC(entity.getKiller());
+                    updateDB(entity.getKiller());
                 }
                 if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) {
                     embed.msg(title, description, footer);
@@ -737,7 +741,7 @@ public class EntityDeath implements Listener {
                 item = utils.rename(EntityHead.SQUID.getItemStack(), config.getString("SQUID.Name"), loreList);
                 event.getDrops().add(item);
                 if (killerExist) {
-                    updatePDC(entity.getKiller());
+                    updateDB(entity.getKiller());
                 }
                 if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) {
                     embed.msg(title, description, footer);
@@ -753,7 +757,7 @@ public class EntityDeath implements Listener {
                 item = utils.rename(EntityHead.WITCH.getItemStack(), config.getString("WITCH.Name"), loreList);
                 event.getDrops().add(item);
                 if (killerExist) {
-                    updatePDC(entity.getKiller());
+                    updateDB(entity.getKiller());
                 }
                 if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) {
                     embed.msg(title, description, footer);
@@ -769,7 +773,7 @@ public class EntityDeath implements Listener {
                 item = utils.rename(EntityHead.WITHER.getItemStack(), config.getString("WITHER.Name"), loreList);
                 event.getDrops().add(item);
                 if (killerExist) {
-                    updatePDC(entity.getKiller());
+                    updateDB(entity.getKiller());
                 }
                 if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) {
                     embed.msg(title, description, footer);
@@ -785,7 +789,7 @@ public class EntityDeath implements Listener {
                 item = utils.rename(EntityHead.ZOMBIFIED_PIGLIN.getItemStack(), config.getString("ZOMBIFIED_PIGLIN.Name"), loreList);
                 event.getDrops().add(item);
                 if (killerExist) {
-                    updatePDC(entity.getKiller());
+                    updateDB(entity.getKiller());
                 }
                 if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) {
                     embed.msg(title, description, footer);
@@ -801,7 +805,7 @@ public class EntityDeath implements Listener {
                 item = utils.rename(EntityHead.GHAST.getItemStack(), config.getString("GHAST.Name"), loreList);
                 event.getDrops().add(item);
                 if (killerExist) {
-                    updatePDC(entity.getKiller());
+                    updateDB(entity.getKiller());
                 }
                 if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot")) {
                     embed.msg(title, description, footer);
@@ -824,7 +828,7 @@ public class EntityDeath implements Listener {
                 }
                 event.getDrops().add(item);
                 if (killerExist) {
-                    updatePDC(entity.getKiller());
+                    updateDB(entity.getKiller());
                 }
                 if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot"))
                     embed.msg(title, description, footer);
@@ -846,7 +850,7 @@ public class EntityDeath implements Listener {
                         item = utils.rename(EntityHead.VILLAGER_WEAPONSMITH.getItemStack(), name, loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
 
                         break;
@@ -854,7 +858,7 @@ public class EntityDeath implements Listener {
                         item = utils.rename(EntityHead.VILLAGER_SHEPHERD.getItemStack(), name, loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
 
                         break;
@@ -862,7 +866,7 @@ public class EntityDeath implements Listener {
                         item = utils.rename(EntityHead.VILLAGER_LIBRARIAN.getItemStack(), name, loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
 
                         break;
@@ -870,7 +874,7 @@ public class EntityDeath implements Listener {
                         item = utils.rename(EntityHead.VILLAGER_FLETCHER.getItemStack(), name, loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
 
                         break;
@@ -878,7 +882,7 @@ public class EntityDeath implements Listener {
                         item = utils.rename(EntityHead.VILLAGER_FISHERMAN.getItemStack(), name, loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
 
                         break;
@@ -886,7 +890,7 @@ public class EntityDeath implements Listener {
                         item = utils.rename(EntityHead.VILLAGER_FARMER.getItemStack(), name, loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
 
                         break;
@@ -894,7 +898,7 @@ public class EntityDeath implements Listener {
                         item = utils.rename(EntityHead.VILLAGER_CLERIC.getItemStack(), name, loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
 
                         break;
@@ -902,7 +906,7 @@ public class EntityDeath implements Listener {
                         item = utils.rename(EntityHead.VILLAGER_CARTOGRAPHER.getItemStack(), name, loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
 
                         break;
@@ -910,7 +914,7 @@ public class EntityDeath implements Listener {
                         item = utils.rename(EntityHead.VILLAGER_BUTCHER.getItemStack(), name, loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
 
                         break;
@@ -918,7 +922,7 @@ public class EntityDeath implements Listener {
                         item = utils.rename(EntityHead.VILLAGER_ARMORER.getItemStack(), name, loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
 
                         break;
@@ -926,7 +930,7 @@ public class EntityDeath implements Listener {
                         item = utils.rename(EntityHead.VILLAGER_NULL.getItemStack(), name, loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
                         break;
                 }
@@ -952,7 +956,7 @@ public class EntityDeath implements Listener {
                         item = utils.rename(EntityHead.RABBIT_BROWN.getItemStack(), config.getString(name), loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
 
                         break;
@@ -960,7 +964,7 @@ public class EntityDeath implements Listener {
                         item = utils.rename(EntityHead.RABBIT_WHITE.getItemStack(), config.getString(name), loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
 
                         break;
@@ -968,7 +972,7 @@ public class EntityDeath implements Listener {
                         item = utils.rename(EntityHead.RABBIT_BLACK.getItemStack(), config.getString(name), loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
 
                         break;
@@ -976,7 +980,7 @@ public class EntityDeath implements Listener {
                         item = utils.rename(EntityHead.RABBIT_BLACK_AND_WHITE.getItemStack(), config.getString(name), loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
 
                         break;
@@ -984,7 +988,7 @@ public class EntityDeath implements Listener {
                         item = utils.rename(EntityHead.RABBIT_GOLD.getItemStack(), config.getString(name), loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
 
                         break;
@@ -992,7 +996,7 @@ public class EntityDeath implements Listener {
                         item = utils.rename(EntityHead.RABBIT_SALT_AND_PEPPER.getItemStack(), config.getString(name), loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
 
                         break;
@@ -1000,7 +1004,7 @@ public class EntityDeath implements Listener {
                         item = utils.rename(EntityHead.RABBIT_THE_KILLER_BUNNY.getItemStack(), config.getString(name), loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
 
                         break;
@@ -1020,7 +1024,7 @@ public class EntityDeath implements Listener {
                 item = utils.rename(EntityHead.ENDERMITE.getItemStack(), config.getString("ENDERMITE.Name"), loreList);
                 event.getDrops().add(item);
                 if (killerExist) {
-                    updatePDC(entity.getKiller());
+                    updateDB(entity.getKiller());
                 }
 
                 if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot"))
@@ -1038,7 +1042,7 @@ public class EntityDeath implements Listener {
                 item = utils.rename(EntityHead.GUARDIAN.getItemStack(), config.getString("GUARDIAN.Name"), loreList);
                 event.getDrops().add(item);
                 if (killerExist) {
-                    updatePDC(entity.getKiller());
+                    updateDB(entity.getKiller());
                 }
 
                 if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot"))
@@ -1058,7 +1062,7 @@ public class EntityDeath implements Listener {
                 item = utils.rename(EntityHead.SHULKER.getItemStack(), config.getString("SHULKER.Name"), loreList);
                 event.getDrops().add(item);
                 if (killerExist) {
-                    updatePDC(entity.getKiller());
+                    updateDB(entity.getKiller());
                 }
                 if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot"))
                     embed.msg(title, description, footer);
@@ -1076,7 +1080,7 @@ public class EntityDeath implements Listener {
                 item = utils.rename(EntityHead.POLAR_BEAR.getItemStack(), config.getString("POLAR_BEAR.Name"), loreList);
                 event.getDrops().add(item);
                 if (killerExist) {
-                    updatePDC(entity.getKiller());
+                    updateDB(entity.getKiller());
                 }
 
                 if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot"))
@@ -1099,7 +1103,7 @@ public class EntityDeath implements Listener {
                         item = utils.rename(EntityHead.ZOMBIE_VILLAGER_ARMORER.getItemStack(), config.getString(name), loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
 
                         break;
@@ -1107,7 +1111,7 @@ public class EntityDeath implements Listener {
                         item = utils.rename(EntityHead.ZOMBIE_VILLAGER_BUTCHER.getItemStack(), config.getString(name), loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
 
                         break;
@@ -1115,7 +1119,7 @@ public class EntityDeath implements Listener {
                         item = utils.rename(EntityHead.ZOMBIE_VILLAGER_CARTOGRAPHER.getItemStack(), config.getString(name), loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
 
                         break;
@@ -1123,7 +1127,7 @@ public class EntityDeath implements Listener {
                         item = utils.rename(EntityHead.ZOMBIE_VILLAGER_CLERIC.getItemStack(), config.getString(name), loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
 
                         break;
@@ -1131,7 +1135,7 @@ public class EntityDeath implements Listener {
                         item = utils.rename(EntityHead.ZOMBIE_VILLAGER_FARMER.getItemStack(), config.getString(name), loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
 
                         break;
@@ -1139,7 +1143,7 @@ public class EntityDeath implements Listener {
                         item = utils.rename(EntityHead.ZOMBIE_VILLAGER_FISHERMAN.getItemStack(), config.getString(name), loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
 
                         break;
@@ -1147,7 +1151,7 @@ public class EntityDeath implements Listener {
                         item = utils.rename(EntityHead.ZOMBIE_VILLAGER_FLETCHER.getItemStack(), config.getString(name), loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
 
                         break;
@@ -1155,7 +1159,7 @@ public class EntityDeath implements Listener {
                         item = utils.rename(EntityHead.ZOMBIE_VILLAGER_LIBRARIAN.getItemStack(), config.getString(name), loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
 
                         break;
@@ -1163,7 +1167,7 @@ public class EntityDeath implements Listener {
                         item = utils.rename(EntityHead.ZOMBIE_VILLAGER_SHEPHERD.getItemStack(), config.getString(name), loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
 
                         break;
@@ -1171,7 +1175,7 @@ public class EntityDeath implements Listener {
                         item = utils.rename(EntityHead.ZOMBIE_VILLAGER_WEAPONSMITH.getItemStack(), config.getString(name), loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
 
                         break;
@@ -1179,7 +1183,7 @@ public class EntityDeath implements Listener {
                         item = utils.rename(EntityHead.ZOMBIE_VILLAGER_NULL.getItemStack(), config.getString(name), loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
                         break;
                 }
@@ -1198,7 +1202,7 @@ public class EntityDeath implements Listener {
                 item = utils.rename(EntityHead.VINDICATOR.getItemStack(), config.getString("VINDICATOR.Name"), loreList);
                 event.getDrops().add(item);
                 if (killerExist) {
-                    updatePDC(entity.getKiller());
+                    updateDB(entity.getKiller());
                 }
                 if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot"))
                     embed.msg(title, description, footer);
@@ -1222,7 +1226,7 @@ public class EntityDeath implements Listener {
                 }
                 event.getDrops().add(item);
                 if (killerExist) {
-                    updatePDC(entity.getKiller());
+                    updateDB(entity.getKiller());
                 }
                 if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot"))
                     embed.msg(title, description, footer);
@@ -1239,7 +1243,7 @@ public class EntityDeath implements Listener {
                 item = utils.rename(EntityHead.EVOKER.getItemStack(), config.getString("EVOKER.Name"), loreList);
                 event.getDrops().add(item);
                 if (killerExist) {
-                    updatePDC(entity.getKiller());
+                    updateDB(entity.getKiller());
                 }
 
                 if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot"))
@@ -1257,7 +1261,7 @@ public class EntityDeath implements Listener {
                 item = utils.rename(EntityHead.HUSK.getItemStack(), config.getString("HUSK.Name"), loreList);
                 event.getDrops().add(item);
                 if (killerExist) {
-                    updatePDC(entity.getKiller());
+                    updateDB(entity.getKiller());
                 }
 
                 if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot"))
@@ -1275,7 +1279,7 @@ public class EntityDeath implements Listener {
                 item = utils.rename(EntityHead.STRAY.getItemStack(), config.getString("STRAY.Name"), loreList);
                 event.getDrops().add(item);
                 if (killerExist) {
-                    updatePDC(entity.getKiller());
+                    updateDB(entity.getKiller());
                 }
                 if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot"))
                     embed.msg(title, description, footer);
@@ -1292,7 +1296,7 @@ public class EntityDeath implements Listener {
                 item = utils.rename(EntityHead.ELDER_GUARDIAN.getItemStack(), config.getString("ELDER_GUARDIAN.Name"), loreList);
                 event.getDrops().add(item);
                 if (killerExist) {
-                    updatePDC(entity.getKiller());
+                    updateDB(entity.getKiller());
                 }
 
                 if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot"))
@@ -1310,7 +1314,7 @@ public class EntityDeath implements Listener {
                 item = utils.rename(EntityHead.DONKEY.getItemStack(), config.getString("DONKEY.Name"), loreList);
                 event.getDrops().add(item);
                 if (killerExist) {
-                    updatePDC(entity.getKiller());
+                    updateDB(entity.getKiller());
                 }
 
                 if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot"))
@@ -1328,7 +1332,7 @@ public class EntityDeath implements Listener {
                 item = utils.rename(EntityHead.ZOMBIE_HORSE.getItemStack(), config.getString("ZOMBIE_HORSE.Name"), loreList);
                 event.getDrops().add(item);
                 if (killerExist) {
-                    updatePDC(entity.getKiller());
+                    updateDB(entity.getKiller());
                 }
                 if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot"))
                     embed.msg(title, description, footer);
@@ -1345,7 +1349,7 @@ public class EntityDeath implements Listener {
                 item = utils.rename(EntityHead.SKELETON_HORSE.getItemStack(), config.getString("SKELETON_HORSE.Name"), loreList);
                 event.getDrops().add(item);
                 if (killerExist) {
-                    updatePDC(entity.getKiller());
+                    updateDB(entity.getKiller());
                 }
                 if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot"))
                     embed.msg(title, description, footer);
@@ -1364,7 +1368,7 @@ public class EntityDeath implements Listener {
 
                 event.getDrops().add(item);
                 if (killerExist) {
-                    updatePDC(entity.getKiller());
+                    updateDB(entity.getKiller());
                 }
 
                 if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot"))
@@ -1388,7 +1392,7 @@ public class EntityDeath implements Listener {
                         item = utils.rename(EntityHead.PARROT_BLUE.getItemStack(), name, loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
 
                         break;
@@ -1396,7 +1400,7 @@ public class EntityDeath implements Listener {
                         item = utils.rename(EntityHead.PARROT_CYAN.getItemStack(), name, loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
 
                         break;
@@ -1404,7 +1408,7 @@ public class EntityDeath implements Listener {
                         item = utils.rename(EntityHead.PARROT_GRAY.getItemStack(), name, loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
 
                         break;
@@ -1412,7 +1416,7 @@ public class EntityDeath implements Listener {
                         item = utils.rename(EntityHead.PARROT_RED.getItemStack(), name, loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
 
                         break;
@@ -1420,7 +1424,7 @@ public class EntityDeath implements Listener {
                         item = utils.rename(EntityHead.PARROT_GREEN.getItemStack(), name, loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
                         break;
                 }
@@ -1448,7 +1452,7 @@ public class EntityDeath implements Listener {
                         item = utils.rename(EntityHead.TROPICAL_FISH_MAGENTA.getItemStack(), name, loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
 
                         break;
@@ -1456,7 +1460,7 @@ public class EntityDeath implements Listener {
                         item = utils.rename(EntityHead.TROPICAL_FISH_LIGHT_BLUE.getItemStack(), name, loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
 
                         break;
@@ -1464,7 +1468,7 @@ public class EntityDeath implements Listener {
                         item = utils.rename(EntityHead.TROPICAL_FISH_YELLOW.getItemStack(), name, loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
 
                         break;
@@ -1472,7 +1476,7 @@ public class EntityDeath implements Listener {
                         item = utils.rename(EntityHead.TROPICAL_FISH_PINK.getItemStack(), name, loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
 
                         break;
@@ -1480,7 +1484,7 @@ public class EntityDeath implements Listener {
                         item = utils.rename(EntityHead.TROPICAL_FISH_GRAY.getItemStack(), name, loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
 
                         break;
@@ -1488,7 +1492,7 @@ public class EntityDeath implements Listener {
                         item = utils.rename(EntityHead.TROPICAL_FISH_LIGHT_GRAY.getItemStack(), name, loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
 
                         break;
@@ -1496,7 +1500,7 @@ public class EntityDeath implements Listener {
                         item = utils.rename(EntityHead.TROPICAL_FISH_CYAN.getItemStack(), name, loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
 
                         break;
@@ -1504,7 +1508,7 @@ public class EntityDeath implements Listener {
                         item = utils.rename(EntityHead.TROPICAL_FISH_BLUE.getItemStack(), name, loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
 
                         break;
@@ -1512,7 +1516,7 @@ public class EntityDeath implements Listener {
                         item = utils.rename(EntityHead.TROPICAL_FISH_GREEN.getItemStack(), name, loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
 
                         break;
@@ -1520,7 +1524,7 @@ public class EntityDeath implements Listener {
                         item = utils.rename(EntityHead.TROPICAL_FISH_RED.getItemStack(), name, loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
 
                         break;
@@ -1528,7 +1532,7 @@ public class EntityDeath implements Listener {
                         item = utils.rename(EntityHead.TROPICAL_FISH_BLACK.getItemStack(), name, loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
 
                         break;
@@ -1538,7 +1542,7 @@ public class EntityDeath implements Listener {
 
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
                 }
                 if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot"))
@@ -1556,7 +1560,7 @@ public class EntityDeath implements Listener {
                 item = utils.rename(EntityHead.PUFFERFISH.getItemStack(), config.getString("PUFFERFISH.Name"), loreList);
                 event.getDrops().add(item);
                 if (killerExist) {
-                    updatePDC(entity.getKiller());
+                    updateDB(entity.getKiller());
                 }
 
                 if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot"))
@@ -1574,7 +1578,7 @@ public class EntityDeath implements Listener {
                 item = utils.rename(EntityHead.SALMON.getItemStack(), config.getString("SALMON.Name"), loreList);
                 event.getDrops().add(item);
                 if (killerExist) {
-                    updatePDC(entity.getKiller());
+                    updateDB(entity.getKiller());
                 }
 
                 if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot"))
@@ -1592,7 +1596,7 @@ public class EntityDeath implements Listener {
                 item = utils.rename(EntityHead.COD.getItemStack(), config.getString("COD.Name"), loreList);
                 event.getDrops().add(item);
                 if (killerExist) {
-                    updatePDC(entity.getKiller());
+                    updateDB(entity.getKiller());
                 }
 
                 if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot"))
@@ -1610,7 +1614,7 @@ public class EntityDeath implements Listener {
                 item = utils.rename(EntityHead.TURTLE.getItemStack(), config.getString("TURTLE.Name"), loreList);
                 event.getDrops().add(item);
                 if (killerExist) {
-                    updatePDC(entity.getKiller());
+                    updateDB(entity.getKiller());
                 }
                 if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot"))
                     embed.msg(title, description, footer);
@@ -1627,7 +1631,7 @@ public class EntityDeath implements Listener {
                 item = utils.rename(EntityHead.DOLPHIN.getItemStack(), config.getString("DOLPHIN.Name"), loreList);
                 event.getDrops().add(item);
                 if (killerExist) {
-                    updatePDC(entity.getKiller());
+                    updateDB(entity.getKiller());
                 }
 
                 if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot"))
@@ -1647,7 +1651,7 @@ public class EntityDeath implements Listener {
 
                 event.getDrops().add(item);
                 if (killerExist) {
-                    updatePDC(entity.getKiller());
+                    updateDB(entity.getKiller());
                 }
                 if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot"))
                     embed.msg(title, description, footer);
@@ -1664,7 +1668,7 @@ public class EntityDeath implements Listener {
                 item = utils.rename(EntityHead.DROWNED.getItemStack(), config.getString("DROWNED.Name"), loreList);
                 event.getDrops().add(item);
                 if (killerExist) {
-                    updatePDC(entity.getKiller());
+                    updateDB(entity.getKiller());
                 }
 
                 if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot"))
@@ -1686,7 +1690,7 @@ public class EntityDeath implements Listener {
 
                 event.getDrops().add(item);
                 if (killerExist) {
-                    updatePDC(entity.getKiller());
+                    updateDB(entity.getKiller());
                 }
                 if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot"))
                     embed.msg(title, description, footer);
@@ -1708,7 +1712,7 @@ public class EntityDeath implements Listener {
                         item = utils.rename(EntityHead.TRADER_LLAMA_BROWN.getItemStack(), name, loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
 
                         break;
@@ -1716,7 +1720,7 @@ public class EntityDeath implements Listener {
                         item = utils.rename(EntityHead.TRADER_LLAMA_WHITE.getItemStack(), name, loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
 
                         break;
@@ -1724,7 +1728,7 @@ public class EntityDeath implements Listener {
                         item = utils.rename(EntityHead.TRADER_LLAMA_GRAY.getItemStack(), name, loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
 
                         break;
@@ -1732,7 +1736,7 @@ public class EntityDeath implements Listener {
                         item = utils.rename(EntityHead.TRADER_LLAMA_CREAMY.getItemStack(), name, loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
 
                         break;
@@ -1756,7 +1760,7 @@ public class EntityDeath implements Listener {
                         item = utils.rename(EntityHead.LLAMA_BROWN.getItemStack(), config.getString("LLAMA.Name"), loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
 
                         break;
@@ -1764,7 +1768,7 @@ public class EntityDeath implements Listener {
                         item = utils.rename(EntityHead.LLAMA_GRAY.getItemStack(), config.getString("LLAMA.Name"), loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
 
                         break;
@@ -1772,7 +1776,7 @@ public class EntityDeath implements Listener {
                         item = utils.rename(EntityHead.LLAMA_CREAMY.getItemStack(), config.getString("LLAMA.Name"), loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
 
                         break;
@@ -1780,7 +1784,7 @@ public class EntityDeath implements Listener {
                         item = utils.rename(EntityHead.LLAMA_WHITE.getItemStack(), config.getString("LLAMA.Name"), loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
 
                         break;
@@ -1800,7 +1804,7 @@ public class EntityDeath implements Listener {
                 item = utils.rename(EntityHead.RAVAGER.getItemStack(), config.getString("RAVAGER.Name"), loreList);
                 event.getDrops().add(item);
                 if (killerExist) {
-                    updatePDC(entity.getKiller());
+                    updateDB(entity.getKiller());
                 }
                 if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot"))
                     embed.msg(title, description, footer);
@@ -1817,7 +1821,7 @@ public class EntityDeath implements Listener {
                 item = utils.rename(EntityHead.PILLAGER.getItemStack(), config.getString("PILLAGER.Name"), loreList);
                 event.getDrops().add(item);
                 if (killerExist) {
-                    updatePDC(entity.getKiller());
+                    updateDB(entity.getKiller());
                 }
                 if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot"))
                     embed.msg(title, description, footer);
@@ -1839,7 +1843,7 @@ public class EntityDeath implements Listener {
                 }
                 event.getDrops().add(item);
                 if (killerExist) {
-                    updatePDC(entity.getKiller());
+                    updateDB(entity.getKiller());
                 }
                 if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot"))
                     embed.msg(title, description, footer);
@@ -1860,7 +1864,7 @@ public class EntityDeath implements Listener {
                         item = utils.rename(EntityHead.FOX.getItemStack(), config.getString("FOX.Name"), loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
 
                         break;
@@ -1869,7 +1873,7 @@ public class EntityDeath implements Listener {
                         item = utils.rename(EntityHead.FOX_WHITE.getItemStack(), config.getString("FOX.Name"), loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
 
                         break;
@@ -1892,7 +1896,7 @@ public class EntityDeath implements Listener {
                         item = utils.rename(EntityHead.CAT_BLACK.getItemStack(), config.getString("CAT.Name"), loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
 
                         break;
@@ -1900,7 +1904,7 @@ public class EntityDeath implements Listener {
                         item = utils.rename(EntityHead.CAT_BRITISH.getItemStack(), config.getString("CAT.Name"), loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
 
                         break;
@@ -1908,7 +1912,7 @@ public class EntityDeath implements Listener {
                         item = utils.rename(EntityHead.CAT_CALICO.getItemStack(), config.getString("CAT.Name"), loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
 
                         break;
@@ -1916,7 +1920,7 @@ public class EntityDeath implements Listener {
                         item = utils.rename(EntityHead.CAT_JELLIE.getItemStack(), config.getString("CAT.Name"), loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
 
                         break;
@@ -1924,7 +1928,7 @@ public class EntityDeath implements Listener {
                         item = utils.rename(EntityHead.CAT_PERSIAN.getItemStack(), config.getString("CAT.Name"), loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
 
                         break;
@@ -1932,7 +1936,7 @@ public class EntityDeath implements Listener {
                         item = utils.rename(EntityHead.CAT_RAGDOLL.getItemStack(), config.getString("CAT.Name"), loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
 
                         break;
@@ -1940,7 +1944,7 @@ public class EntityDeath implements Listener {
                         item = utils.rename(EntityHead.CAT_RED.getItemStack(), config.getString("CAT.Name"), loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
 
                         break;
@@ -1948,7 +1952,7 @@ public class EntityDeath implements Listener {
                         item = utils.rename(EntityHead.CAT_SIAMESE.getItemStack(), config.getString("CAT.Name"), loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
 
                         break;
@@ -1956,7 +1960,7 @@ public class EntityDeath implements Listener {
                         item = utils.rename(EntityHead.CAT_TABBY.getItemStack(), config.getString("CAT.Name"), loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
 
                         break;
@@ -1964,7 +1968,7 @@ public class EntityDeath implements Listener {
                         item = utils.rename(EntityHead.CAT_WHITE.getItemStack(), config.getString("CAT.Name"), loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
                         break;
                 }
@@ -1990,7 +1994,7 @@ public class EntityDeath implements Listener {
                 }
                 event.getDrops().add(item);
                 if (killerExist) {
-                    updatePDC(entity.getKiller());
+                    updateDB(entity.getKiller());
                 }
                 if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot"))
                     embed.msg(title, description, footer);
@@ -2008,7 +2012,7 @@ public class EntityDeath implements Listener {
                 item = utils.rename(EntityHead.ZOGLIN.getItemStack(), config.getString("ZOGLIN.Name"), loreList);
                 event.getDrops().add(item);
                 if (killerExist) {
-                    updatePDC(entity.getKiller());
+                    updateDB(entity.getKiller());
                 }
                 if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot"))
                     embed.msg(title, description, footer);
@@ -2025,7 +2029,7 @@ public class EntityDeath implements Listener {
                 item = utils.rename(EntityHead.STRIDER.getItemStack(), config.getString("STRIDER.Name"), loreList);
                 event.getDrops().add(item);
                 if (killerExist) {
-                    updatePDC(entity.getKiller());
+                    updateDB(entity.getKiller());
                 }
                 if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot"))
                     embed.msg(title, description, footer);
@@ -2042,7 +2046,7 @@ public class EntityDeath implements Listener {
                 item = utils.rename(EntityHead.PIGLIN.getItemStack(), config.getString("PIGLIN.Name"), loreList);
                 event.getDrops().add(item);
                 if (killerExist) {
-                    updatePDC(entity.getKiller());
+                    updateDB(entity.getKiller());
                 }
                 if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot"))
                     embed.msg(title, description, footer);
@@ -2059,7 +2063,7 @@ public class EntityDeath implements Listener {
                 item = utils.rename(EntityHead.HOGLIN.getItemStack(), config.getString("HOGLIN.Name"), loreList);
                 event.getDrops().add(item);
                 if (killerExist) {
-                    updatePDC(entity.getKiller());
+                    updateDB(entity.getKiller());
                 }
                 if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot"))
                     embed.msg(title, description, footer);
@@ -2076,7 +2080,7 @@ public class EntityDeath implements Listener {
                 item = utils.rename(EntityHead.PIGLIN_BRUTE.getItemStack(), config.getString("PIGLIN_BRUTE.Name"), loreList);
                 event.getDrops().add(item);
                 if (killerExist) {
-                    updatePDC(entity.getKiller());
+                    updateDB(entity.getKiller());
                 }
                 if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot"))
                     embed.msg(title, description, footer);
@@ -2095,7 +2099,7 @@ public class EntityDeath implements Listener {
                 item = utils.rename(EntityHead.GLOW_SQUID.getItemStack(), config.getString("GLOW_SQUID.Name"), loreList);
                 event.getDrops().add(item);
                 if (killerExist) {
-                    updatePDC(entity.getKiller());
+                    updateDB(entity.getKiller());
                 }
                 if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot"))
                     embed.msg(title, description, footer);
@@ -2112,7 +2116,7 @@ public class EntityDeath implements Listener {
                 item = utils.rename(EntityHead.GOAT.getItemStack(), config.getString("GOAT.Name"), loreList);
                 event.getDrops().add(item);
                 if (killerExist) {
-                    updatePDC(entity.getKiller());
+                    updateDB(entity.getKiller());
                 }
 
                 if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot"))
@@ -2135,35 +2139,35 @@ public class EntityDeath implements Listener {
                         item = utils.rename(EntityHead.AXOLOTL_LUCY.getItemStack(), name, loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
                         break;
                     case BLUE:
                         item = utils.rename(EntityHead.AXOLOTL_BLUE.getItemStack(), name, loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
                         break;
                     case WILD:
                         item = utils.rename(EntityHead.AXOLOTL_WILD.getItemStack(), name, loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
                         break;
                     case CYAN:
                         item = utils.rename(EntityHead.AXOLOTL_CYAN.getItemStack(), name, loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
                         break;
                     case GOLD:
                         item = utils.rename(EntityHead.AXOLOTL_GOLD.getItemStack(), name, loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
                         break;
                 }
@@ -2184,7 +2188,7 @@ public class EntityDeath implements Listener {
                 item = utils.rename(EntityHead.ALLAY.getItemStack(), config.getString("ALLAY.Name"), loreList);
                 event.getDrops().add(item);
                 if (killerExist) {
-                    updatePDC(entity.getKiller());
+                    updateDB(entity.getKiller());
                 }
 
                 if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot"))
@@ -2206,7 +2210,7 @@ public class EntityDeath implements Listener {
                         item = utils.rename(EntityHead.FROG_TEMPERATE.getItemStack(), name, loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
 
                         break;
@@ -2214,7 +2218,7 @@ public class EntityDeath implements Listener {
                         item = utils.rename(EntityHead.FROG_WARM.getItemStack(), name, loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
 
                         break;
@@ -2222,7 +2226,7 @@ public class EntityDeath implements Listener {
                         item = utils.rename(EntityHead.FROG_COLD.getItemStack(), name, loreList);
                         event.getDrops().add(item);
                         if (killerExist) {
-                            updatePDC(entity.getKiller());
+                            updateDB(entity.getKiller());
                         }
                         break;
                 }
@@ -2241,7 +2245,7 @@ public class EntityDeath implements Listener {
                 item = utils.rename(EntityHead.TADPOLE.getItemStack(), config.getString("TADPOLE.Name"), loreList);
                 event.getDrops().add(item);
                 if (killerExist) {
-                    updatePDC(entity.getKiller());
+                    updateDB(entity.getKiller());
                 }
 
                 if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot"))
@@ -2259,7 +2263,7 @@ public class EntityDeath implements Listener {
                 item = utils.rename(EntityHead.WARDEN.getItemStack(), config.getString("WARDEN.Name"), loreList);
                 event.getDrops().add(item);
                 if (killerExist) {
-                    updatePDC(entity.getKiller());
+                    updateDB(entity.getKiller());
                 }
 
                 if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot"))
@@ -2277,7 +2281,7 @@ public class EntityDeath implements Listener {
                 item = utils.rename(EntityHead.CAMEL.getItemStack(), config.getString("CAMEL.Name"), loreList);
                 event.getDrops().add(item);
                 if (killerExist) {
-                    updatePDC(entity.getKiller());
+                    updateDB(entity.getKiller());
                 }
 
                 if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot"))
@@ -2295,7 +2299,7 @@ public class EntityDeath implements Listener {
                 item = utils.rename(EntityHead.SNIFFER.getItemStack(), config.getString("SNIFFER.Name"), loreList);
                 event.getDrops().add(item);
                 if (killerExist) {
-                    updatePDC(entity.getKiller());
+                    updateDB(entity.getKiller());
                 }
 
                 if ((config.getBoolean("Bot.Enable")) && killerExist && Bukkit.getPluginManager().isPluginEnabled("CentralBot"))

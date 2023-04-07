@@ -3,6 +3,7 @@ package me.rrs.headdrop.util;
 import me.rrs.centralbot.spigot.CentralBotAPI;
 import me.rrs.headdrop.HeadDrop;
 import net.dv8tion.jda.api.EmbedBuilder;
+import org.jetbrains.annotations.NotNull;
 
 
 public class Embed {
@@ -16,7 +17,7 @@ public class Embed {
                 .build()).queue();
     }
 
-    public void msg(String title, String description, String footer) {
+    public void msg(@NotNull String title, String description, @NotNull String footer) {
         embed(title, description, footer);
     }
 }

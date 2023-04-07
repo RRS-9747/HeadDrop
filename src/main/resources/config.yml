@@ -18,6 +18,15 @@ Config:
     - demoWorld
     - demoWorld2
 
+Database:
+  Online: true
+  URL: "jdbc:sqlite:HeadDrop.sqlite"
+  User:
+  Password:
+
+Web:
+  Enable: true
+  Port: 8080
 
 Bot:
   Enable: false

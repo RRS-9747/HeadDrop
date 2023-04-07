@@ -1,6 +1,7 @@
 
 package me.rrs.headdrop;
 
+import com.sun.net.httpserver.HttpServer;
 import dev.dejvokep.boostedyaml.YamlDocument;
 import dev.dejvokep.boostedyaml.dvs.Pattern;
 import dev.dejvokep.boostedyaml.dvs.segment.Segment;
@@ -10,6 +11,7 @@ import dev.dejvokep.boostedyaml.settings.loader.LoaderSettings;
 import dev.dejvokep.boostedyaml.settings.updater.UpdaterSettings;
 import me.rrs.headdrop.commands.MainCommand;
 import me.rrs.headdrop.commands.Head;
+import me.rrs.headdrop.database.Database;
 import me.rrs.headdrop.listeners.EntityDeath;
 import me.rrs.headdrop.util.TabComplete;
 import me.rrs.headdrop.util.UpdateAPI;
@@ -23,12 +25,14 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.InetSocketAddress;
 
 public class HeadDrop extends JavaPlugin {
 
     private static HeadDrop instance;
     private static YamlDocument lang;
     private static YamlDocument config;
+    private static Database database;
 
 
 
@@ -41,18 +45,30 @@ public class HeadDrop extends JavaPlugin {
     public static HeadDrop getInstance() {
         return instance;
     }
+    public static Database getDatabase(){
+        return database;
+    }
 
 
     @Override
     public void onEnable() {
-
-        String version = Bukkit.getServer().getBukkitVersion();
 
         if (!getDescription().getName().equals("HeadDrop")){
             Bukkit.getLogger().severe("Please Download a fresh jar from https://www.spigotmc.org/resources/99976/");
             Bukkit.getPluginManager().disablePlugin(this);
             return;
         }
+
+        Bukkit.getLogger().info("");
+        Bukkit.getLogger().info("██╗  ██╗███████╗ █████╗ ██████╗ ██████╗ ██████╗  █████╗ ██████╗ ");
+        Bukkit.getLogger().info("██║  ██║██╔════╝██╔══██╗██╔══██╗██╔══██╗██╔══██╗██╔══██╗██╔══██╗");
+        Bukkit.getLogger().info("███████║█████╗  ███████║██║  ██║██║  ██║██████╔╝██║  ██║██████╔╝");
+        Bukkit.getLogger().info("██╔══██║██╔══╝  ██╔══██║██║  ██║██║  ██║██╔══██╗██║  ██║██╔═══╝ ");
+        Bukkit.getLogger().info("██║  ██║███████╗██║  ██║██████╔╝██████╔╝██║  ██║╚█████╔╝██║     ");
+        Bukkit.getLogger().info("╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝ ╚═════╝ ╚═╝  ╚═╝ ╚════╝ ╚═╝     ");
+        Bukkit.getLogger().info("");
+        Bukkit.getLogger().info("--------------------------------------------------------------------------");
+        Bukkit.getLogger().info("[HeadDrop] HeadDrop " + getDescription().getVersion()+ " by RRS");
 
         instance = this;
         try {
@@ -73,19 +89,12 @@ public class HeadDrop extends JavaPlugin {
             e.printStackTrace();
         }
 
-        Bukkit.getLogger().info("");
-        Bukkit.getLogger().info("██╗  ██╗███████╗ █████╗ ██████╗ ██████╗ ██████╗  █████╗ ██████╗ ");
-        Bukkit.getLogger().info("██║  ██║██╔════╝██╔══██╗██╔══██╗██╔══██╗██╔══██╗██╔══██╗██╔══██╗");
-        Bukkit.getLogger().info("███████║█████╗  ███████║██║  ██║██║  ██║██████╔╝██║  ██║██████╔╝");
-        Bukkit.getLogger().info("██╔══██║██╔══╝  ██╔══██║██║  ██║██║  ██║██╔══██╗██║  ██║██╔═══╝ ");
-        Bukkit.getLogger().info("██║  ██║███████╗██║  ██║██████╔╝██████╔╝██║  ██║╚█████╔╝██║     ");
-        Bukkit.getLogger().info("╚═╝  ╚═╝╚══════╝╚═╝  ╚═╝╚═════╝ ╚═════╝ ╚═╝  ╚═╝ ╚════╝ ╚═╝     ");
-        Bukkit.getLogger().info("");
-        Bukkit.getLogger().info("--------------------------------------------------------------------------");
-        Bukkit.getLogger().info("[HeadDrop] HeadDrop " + getDescription().getVersion()+ " by RRS");
-
         Metrics metrics = new Metrics(this, 13554);
         metrics.addCustomChart(new SimplePie("discord_bot", () -> String.valueOf(getConfig().getBoolean("Bot.Enable"))));
+
+        database = new Database();
+        database.setupDataSource();
+        database.createTable();
 
         getServer().getPluginManager().registerEvents(new EntityDeath(), this);
         getServer().getPluginManager().registerEvents(new PlayerJoin(), this);
@@ -95,12 +104,26 @@ public class HeadDrop extends JavaPlugin {
         getCommand("headdrop").setTabCompleter(new TabComplete());
         updateChecker();
 
+        if (config.getBoolean("Web.Enable")){
+            WebsiteController handler = new WebsiteController();
+            try {
+                handler.start(config.getInt("Web.Port"));
+                Bukkit.getLogger().info("[HeadDrop] Website is now online at " + config.getInt("Web.Port" + " port"));
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        }
+
         Bukkit.getLogger().info("[HeadDrop] Enabled successfully!");
         Bukkit.getLogger().info("--------------------------------------------------------------------------");
     }
 
     @Override
     public void onDisable() {
+        if (config.getBoolean("Web.Enable")){
+            WebsiteController handler = new WebsiteController();
+            handler.stop();
+        }
         Bukkit.getLogger().info("HeadDrop Disabled.");
     }
 

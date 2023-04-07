@@ -3,6 +3,7 @@ package me.rrs.headdrop.util;
 import de.tr7zw.changeme.nbtapi.NBTCompound;
 import de.tr7zw.changeme.nbtapi.NBTItem;
 import me.clip.placeholderapi.PlaceholderAPI;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -19,7 +20,11 @@ public class ItemUtils {
         if (rawLore != null || !rawLore.isEmpty()) {
             List<String> finalLore = new ArrayList<>();
             for (String lore : rawLore) {
-                finalLore.add(PlaceholderAPI.setPlaceholders(null, ChatColor.translateAlternateColorCodes('&', lore)));
+                if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")){
+                    finalLore.add(PlaceholderAPI.setPlaceholders(null, ChatColor.translateAlternateColorCodes('&', lore)));
+                }else {
+                    finalLore.add(lore);
+                }
             }
             meta.setLore(finalLore);
         }
@@ -33,7 +38,11 @@ public class ItemUtils {
         if (rawLore != null || !rawLore.isEmpty()) {
             List<String> finalLore = new ArrayList<>();
             for (String lore : rawLore) {
-                finalLore.add(PlaceholderAPI.setPlaceholders(null, ChatColor.translateAlternateColorCodes('&', lore)));
+                if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")){
+                    finalLore.add(PlaceholderAPI.setPlaceholders(null, ChatColor.translateAlternateColorCodes('&', lore)));
+                }else {
+                    finalLore.add(lore);
+                }
             }
             meta.setLore(finalLore);
         }

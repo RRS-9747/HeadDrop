@@ -15,7 +15,9 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
 
 public class MainCommand implements CommandExecutor {
 
@@ -62,14 +64,16 @@ public class MainCommand implements CommandExecutor {
                     }
                     break;
                 case "leaderboard":
-                    List<Player> topPlayers = getTopPlayers();
+                    Map<String, Integer> playerData = HeadDrop.getDatabase().getPlayerData();
+                    List<Map.Entry<String, Integer>> sortedData = new ArrayList<>(playerData.entrySet());
+                    sortedData.sort(Map.Entry.comparingByValue(Comparator.reverseOrder()));
                     sender.sendMessage(ChatColor.GOLD + "---- Top Online HeadHunter ----");
-                    for (int i = 0; i < topPlayers.size(); i++) {
-                        Player player = topPlayers.get(i);
-                        PersistentDataContainer container = player.getPersistentDataContainer();
-                        int headDropCount = container.get(new NamespacedKey(HeadDrop.getInstance(), "HeadDrop"), PersistentDataType.INTEGER);
-                        sender.sendMessage(ChatColor.YELLOW.toString() + (i + 1) + ". " + player.getName() + " - " + headDropCount + " Head(s)");
+                    for (int i = 0; i < Math.min(sortedData.size(), 10); i++) {
+                        Map.Entry<String, Integer> entry = sortedData.get(i);
+                        sender.sendMessage(ChatColor.YELLOW.toString() + (i + 1) + ". " + entry.getKey() + " - " + entry.getValue() + " Head(s)");
                     }
+                    break;
+
 
             }
         }
