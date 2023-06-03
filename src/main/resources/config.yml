@@ -14,6 +14,7 @@ Config:
   Update-Checker-Interval: 10 # In Minute.
   Require-Killer-Player: true
   Killer-Require-Permission: false
+  Auto-Pickup: false
   Disable-Worlds:
     - demoWorld
     - demoWorld2
@@ -25,8 +26,9 @@ Database:
   Password:
 
 Web:
-  Enable: true
+  Enable: false
   Port: 8080
+  Endpoint: "leaderboard" #make the website address https://localhost:8080/leaderboard
 
 Bot:
   Enable: false

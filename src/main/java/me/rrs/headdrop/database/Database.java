@@ -62,7 +62,7 @@ public class Database {
     }
 
 
-    public boolean updateDataByUuid(String uuid, String name, int data) {
+    public void updateDataByUuid(String uuid, String name, int data) {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement selectStatement = connection.prepareStatement("SELECT * FROM headdrop WHERE uuid = ?");
              PreparedStatement insertStatement = connection.prepareStatement("INSERT INTO headdrop (name, uuid, data) VALUES (?, ?, ?)");
@@ -76,27 +76,22 @@ public class Database {
                     updateStatement.setString(1, name);
                     updateStatement.setInt(2, data);
                     updateStatement.setString(3, uuid);
-                    int rowsUpdated = updateStatement.executeUpdate();
-                    return rowsUpdated > 0;
                 } else {
                     // Row doesn't exist, insert a new row with the name, UUID, and data columns
                     insertStatement.setString(1, name);
                     insertStatement.setString(2, uuid);
                     insertStatement.setInt(3, data);
-                    int rowsInserted = insertStatement.executeUpdate();
-                    return rowsInserted > 0;
                 }
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return false;
     }
 
 
 
-    public boolean updateDataByName(String name, int data) {
+    public void updateDataByName(String name, int data) {
         try (Connection connection = dataSource.getConnection();
              PreparedStatement statement = connection.prepareStatement("SELECT * FROM headdrop WHERE name = ?;")) {
             statement.setString(1, name);
@@ -105,8 +100,6 @@ public class Database {
                     try (PreparedStatement updateStatement = connection.prepareStatement("UPDATE headdrop SET data = ? WHERE name = ?;")) {
                         updateStatement.setInt(1, data);
                         updateStatement.setString(2, name);
-                        int rowsUpdated = updateStatement.executeUpdate();
-                        return rowsUpdated > 0;
                     }
                 } else {
                     try (PreparedStatement insertStatement = connection.prepareStatement("INSERT INTO headdrop (name, uuid, data) VALUES (?, ?, ?);")) {
@@ -114,15 +107,12 @@ public class Database {
                         insertStatement.setString(1, name);
                         insertStatement.setString(2, uuid.toString());
                         insertStatement.setInt(3, data);
-                        int rowsInserted = insertStatement.executeUpdate();
-                        return rowsInserted > 0;
                     }
                 }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return false;
     }
 
 

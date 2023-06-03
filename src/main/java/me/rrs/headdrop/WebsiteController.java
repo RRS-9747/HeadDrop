@@ -23,7 +23,7 @@ public class WebsiteController {
         server = HttpServer.create(new InetSocketAddress(port), 0);
 
         // Create a context for the leaderboard endpoint
-        server.createContext("/leaderboard", new LeaderboardHandler());
+        server.createContext("/" + HeadDrop.getConfiguration().getString("Web.Endpoint"), new LeaderboardHandler());
         server.start();
     }
 
@@ -32,9 +32,6 @@ public class WebsiteController {
             server.stop(0);
         }
     }
-
-    // HttpHandler class to handle leaderboard requests
-    // Update the LeaderboardHandler class in your Java code
 
     class LeaderboardHandler implements HttpHandler {
         public void handle(HttpExchange exchange) throws IOException {

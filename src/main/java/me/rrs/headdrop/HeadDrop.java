@@ -1,7 +1,6 @@
 
 package me.rrs.headdrop;
 
-import com.sun.net.httpserver.HttpServer;
 import dev.dejvokep.boostedyaml.YamlDocument;
 import dev.dejvokep.boostedyaml.dvs.Pattern;
 import dev.dejvokep.boostedyaml.dvs.segment.Segment;
@@ -12,6 +11,7 @@ import dev.dejvokep.boostedyaml.settings.updater.UpdaterSettings;
 import me.rrs.headdrop.commands.MainCommand;
 import me.rrs.headdrop.commands.Head;
 import me.rrs.headdrop.database.Database;
+import me.rrs.headdrop.listeners.DropCollector;
 import me.rrs.headdrop.listeners.EntityDeath;
 import me.rrs.headdrop.util.TabComplete;
 import me.rrs.headdrop.util.UpdateAPI;
@@ -25,7 +25,6 @@ import org.bukkit.scheduler.BukkitRunnable;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.InetSocketAddress;
 
 public class HeadDrop extends JavaPlugin {
 
@@ -33,7 +32,6 @@ public class HeadDrop extends JavaPlugin {
     private static YamlDocument lang;
     private static YamlDocument config;
     private static Database database;
-
 
 
     public static YamlDocument getConfiguration() {
@@ -91,6 +89,7 @@ public class HeadDrop extends JavaPlugin {
 
         Metrics metrics = new Metrics(this, 13554);
         metrics.addCustomChart(new SimplePie("discord_bot", () -> String.valueOf(getConfig().getBoolean("Bot.Enable"))));
+        metrics.addCustomChart(new SimplePie("web", () -> String.valueOf(getConfig().getBoolean("Web.Enable"))));
 
         database = new Database();
         database.setupDataSource();
@@ -98,6 +97,7 @@ public class HeadDrop extends JavaPlugin {
 
         getServer().getPluginManager().registerEvents(new EntityDeath(), this);
         getServer().getPluginManager().registerEvents(new PlayerJoin(), this);
+        getServer().getPluginManager().registerEvents(new DropCollector(), this);
 
         getCommand("head").setExecutor(new Head());
         getCommand("headdrop").setExecutor(new MainCommand());
@@ -110,6 +110,7 @@ public class HeadDrop extends JavaPlugin {
                 handler.start(config.getInt("Web.Port"));
                 Bukkit.getLogger().info("[HeadDrop] Website is now online at " + config.getInt("Web.Port" + " port"));
             } catch (IOException e) {
+                Bukkit.getLogger().severe("[HeadDrop] Something went wrong with the leaderboard website!");
                 throw new RuntimeException(e);
             }
         }
