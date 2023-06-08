@@ -2731,25 +2731,23 @@ public class EntityDeath implements Listener {
                         .map(lore -> lore.replace("{DATE}", LocalDate.now().toString()))
                         .collect(Collectors.toList());
                 //PIGLIN_HEAD added in 1.20
-                try {
-                    item = utils.rename(new ItemStack(Material.PIGLIN_HEAD), config.getString("PIGLIN.Name"), loreList);
-
-                    HeadDropEvent headDropEvent = new HeadDropEvent(item, entity.getKiller());
-                    Bukkit.getServer().getPluginManager().callEvent(headDropEvent);
-                    if (!headDropEvent.isCancelled()){
-                        event.getDrops().add(item);
-                    }
-
-                } catch (NoSuchFieldError e) {
+                if (Bukkit.getServer().getVersion().contains("1.19")){
                     item = utils.rename(EntityHead.PIGLIN.getItemStack(), config.getString("PIGLIN.Name"), loreList);
+                }else {
+                    try {
+                        item = utils.rename(new ItemStack(Material.PIGLIN_HEAD), config.getString("PIGLIN.Name"), loreList);
 
-                    HeadDropEvent headDropEvent = new HeadDropEvent(item, entity.getKiller());
-                    Bukkit.getServer().getPluginManager().callEvent(headDropEvent);
-                    if (!headDropEvent.isCancelled()){
-                        event.getDrops().add(item);
+                    } catch (NoSuchFieldError e) {
+                        item = utils.rename(EntityHead.PIGLIN.getItemStack(), config.getString("PIGLIN.Name"), loreList);
                     }
-
                 }
+                HeadDropEvent headDropEvent = new HeadDropEvent(item, entity.getKiller());
+                Bukkit.getServer().getPluginManager().callEvent(headDropEvent);
+                if (!headDropEvent.isCancelled()){
+                    event.getDrops().add(item);
+                }
+
+
                 if (killerExist) {
                     updateDB(entity.getKiller());
                 }
