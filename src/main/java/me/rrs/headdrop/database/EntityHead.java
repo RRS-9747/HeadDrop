@@ -1,7 +1,6 @@
 package me.rrs.headdrop.database;
 
 import me.rrs.headdrop.util.SkullCreator;
-import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
 public enum EntityHead {

@@ -2,15 +2,10 @@ package me.rrs.headdrop;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
-import org.bukkit.Bukkit;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.net.InetSocketAddress;
-import java.net.URLDecoder;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -33,7 +28,7 @@ public class WebsiteController {
         }
     }
 
-    class LeaderboardHandler implements HttpHandler {
+    static class LeaderboardHandler implements HttpHandler {
         public void handle(HttpExchange exchange) throws IOException {
             // Get player data from the database
             Map<String, Integer> playerData = HeadDrop.getDatabase().getPlayerData();

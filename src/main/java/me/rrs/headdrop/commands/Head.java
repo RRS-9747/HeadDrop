@@ -11,7 +11,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class Head implements CommandExecutor {
 
-    Lang lang = new Lang();
+    final Lang lang = new Lang();
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, String[] args) {

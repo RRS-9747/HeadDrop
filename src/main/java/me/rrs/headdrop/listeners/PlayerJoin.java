@@ -1,14 +1,10 @@
 package me.rrs.headdrop.listeners;
 
-import me.rrs.headdrop.HeadDrop;
 import org.bukkit.ChatColor;
-import org.bukkit.NamespacedKey;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.persistence.PersistentDataContainer;
-import org.bukkit.persistence.PersistentDataType;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;

@@ -11,8 +11,8 @@ public final class HeadDropEvent extends Event implements Cancellable {
     private static final HandlerList handlers = new HandlerList();
     private boolean cancelled;
 
-    private ItemStack head;
-    private Player killer;
+    private final ItemStack head;
+    private final Player killer;
 
     public HeadDropEvent(ItemStack head, Player killer) {
         this.head = head;
@@ -30,10 +30,6 @@ public final class HeadDropEvent extends Event implements Cancellable {
 
     public Player getKiller() {
         return killer;
-    }
-
-    public static HandlerList getHandlerList() {
-        return handlers;
     }
 
     @Override

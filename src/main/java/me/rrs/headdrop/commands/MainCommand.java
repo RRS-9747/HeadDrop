@@ -4,13 +4,10 @@ import me.rrs.headdrop.HeadDrop;
 import me.rrs.headdrop.util.Lang;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.NamespacedKey;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-import org.bukkit.persistence.PersistentDataContainer;
-import org.bukkit.persistence.PersistentDataType;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -21,7 +18,7 @@ import java.util.Map;
 
 public class MainCommand implements CommandExecutor {
 
-    Lang lang = new Lang();
+    final Lang lang = new Lang();
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, String[] args) {
         if (args.length == 0){
@@ -78,28 +75,5 @@ public class MainCommand implements CommandExecutor {
             }
         }
         return true;
-    }
-
-    public List<Player> getTopPlayers() {
-        // Create a list to store the top players
-        List<Player> topPlayers = new ArrayList<>();
-
-        // Iterate through all online players
-        for (Player player : Bukkit.getOnlinePlayers()) {
-            // Retrieve the player's HeadDrop PDC count
-            PersistentDataContainer container = player.getPersistentDataContainer();
-            int headDropCount = container.get(new NamespacedKey(HeadDrop.getInstance(), "HeadDrop"), PersistentDataType.INTEGER);
-
-            // If the player's HeadDrop count is high enough, add them to the top players list
-            if (topPlayers.size() < 10 || headDropCount > topPlayers.get(9).getPersistentDataContainer().get(new NamespacedKey(HeadDrop.getInstance(), "HeadDrop"), PersistentDataType.INTEGER)) {
-                topPlayers.add(player);
-                topPlayers.sort((p1, p2) -> p2.getPersistentDataContainer().get(new NamespacedKey(HeadDrop.getInstance(), "HeadDrop"), PersistentDataType.INTEGER) - p1.getPersistentDataContainer().get(new NamespacedKey(HeadDrop.getInstance(), "HeadDrop"), PersistentDataType.INTEGER));
-                if (topPlayers.size() > 10) {
-                    topPlayers.remove(10);
-                }
-            }
-        }
-
-        return topPlayers;
     }
 }
