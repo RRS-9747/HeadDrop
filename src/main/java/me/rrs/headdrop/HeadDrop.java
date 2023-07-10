@@ -10,9 +10,9 @@ import dev.dejvokep.boostedyaml.settings.updater.UpdaterSettings;
 import me.rrs.headdrop.commands.Head;
 import me.rrs.headdrop.commands.MainCommand;
 import me.rrs.headdrop.database.Database;
-import me.rrs.headdrop.listeners.DropCollector;
-import me.rrs.headdrop.listeners.EntityDeath;
-import me.rrs.headdrop.listeners.PlayerJoin;
+import me.rrs.headdrop.listener.DropCollector;
+import me.rrs.headdrop.listener.EntityDeath;
+import me.rrs.headdrop.listener.PlayerJoin;
 import me.rrs.headdrop.util.TabComplete;
 import me.rrs.headdrop.util.UpdateAPI;
 import org.bstats.bukkit.Metrics;
@@ -104,15 +104,16 @@ public class HeadDrop extends JavaPlugin {
         getCommand("head").setExecutor(new Head());
         getCommand("headdrop").setExecutor(new MainCommand());
         getCommand("headdrop").setTabCompleter(new TabComplete());
-        if (Bukkit.getServer().getVersion().contains("Folia")) {
-            updateChecker();
-        } else {
+
+        try {
             new BukkitRunnable() {
                 @Override
                 public void run() {
                     updateChecker();
                 }
             }.runTaskTimerAsynchronously(this, 0L, 20L * 60 * config.getInt("Config.Update-Checker-Interval"));
+        }catch (UnsupportedOperationException e) {
+            updateChecker();
         }
 
 
