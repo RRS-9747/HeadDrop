@@ -1,9 +1,0 @@
-Version: ${project.version}
-MyHead-Success: "Your Head added in your inventory!"
-Head-Success: "%player%'s Head added in your inventory"
-Head-Error: "You Need to give a player name to get head!"
-Head-Search-Error: "You need to give a name to search for head!"
-Custom-Head-Success: "Head Added on your Inventory"
-Reload: "Plugin reloaded!"
-Permission-Error: "You don't have permission to execute this command!"
-Player-Command: "This is player only command!"
