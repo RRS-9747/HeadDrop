@@ -47,7 +47,6 @@ public class ItemUtils {
             }
             meta.setLore(finalLore);
         }
-        System.out.println("Lore added");
         head.setItemMeta(meta);
         return head;
     }

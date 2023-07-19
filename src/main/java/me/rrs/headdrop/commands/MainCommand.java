@@ -1,6 +1,7 @@
 package me.rrs.headdrop.commands;
 
 import me.rrs.headdrop.HeadDrop;
+import me.rrs.headdrop.listener.GUI;
 import me.rrs.headdrop.util.Lang;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -9,6 +10,7 @@ import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
@@ -38,6 +40,7 @@ public class MainCommand implements CommandExecutor {
                         player.sendMessage(ChatColor.AQUA + "> " + ChatColor.LIGHT_PURPLE + "/myhead" + ChatColor.RESET + " -> Get your head.");
                         player.sendMessage(ChatColor.AQUA + "> " + ChatColor.LIGHT_PURPLE + "/head <player Name>" + ChatColor.RESET + " -> Get another player head");
                     }
+
                     break;
                 case "reload":
                     if (sender instanceof Player) {
@@ -46,7 +49,7 @@ public class MainCommand implements CommandExecutor {
                             try {
                                 HeadDrop.getLang().reload();
                                 HeadDrop.getConfiguration().reload();
-                                lang.msg(ChatColor.GREEN + "HeadDrop" + ChatColor.RESET, "Reload", player);
+                                lang.msg(ChatColor.GREEN + "[HeadDrop] " + ChatColor.RESET, "Reload", player);
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
@@ -62,6 +65,7 @@ public class MainCommand implements CommandExecutor {
                             e.printStackTrace();
                         }
                     }
+
                     break;
                 case "leaderboard":
                     Map<String, Integer> playerData = HeadDrop.getDatabase().getPlayerData();
@@ -72,6 +76,7 @@ public class MainCommand implements CommandExecutor {
                         Map.Entry<String, Integer> entry = sortedData.get(i);
                         sender.sendMessage(ChatColor.YELLOW.toString() + (i + 1) + ". " + entry.getKey() + " - " + entry.getValue() + " Head(s)");
                     }
+
                     break;
                 case "debug":
                     if (sender instanceof ConsoleCommandSender){
@@ -100,6 +105,16 @@ public class MainCommand implements CommandExecutor {
                             e.printStackTrace();
                         }
                     }
+
+                    break;
+                case "gui":
+                    if (sender instanceof Player) {
+                        GUI gui = new GUI();
+                        Player player = (Player) sender;
+                        player.openInventory(gui.getInventory());
+                    }else lang.pcmd();
+
+                    break;
 
             }
         }

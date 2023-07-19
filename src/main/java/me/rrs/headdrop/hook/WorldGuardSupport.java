@@ -14,8 +14,10 @@ import com.sk89q.worldguard.protection.regions.RegionQuery;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 
+
 public class WorldGuardSupport {
     private static StateFlag HEADDROP_FLAG;
+
 
     public static boolean canDrop(Location loc){
         WorldGuard wGuard = WorldGuard.getInstance();
@@ -31,19 +33,18 @@ public class WorldGuardSupport {
     }
 
 
-    public static void initiate(){
+    public WorldGuardSupport(){
         FlagRegistry registry = WorldGuard.getInstance().getFlagRegistry();
         try {
-            StateFlag flag = new StateFlag("HeadDrop", true);
+            StateFlag flag = new StateFlag("HeadDrop", false);
             registry.register(flag);
-            HEADDROP_FLAG = flag; // only set our field if there was no error
+            HEADDROP_FLAG = flag;
+            Bukkit.getLogger().info("[HeadDrop] Hooked into WorldGuard!");
         } catch (FlagConflictException e) {
             Flag<?> existing = registry.get("HeadDrop");
             if (existing instanceof StateFlag) {
                 HEADDROP_FLAG = (StateFlag) existing;
             }
-
         }
-        Bukkit.getLogger().info("[HeadDrop] Hooked into WorldGuard!");
     }
 }

@@ -43,7 +43,7 @@ public class EntityDeath implements Listener {
     @EventHandler(priority = EventPriority.HIGH)
     public void entityDropHeadEvent(final EntityDeathEvent event) {
 
-        if (Bukkit.getPluginManager().isPluginEnabled("WorldGuard")){
+        if (Bukkit.getPluginManager().isPluginEnabled("WorldGuard")) {
             if (!WorldGuardSupport.canDrop(event.getEntity().getLocation())) return;
         }
 
@@ -59,9 +59,9 @@ public class EntityDeath implements Listener {
         boolean killerExist = entity.getKiller() != null;
 
 
-        if (!HeadDrop.getConfiguration().getBoolean("Config.Baby-HeadDrop")){
-            if (entity instanceof Ageable){
-                if (!((Ageable) entity).isAdult()){
+        if (!HeadDrop.getConfiguration().getBoolean("Config.Baby-HeadDrop")) {
+            if (entity instanceof Ageable) {
+                if (!((Ageable) entity).isAdult()) {
                     return;
                 }
             }
@@ -89,9 +89,9 @@ public class EntityDeath implements Listener {
                     entity.getKiller().getInventory().getItemInMainHand().getEnchantmentLevel(Enchantment.LOOT_BONUS_MOBS) : 0;
         }
 
-        if (HeadDrop.getConfiguration().getBoolean("Config.Enable-Perm-Chance")){
-            if (killerExist){
-                for (int i = 100; i > 0; i--){
+        if (HeadDrop.getConfiguration().getBoolean("Config.Enable-Perm-Chance")) {
+            if (killerExist) {
+                for (int i = 100; i > 0; i--) {
                     if (entity.getKiller().hasPermission("headdrop.chance" + i)) {
                         lootLvl = lootLvl + i;
                     }
@@ -114,6 +114,9 @@ public class EntityDeath implements Listener {
         EntityType type = entity.getType();
 
         ItemStack item;
+
+
+
 
         if (type == EntityType.PLAYER) {
             if ((config.getBoolean("PLAYER.Require-Permission")) && !entity.hasPermission("headdrop.player")) {

@@ -24,6 +24,9 @@ Config:
     - demoWorld
     - demoWorld2
 
+Hooks:
+  WorldGuard: false
+
 Database:
   Online: true
   URL: "jdbc:sqlite:HeadDrop.sqlite"
@@ -590,6 +593,22 @@ VEX:
 
 ZOMBIFIED_PIGLIN:
   Name: "Zombified Piglin"
+  Drop: true
+  Chance: 100
+  Lore:
+    - "Killed by {KILLER}"
+    - "Killed on {DATE}"
+
+MAGMA_CUBE:
+  Name: "Panda"
+  Drop: true
+  Chance: 100
+  Lore:
+    - "Killed by {KILLER}"
+    - "Killed on {DATE}"
+
+PANDA:
+  Name: "Panda"
   Drop: true
   Chance: 100
   Lore:

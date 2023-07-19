@@ -22,6 +22,7 @@ public class TabComplete implements TabCompleter {
                 results.add("help");
                 results.add("reload");
                 results.add("leaderboard");
+                results.add("gui");
         }
         return sortedResults(args[0]);
     }

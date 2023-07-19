@@ -50,8 +50,31 @@ public class HeadDrop extends JavaPlugin {
 
     @Override
     public void onLoad() {
-        if (Bukkit.getPluginManager().isPluginEnabled("WorldGuard")){
-            WorldGuardSupport.initiate();
+        instance = this;
+        try {
+            lang = YamlDocument.create(new File(getDataFolder(), "lang.yml"), getResource("lang.yml"),
+                    GeneralSettings.DEFAULT,
+                    LoaderSettings.builder().setAutoUpdate(true).build(),
+                    DumperSettings.DEFAULT,
+                    UpdaterSettings.builder().setAutoSave(true).setVersioning(new Pattern(Segment.range(1, Integer.MAX_VALUE),
+                            Segment.literal("."), Segment.range(0, 100)), "Version").build());
+
+            config = YamlDocument.create(new File(getDataFolder(), "config.yml"), getResource("config.yml"),
+                    GeneralSettings.DEFAULT,
+                    LoaderSettings.builder().setAutoUpdate(true).build(),
+                    DumperSettings.DEFAULT,
+                    UpdaterSettings.builder().setAutoSave(true).setVersioning(new Pattern(Segment.range(1, Integer.MAX_VALUE),
+                            Segment.literal("."), Segment.range(0, 100)), "Config.Version").build());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        database = new Database();
+        database.setupDataSource();
+        database.createTable();
+
+        if (config.getBoolean("Hooks.WorldGuard")){
+            new WorldGuardSupport();
         }
 
     }
@@ -76,36 +99,16 @@ public class HeadDrop extends JavaPlugin {
         Bukkit.getLogger().info("--------------------------------------------------------------------------");
         Bukkit.getLogger().info("[HeadDrop] HeadDrop " + getDescription().getVersion() + " by RRS");
 
-        instance = this;
-        try {
-            lang = YamlDocument.create(new File(getDataFolder(), "lang.yml"), getResource("lang.yml"),
-                    GeneralSettings.DEFAULT,
-                    LoaderSettings.builder().setAutoUpdate(true).build(),
-                    DumperSettings.DEFAULT,
-                    UpdaterSettings.builder().setAutoSave(true).setVersioning(new Pattern(Segment.range(1, Integer.MAX_VALUE),
-                            Segment.literal("."), Segment.range(0, 100)), "Version").build());
-
-            config = YamlDocument.create(new File(getDataFolder(), "config.yml"), getResource("config.yml"),
-                    GeneralSettings.DEFAULT,
-                    LoaderSettings.builder().setAutoUpdate(true).build(),
-                    DumperSettings.DEFAULT,
-                    UpdaterSettings.builder().setAutoSave(true).setVersioning(new Pattern(Segment.range(1, Integer.MAX_VALUE),
-                            Segment.literal("."), Segment.range(0, 100)), "Config.Version").build());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
         Metrics metrics = new Metrics(this, 13554);
         metrics.addCustomChart(new SimplePie("discord_bot", () -> String.valueOf(getConfig().getBoolean("Bot.Enable"))));
         metrics.addCustomChart(new SimplePie("web", () -> String.valueOf(getConfig().getBoolean("Web.Enable"))));
 
-        database = new Database();
-        database.setupDataSource();
-        database.createTable();
-
         getServer().getPluginManager().registerEvents(new EntityDeath(), this);
         getServer().getPluginManager().registerEvents(new PlayerJoin(), this);
         getServer().getPluginManager().registerEvents(new PoweredCreeper(), this);
+        getServer().getPluginManager().registerEvents(new GUI(), this);
+
+
 
         getCommand("head").setExecutor(new Head());
         getCommand("headdrop").setExecutor(new MainCommand());
@@ -118,9 +121,7 @@ public class HeadDrop extends JavaPlugin {
                     updateChecker();
                 }
             }.runTaskTimerAsynchronously(this, 0L, 20L * 60 * config.getInt("Config.Update-Checker-Interval"));
-        }catch (UnsupportedOperationException e) {
-            updateChecker();
-        }
+        }catch (UnsupportedOperationException ignored) {}
 
 
         if (config.getBoolean("Web.Enable")) {
