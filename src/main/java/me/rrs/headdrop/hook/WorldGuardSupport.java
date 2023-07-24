@@ -32,7 +32,6 @@ public class WorldGuardSupport {
         return true;
     }
 
-
     public WorldGuardSupport(){
         FlagRegistry registry = WorldGuard.getInstance().getFlagRegistry();
         try {

@@ -17,6 +17,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -52,8 +53,8 @@ public class EntityDeath implements Listener {
         String description = null;
         String footer = null;
         String title = null;
-        final Random random = new Random();
-        float x = random.nextFloat(101);
+        Random random = new Random();
+        float x = random.nextFloat() * 101.0F;
 
         final LivingEntity entity = event.getEntity();
         boolean killerExist = entity.getKiller() != null;
@@ -116,8 +117,6 @@ public class EntityDeath implements Listener {
         ItemStack item;
 
 
-
-
         if (type == EntityType.PLAYER) {
             if ((config.getBoolean("PLAYER.Require-Permission")) && !entity.hasPermission("headdrop.player")) {
                 return;
@@ -154,7 +153,7 @@ public class EntityDeath implements Listener {
                         .map(lore -> lore.replace("{KILLER}", entity.getKiller() != null ? entity.getKiller().getName() : "Unknown"))
                         .map(lore -> lore.replace("{DATE}", LocalDate.now().toString()))
                         .collect(Collectors.toList());
-                item = EntityHead.BAT.getItemStack(loreList);
+                item = EntityHead.BAT.getSkull(loreList);
 
                 HeadDropEvent headDropEvent = new HeadDropEvent(item, entity.getKiller(), entity);
                 Bukkit.getServer().getPluginManager().callEvent(headDropEvent);
@@ -180,12 +179,15 @@ public class EntityDeath implements Listener {
                         .map(lore -> lore.replace("{DATE}", LocalDate.now().toString()))
                         .collect(Collectors.toList());
 
-                ItemStack skull = utils.rename(new ItemStack(Material.DRAGON_HEAD), loreList);
+                item = new ItemStack(Material.DRAGON_HEAD);
+                ItemMeta meta = item.getItemMeta();
+                meta.setLore(loreList);
+                item.setItemMeta(meta);
 
-                HeadDropEvent headDropEvent = new HeadDropEvent(skull, entity.getKiller(), entity);
+                HeadDropEvent headDropEvent = new HeadDropEvent(item, entity.getKiller(), entity);
                 Bukkit.getServer().getPluginManager().callEvent(headDropEvent);
                 if (!headDropEvent.isCancelled()){
-                    event.getDrops().add(skull);
+                    event.getDrops().add(item);
 
                     if (killerExist) {
                         updateDB(entity.getKiller());
@@ -206,12 +208,15 @@ public class EntityDeath implements Listener {
                         .map(lore -> lore.replace("{DATE}", LocalDate.now().toString()))
                         .collect(Collectors.toList());
 
-                ItemStack skull = utils.rename(new ItemStack(Material.ZOMBIE_HEAD), loreList);
+                item = new ItemStack(Material.ZOMBIE_HEAD);
+                ItemMeta meta = item.getItemMeta();
+                meta.setLore(loreList);
+                item.setItemMeta(meta);
 
-                HeadDropEvent headDropEvent = new HeadDropEvent(skull, entity.getKiller(), entity);
+                HeadDropEvent headDropEvent = new HeadDropEvent(item, entity.getKiller(), entity);
                 Bukkit.getServer().getPluginManager().callEvent(headDropEvent);
                 if (!headDropEvent.isCancelled()){
-                    event.getDrops().add(skull);
+                    event.getDrops().add(item);
 
                     if (killerExist) {
                         updateDB(entity.getKiller());
@@ -232,12 +237,15 @@ public class EntityDeath implements Listener {
                         .map(lore -> lore.replace("{DATE}", LocalDate.now().toString()))
                         .collect(Collectors.toList());
 
-                ItemStack skull = utils.rename(new ItemStack(Material.WITHER_SKELETON_SKULL), loreList);
+                item = new ItemStack(Material.WITHER_SKELETON_SKULL);
+                ItemMeta meta = item.getItemMeta();
+                meta.setLore(loreList);
+                item.setItemMeta(meta);
 
-                HeadDropEvent headDropEvent = new HeadDropEvent(skull, entity.getKiller(), entity);
+                HeadDropEvent headDropEvent = new HeadDropEvent(item, entity.getKiller(), entity);
                 Bukkit.getServer().getPluginManager().callEvent(headDropEvent);
                 if (!headDropEvent.isCancelled()){
-                    event.getDrops().add(skull);
+                    event.getDrops().add(item);
 
                     if (killerExist) {
                         updateDB(entity.getKiller());
@@ -253,18 +261,21 @@ public class EntityDeath implements Listener {
             if ((config.getBoolean("CREEPER.Drop")) && x <= config.getInt("CREEPER.Chance") + lootLvl) {
                 event.getDrops().removeIf(head -> head.getType() == Material.CREEPER_HEAD);
 
-                List<String> loreList = config.getStringList("WITHER_SKELETON.Lore");
+                List<String> loreList = config.getStringList("CREEPER.Lore");
                 loreList = loreList.stream()
                         .map(lore -> lore.replace("{KILLER}", entity.getKiller() != null ? entity.getKiller().getName() : "Unknown"))
                         .map(lore -> lore.replace("{DATE}", LocalDate.now().toString()))
                         .collect(Collectors.toList());
 
-                ItemStack skull = utils.rename(new ItemStack(Material.CREEPER_HEAD), loreList);
+                item = new ItemStack(Material.CREEPER_HEAD);
+                ItemMeta meta = item.getItemMeta();
+                meta.setLore(loreList);
+                item.setItemMeta(meta);
 
-                HeadDropEvent headDropEvent = new HeadDropEvent(skull, entity.getKiller(), entity);
+                HeadDropEvent headDropEvent = new HeadDropEvent(item, entity.getKiller(), entity);
                 Bukkit.getServer().getPluginManager().callEvent(headDropEvent);
                 if (!headDropEvent.isCancelled()){
-                    event.getDrops().add(skull);
+                    event.getDrops().add(item);
 
                     if (killerExist) {
                         updateDB(entity.getKiller());
@@ -281,18 +292,21 @@ public class EntityDeath implements Listener {
             if ((config.getBoolean("SKELETON.Drop")) && x <= config.getInt("SKELETON.Chance") + lootLvl) {
                 event.getDrops().removeIf(head -> head.getType() == Material.SKELETON_SKULL);
 
-                List<String> loreList = config.getStringList("WITHER_SKELETON.Lore");
+                List<String> loreList = config.getStringList("SKELETON.Lore");
                 loreList = loreList.stream()
                         .map(lore -> lore.replace("{KILLER}", entity.getKiller() != null ? entity.getKiller().getName() : "Unknown"))
                         .map(lore -> lore.replace("{DATE}", LocalDate.now().toString()))
                         .collect(Collectors.toList());
 
-                ItemStack skull = utils.rename(new ItemStack(Material.SKELETON_SKULL), loreList);
+                item = new ItemStack(Material.SKELETON_SKULL);
+                ItemMeta meta = item.getItemMeta();
+                meta.setLore(loreList);
+                item.setItemMeta(meta);
 
-                HeadDropEvent headDropEvent = new HeadDropEvent(skull, entity.getKiller(), entity);
+                HeadDropEvent headDropEvent = new HeadDropEvent(item, entity.getKiller(), entity);
                 Bukkit.getServer().getPluginManager().callEvent(headDropEvent);
                 if (!headDropEvent.isCancelled()){
-                    event.getDrops().add(skull);
+                    event.getDrops().add(item);
 
                     if (killerExist) {
                         updateDB(entity.getKiller());
@@ -311,11 +325,12 @@ public class EntityDeath implements Listener {
                         .map(lore -> lore.replace("{KILLER}", entity.getKiller() != null ? entity.getKiller().getName() : "Unknown"))
                         .map(lore -> lore.replace("{DATE}", LocalDate.now().toString()))
                         .collect(Collectors.toList());
-                item = EntityHead.BLAZE.getItemStack(loreList);
+                item = EntityHead.BLAZE.getSkull(loreList);
 
                 HeadDropEvent headDropEvent = new HeadDropEvent(item, entity.getKiller(), entity);
                 Bukkit.getServer().getPluginManager().callEvent(headDropEvent);
                 if (!headDropEvent.isCancelled()){
+
                     event.getDrops().add(item);
 
                     if (killerExist) {
@@ -335,7 +350,7 @@ public class EntityDeath implements Listener {
                         .map(lore -> lore.replace("{KILLER}", entity.getKiller() != null ? entity.getKiller().getName() : "Unknown"))
                         .map(lore -> lore.replace("{DATE}", LocalDate.now().toString()))
                         .collect(Collectors.toList());
-                item = EntityHead.SPIDER.getItemStack(loreList);
+                item = EntityHead.SPIDER.getSkull(loreList);
 
                 HeadDropEvent headDropEvent = new HeadDropEvent(item, entity.getKiller(), entity);
                 Bukkit.getServer().getPluginManager().callEvent(headDropEvent);
@@ -360,7 +375,7 @@ public class EntityDeath implements Listener {
                         .map(lore -> lore.replace("{KILLER}", entity.getKiller() != null ? entity.getKiller().getName() : "Unknown"))
                         .map(lore -> lore.replace("{DATE}", LocalDate.now().toString()))
                         .collect(Collectors.toList());
-                item = EntityHead.CAVE_SPIDER.getItemStack(loreList);
+                item = EntityHead.CAVE_SPIDER.getSkull(loreList);
 
                 HeadDropEvent headDropEvent = new HeadDropEvent(item, entity.getKiller(), entity);
                 Bukkit.getServer().getPluginManager().callEvent(headDropEvent);
@@ -384,7 +399,7 @@ public class EntityDeath implements Listener {
                         .map(lore -> lore.replace("{KILLER}", entity.getKiller() != null ? entity.getKiller().getName() : "Unknown"))
                         .map(lore -> lore.replace("{DATE}", LocalDate.now().toString()))
                         .collect(Collectors.toList());
-                item = EntityHead.CHICKEN.getItemStack(loreList);
+                item = EntityHead.CHICKEN.getSkull(loreList);
 
                 HeadDropEvent headDropEvent = new HeadDropEvent(item, entity.getKiller(), entity);
                 Bukkit.getServer().getPluginManager().callEvent(headDropEvent);
@@ -408,7 +423,7 @@ public class EntityDeath implements Listener {
                         .map(lore -> lore.replace("{KILLER}", entity.getKiller() != null ? entity.getKiller().getName() : "Unknown"))
                         .map(lore -> lore.replace("{DATE}", LocalDate.now().toString()))
                         .collect(Collectors.toList());
-                item = EntityHead.COW.getItemStack(loreList);
+                item = EntityHead.COW.getSkull(loreList);
 
                 HeadDropEvent headDropEvent = new HeadDropEvent(item, entity.getKiller(), entity);
                 Bukkit.getServer().getPluginManager().callEvent(headDropEvent);
@@ -432,7 +447,7 @@ public class EntityDeath implements Listener {
                         .map(lore -> lore.replace("{KILLER}", entity.getKiller() != null ? entity.getKiller().getName() : "Unknown"))
                         .map(lore -> lore.replace("{DATE}", LocalDate.now().toString()))
                         .collect(Collectors.toList());
-                item = EntityHead.ENDERMAN.getItemStack(loreList);
+                item = EntityHead.ENDERMAN.getSkull(loreList);
 
                 HeadDropEvent headDropEvent = new HeadDropEvent(item, entity.getKiller(), entity);
                 Bukkit.getServer().getPluginManager().callEvent(headDropEvent);
@@ -456,7 +471,7 @@ public class EntityDeath implements Listener {
                         .map(lore -> lore.replace("{KILLER}", entity.getKiller() != null ? entity.getKiller().getName() : "Unknown"))
                         .map(lore -> lore.replace("{DATE}", LocalDate.now().toString()))
                         .collect(Collectors.toList());
-                item = EntityHead.GIANT.getItemStack(loreList);
+                item = EntityHead.GIANT.getSkull(loreList);
 
                 HeadDropEvent headDropEvent = new HeadDropEvent(item, entity.getKiller(), entity);
                 Bukkit.getServer().getPluginManager().callEvent(headDropEvent);
@@ -484,7 +499,7 @@ public class EntityDeath implements Listener {
 
                 switch (horse.getColor()) {
                     case WHITE:
-                        item = EntityHead.HORSE_WHITE.getItemStack(loreList);
+                        item = EntityHead.HORSE_WHITE.getSkull(loreList);
                         HeadDropEvent headDropEvent = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent);
                         if (!headDropEvent.isCancelled()){
@@ -498,7 +513,7 @@ public class EntityDeath implements Listener {
 
                         break;
                     case CREAMY:
-                        item = EntityHead.HORSE_CREAMY.getItemStack(loreList);
+                        item = EntityHead.HORSE_CREAMY.getSkull(loreList);
                         HeadDropEvent headDropEvent1 = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent1);
                         if (!headDropEvent1.isCancelled()){
@@ -512,7 +527,7 @@ public class EntityDeath implements Listener {
 
                         break;
                     case CHESTNUT:
-                        item = EntityHead.HORSE_CHESTNUT.getItemStack(loreList);
+                        item = EntityHead.HORSE_CHESTNUT.getSkull(loreList);
                         HeadDropEvent headDropEvent2 = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent2);
                         if (!headDropEvent2.isCancelled()){
@@ -530,7 +545,7 @@ public class EntityDeath implements Listener {
 
                         break;
                     case BROWN:
-                        item = EntityHead.HORSE_BROWN.getItemStack(loreList);
+                        item = EntityHead.HORSE_BROWN.getSkull(loreList);
                         HeadDropEvent headDropEvent3 = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent3);
                         if (!headDropEvent3.isCancelled()){
@@ -548,7 +563,7 @@ public class EntityDeath implements Listener {
 
                         break;
                     case BLACK:
-                        item = EntityHead.HORSE_BLACK.getItemStack(loreList);
+                        item = EntityHead.HORSE_BLACK.getSkull(loreList);
                         HeadDropEvent headDropEvent4 = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent4);
                         if (!headDropEvent4.isCancelled()){
@@ -566,7 +581,7 @@ public class EntityDeath implements Listener {
 
                         break;
                     case GRAY:
-                        item = EntityHead.HORSE_GRAY.getItemStack(loreList);
+                        item = EntityHead.HORSE_GRAY.getSkull(loreList);
                         HeadDropEvent headDropEvent5 = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent5);
                         if (!headDropEvent5.isCancelled()){
@@ -584,7 +599,7 @@ public class EntityDeath implements Listener {
 
                         break;
                     case DARK_BROWN:
-                        item = EntityHead.HORSE_DARK_BROWN.getItemStack(loreList);
+                        item = EntityHead.HORSE_DARK_BROWN.getSkull(loreList);
                         HeadDropEvent headDropEvent6 = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent6);
                         if (!headDropEvent6.isCancelled()){
@@ -610,7 +625,7 @@ public class EntityDeath implements Listener {
                         .map(lore -> lore.replace("{KILLER}", entity.getKiller() != null ? entity.getKiller().getName() : "Unknown"))
                         .map(lore -> lore.replace("{DATE}", LocalDate.now().toString()))
                         .collect(Collectors.toList());
-                item = EntityHead.ILLUSIONER.getItemStack(loreList);
+                item = EntityHead.ILLUSIONER.getSkull(loreList);
 
                 HeadDropEvent headDropEvent = new HeadDropEvent(item, entity.getKiller(), entity);
                 Bukkit.getServer().getPluginManager().callEvent(headDropEvent);
@@ -635,7 +650,7 @@ public class EntityDeath implements Listener {
                         .map(lore -> lore.replace("{KILLER}", entity.getKiller() != null ? entity.getKiller().getName() : "Unknown"))
                         .map(lore -> lore.replace("{DATE}", LocalDate.now().toString()))
                         .collect(Collectors.toList());
-                item = EntityHead.IRON_GOLEM.getItemStack(loreList);
+                item = EntityHead.IRON_GOLEM.getSkull(loreList);
 
                 HeadDropEvent headDropEvent = new HeadDropEvent(item, entity.getKiller(), entity);
                 Bukkit.getServer().getPluginManager().callEvent(headDropEvent);
@@ -660,7 +675,7 @@ public class EntityDeath implements Listener {
                         .map(lore -> lore.replace("{KILLER}", entity.getKiller() != null ? entity.getKiller().getName() : "Unknown"))
                         .map(lore -> lore.replace("{DATE}", LocalDate.now().toString()))
                         .collect(Collectors.toList());
-                item = EntityHead.MAGMA_CUBE.getItemStack(loreList);
+                item = EntityHead.MAGMA_CUBE.getSkull(loreList);
 
                 HeadDropEvent headDropEvent = new HeadDropEvent(item, entity.getKiller(), entity);
                 Bukkit.getServer().getPluginManager().callEvent(headDropEvent);
@@ -687,7 +702,7 @@ public class EntityDeath implements Listener {
                         .map(lore -> lore.replace("{DATE}", LocalDate.now().toString()))
                         .collect(Collectors.toList());
                 if (mushroomCow.getVariant().equals(MushroomCow.Variant.RED)) {
-                    item = EntityHead.MUSHROOM_COW_RED.getItemStack(loreList);
+                    item = EntityHead.MUSHROOM_COW_RED.getSkull(loreList);
 
                     HeadDropEvent headDropEvent = new HeadDropEvent(item, entity.getKiller(), entity);
                     Bukkit.getServer().getPluginManager().callEvent(headDropEvent);
@@ -705,7 +720,7 @@ public class EntityDeath implements Listener {
 
 
                 } else if (mushroomCow.getVariant().equals(MushroomCow.Variant.BROWN)) {
-                    item = EntityHead.MUSHROOM_COW_BROWN.getItemStack(loreList);
+                    item = EntityHead.MUSHROOM_COW_BROWN.getSkull(loreList);
 
                     HeadDropEvent headDropEvent = new HeadDropEvent(item, entity.getKiller(), entity);
                     Bukkit.getServer().getPluginManager().callEvent(headDropEvent);
@@ -732,7 +747,7 @@ public class EntityDeath implements Listener {
                         .map(lore -> lore.replace("{KILLER}", entity.getKiller() != null ? entity.getKiller().getName() : "Unknown"))
                         .map(lore -> lore.replace("{DATE}", LocalDate.now().toString()))
                         .collect(Collectors.toList());
-                item = EntityHead.OCELOT.getItemStack(loreList);
+                item = EntityHead.OCELOT.getSkull(loreList);
 
                 HeadDropEvent headDropEvent = new HeadDropEvent(item, entity.getKiller(), entity);
                 Bukkit.getServer().getPluginManager().callEvent(headDropEvent);
@@ -757,7 +772,7 @@ public class EntityDeath implements Listener {
                         .map(lore -> lore.replace("{KILLER}", entity.getKiller() != null ? entity.getKiller().getName() : "Unknown"))
                         .map(lore -> lore.replace("{DATE}", LocalDate.now().toString()))
                         .collect(Collectors.toList());
-                item = EntityHead.PIG.getItemStack(loreList);
+                item = EntityHead.PIG.getSkull(loreList);
 
                 HeadDropEvent headDropEvent = new HeadDropEvent(item, entity.getKiller(), entity);
                 Bukkit.getServer().getPluginManager().callEvent(headDropEvent);
@@ -788,7 +803,7 @@ public class EntityDeath implements Listener {
                 switch (sheep.getColor()) {
 
                     case WHITE:
-                        item = EntityHead.SHEEP_WHITE.getItemStack(loreList);
+                        item = EntityHead.SHEEP_WHITE.getSkull(loreList);
                         HeadDropEvent headDropEvent = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent);
                         if (!headDropEvent.isCancelled()){
@@ -807,7 +822,7 @@ public class EntityDeath implements Listener {
 
                         break;
                     case ORANGE:
-                        item = EntityHead.SHEEP_ORANGE.getItemStack(loreList);
+                        item = EntityHead.SHEEP_ORANGE.getSkull(loreList);
                         HeadDropEvent headDropEvent1 = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent1);
                         if (!headDropEvent1.isCancelled()){
@@ -825,7 +840,7 @@ public class EntityDeath implements Listener {
 
                         break;
                     case MAGENTA:
-                        item = EntityHead.SHEEP_MAGENTA.getItemStack(loreList);
+                        item = EntityHead.SHEEP_MAGENTA.getSkull(loreList);
                         HeadDropEvent headDropEvent2 = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent2);
                         if (!headDropEvent2.isCancelled()){
@@ -843,7 +858,7 @@ public class EntityDeath implements Listener {
 
                         break;
                     case LIGHT_BLUE:
-                        item = EntityHead.SHEEP_LIGHT_BLUE.getItemStack(loreList);
+                        item = EntityHead.SHEEP_LIGHT_BLUE.getSkull(loreList);
                         HeadDropEvent headDropEvent3 = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent3);
                         if (!headDropEvent3.isCancelled()){
@@ -861,7 +876,7 @@ public class EntityDeath implements Listener {
 
                         break;
                     case YELLOW:
-                        item = EntityHead.SHEEP_YELLOW.getItemStack(loreList);
+                        item = EntityHead.SHEEP_YELLOW.getSkull(loreList);
                         HeadDropEvent headDropEvent4 = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent4);
                         if (!headDropEvent4.isCancelled()){
@@ -879,7 +894,7 @@ public class EntityDeath implements Listener {
 
                         break;
                     case LIME:
-                        item = EntityHead.SHEEP_LIME.getItemStack(loreList);
+                        item = EntityHead.SHEEP_LIME.getSkull(loreList);
                         HeadDropEvent headDropEvent5 = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent5);
                         if (!headDropEvent5.isCancelled()){
@@ -897,7 +912,7 @@ public class EntityDeath implements Listener {
 
                         break;
                     case PINK:
-                        item = EntityHead.SHEEP_PINK.getItemStack(loreList);
+                        item = EntityHead.SHEEP_PINK.getSkull(loreList);
                         HeadDropEvent headDropEvent6 = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent6);
                         if (!headDropEvent6.isCancelled()){
@@ -915,7 +930,7 @@ public class EntityDeath implements Listener {
 
                         break;
                     case GRAY:
-                        item = EntityHead.SHEEP_GRAY.getItemStack(loreList);
+                        item = EntityHead.SHEEP_GRAY.getSkull(loreList);
                         HeadDropEvent headDropEvent7 = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent7);
                         if (!headDropEvent7.isCancelled()){
@@ -933,7 +948,7 @@ public class EntityDeath implements Listener {
 
                         break;
                     case LIGHT_GRAY:
-                        item = EntityHead.SHEEP_LIGHT_GRAY.getItemStack(loreList);
+                        item = EntityHead.SHEEP_LIGHT_GRAY.getSkull(loreList);
                         HeadDropEvent headDropEvent8 = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent8);
                         if (!headDropEvent8.isCancelled()){
@@ -951,7 +966,7 @@ public class EntityDeath implements Listener {
 
                         break;
                     case CYAN:
-                        item = EntityHead.SHEEP_CYAN.getItemStack(loreList);
+                        item = EntityHead.SHEEP_CYAN.getSkull(loreList);
                         HeadDropEvent headDropEvent9 = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent9);
                         if (!headDropEvent9.isCancelled()){
@@ -969,7 +984,7 @@ public class EntityDeath implements Listener {
 
                         break;
                     case PURPLE:
-                        item = EntityHead.SHEEP_PURPLE.getItemStack(loreList);
+                        item = EntityHead.SHEEP_PURPLE.getSkull(loreList);
                         HeadDropEvent headDropEvent10 = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent10);
                         if (!headDropEvent10.isCancelled()){
@@ -988,7 +1003,7 @@ public class EntityDeath implements Listener {
 
                         break;
                     case BLUE:
-                        item = EntityHead.SHEEP_BLUE.getItemStack(loreList);
+                        item = EntityHead.SHEEP_BLUE.getSkull(loreList);
                         HeadDropEvent headDropEvent11 = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent11);
                         if (!headDropEvent11.isCancelled()){
@@ -1007,7 +1022,7 @@ public class EntityDeath implements Listener {
 
                         break;
                     case BROWN:
-                        item = EntityHead.SHEEP_BROWN.getItemStack(loreList);
+                        item = EntityHead.SHEEP_BROWN.getSkull(loreList);
                         HeadDropEvent headDropEvent12 = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent12);
                         if (!headDropEvent12.isCancelled()){
@@ -1025,7 +1040,7 @@ public class EntityDeath implements Listener {
 
                         break;
                     case GREEN:
-                        item = EntityHead.SHEEP_GREEN.getItemStack(loreList);
+                        item = EntityHead.SHEEP_GREEN.getSkull(loreList);
                         HeadDropEvent headDropEvent13 = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent13);
                         if (!headDropEvent13.isCancelled()){
@@ -1043,7 +1058,7 @@ public class EntityDeath implements Listener {
 
                         break;
                     case RED:
-                        item = EntityHead.SHEEP_RED.getItemStack(loreList);
+                        item = EntityHead.SHEEP_RED.getSkull(loreList);
                         HeadDropEvent headDropEvent14 = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent14);
                         if (!headDropEvent14.isCancelled()){
@@ -1061,7 +1076,7 @@ public class EntityDeath implements Listener {
 
                         break;
                     case BLACK:
-                        item = EntityHead.SHEEP_BLACK.getItemStack(loreList);
+                        item = EntityHead.SHEEP_BLACK.getSkull(loreList);
                         HeadDropEvent headDropEvent15 = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent15);
                         if (!headDropEvent15.isCancelled()){
@@ -1091,7 +1106,7 @@ public class EntityDeath implements Listener {
                         .map(lore -> lore.replace("{KILLER}", entity.getKiller() != null ? entity.getKiller().getName() : "Unknown"))
                         .map(lore -> lore.replace("{DATE}", LocalDate.now().toString()))
                         .collect(Collectors.toList());
-                item = EntityHead.SILVERFISH.getItemStack(loreList);
+                item = EntityHead.SILVERFISH.getSkull(loreList);
 
                 HeadDropEvent headDropEvent = new HeadDropEvent(item, entity.getKiller(), entity);
                 Bukkit.getServer().getPluginManager().callEvent(headDropEvent);
@@ -1116,7 +1131,7 @@ public class EntityDeath implements Listener {
                         .map(lore -> lore.replace("{KILLER}", entity.getKiller() != null ? entity.getKiller().getName() : "Unknown"))
                         .map(lore -> lore.replace("{DATE}", LocalDate.now().toString()))
                         .collect(Collectors.toList());
-                item = EntityHead.SLIME.getItemStack(loreList);
+                item = EntityHead.SLIME.getSkull(loreList);
 
                 HeadDropEvent headDropEvent = new HeadDropEvent(item, entity.getKiller(), entity);
                 Bukkit.getServer().getPluginManager().callEvent(headDropEvent);
@@ -1140,7 +1155,7 @@ public class EntityDeath implements Listener {
                         .map(lore -> lore.replace("{KILLER}", entity.getKiller() != null ? entity.getKiller().getName() : "Unknown"))
                         .map(lore -> lore.replace("{DATE}", LocalDate.now().toString()))
                         .collect(Collectors.toList());
-                item = EntityHead.SNOWMAN.getItemStack(loreList);
+                item = EntityHead.SNOWMAN.getSkull(loreList);
 
                 HeadDropEvent headDropEvent = new HeadDropEvent(item, entity.getKiller(), entity);
                 Bukkit.getServer().getPluginManager().callEvent(headDropEvent);
@@ -1164,7 +1179,7 @@ public class EntityDeath implements Listener {
                         .map(lore -> lore.replace("{KILLER}", entity.getKiller() != null ? entity.getKiller().getName() : "Unknown"))
                         .map(lore -> lore.replace("{DATE}", LocalDate.now().toString()))
                         .collect(Collectors.toList());
-                item = EntityHead.SQUID.getItemStack(loreList);
+                item = EntityHead.SQUID.getSkull(loreList);
 
                 HeadDropEvent headDropEvent = new HeadDropEvent(item, entity.getKiller(), entity);
                 Bukkit.getServer().getPluginManager().callEvent(headDropEvent);
@@ -1187,7 +1202,7 @@ public class EntityDeath implements Listener {
                         .map(lore -> lore.replace("{KILLER}", entity.getKiller() != null ? entity.getKiller().getName() : "Unknown"))
                         .map(lore -> lore.replace("{DATE}", LocalDate.now().toString()))
                         .collect(Collectors.toList());
-                item = EntityHead.WITCH.getItemStack(loreList);
+                item = EntityHead.WITCH.getSkull(loreList);
 
                 HeadDropEvent headDropEvent = new HeadDropEvent(item, entity.getKiller(), entity);
                 Bukkit.getServer().getPluginManager().callEvent(headDropEvent);
@@ -1210,7 +1225,7 @@ public class EntityDeath implements Listener {
                         .map(lore -> lore.replace("{KILLER}", entity.getKiller() != null ? entity.getKiller().getName() : "Unknown"))
                         .map(lore -> lore.replace("{DATE}", LocalDate.now().toString()))
                         .collect(Collectors.toList());
-                item = EntityHead.WITHER.getItemStack(loreList);
+                item = EntityHead.WITHER.getSkull(loreList);
 
                 HeadDropEvent headDropEvent = new HeadDropEvent(item, entity.getKiller(), entity);
                 Bukkit.getServer().getPluginManager().callEvent(headDropEvent);
@@ -1234,7 +1249,7 @@ public class EntityDeath implements Listener {
                         .map(lore -> lore.replace("{KILLER}", entity.getKiller() != null ? entity.getKiller().getName() : "Unknown"))
                         .map(lore -> lore.replace("{DATE}", LocalDate.now().toString()))
                         .collect(Collectors.toList());
-                item = EntityHead.ZOMBIFIED_PIGLIN.getItemStack(loreList);
+                item = EntityHead.ZOMBIFIED_PIGLIN.getSkull(loreList);
 
                 HeadDropEvent headDropEvent = new HeadDropEvent(item, entity.getKiller(), entity);
                 Bukkit.getServer().getPluginManager().callEvent(headDropEvent);
@@ -1258,7 +1273,7 @@ public class EntityDeath implements Listener {
                         .map(lore -> lore.replace("{KILLER}", entity.getKiller() != null ? entity.getKiller().getName() : "Unknown"))
                         .map(lore -> lore.replace("{DATE}", LocalDate.now().toString()))
                         .collect(Collectors.toList());
-                item = EntityHead.GHAST.getItemStack(loreList);
+                item = EntityHead.GHAST.getSkull(loreList);
 
                 HeadDropEvent headDropEvent = new HeadDropEvent(item, entity.getKiller(), entity);
                 Bukkit.getServer().getPluginManager().callEvent(headDropEvent);
@@ -1285,9 +1300,9 @@ public class EntityDeath implements Listener {
                         .collect(Collectors.toList());
 
                 if (wolf.isAngry()) {
-                    item = EntityHead.WOLF_ANGRY.getItemStack(loreList);
+                    item = EntityHead.WOLF_ANGRY.getSkull(loreList);
                 } else {
-                    item = EntityHead.WOLF.getItemStack(loreList);
+                    item = EntityHead.WOLF.getSkull(loreList);
                 }
 
                 HeadDropEvent headDropEvent = new HeadDropEvent(item, entity.getKiller(), entity);
@@ -1317,7 +1332,7 @@ public class EntityDeath implements Listener {
 
                 switch (villager.getProfession()) {
                     case WEAPONSMITH:
-                        item = EntityHead.VILLAGER_WEAPONSMITH.getItemStack(loreList);
+                        item = EntityHead.VILLAGER_WEAPONSMITH.getSkull(loreList);
                         HeadDropEvent headDropEvent = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent);
                         if (!headDropEvent.isCancelled()){
@@ -1335,7 +1350,7 @@ public class EntityDeath implements Listener {
 
                         break;
                     case SHEPHERD:
-                        item = EntityHead.VILLAGER_SHEPHERD.getItemStack(loreList);
+                        item = EntityHead.VILLAGER_SHEPHERD.getSkull(loreList);
                         HeadDropEvent headDropEvent1 = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent1);
                         if (!headDropEvent1.isCancelled()){
@@ -1353,7 +1368,7 @@ public class EntityDeath implements Listener {
 
                         break;
                     case LIBRARIAN:
-                        item = EntityHead.VILLAGER_LIBRARIAN.getItemStack(loreList);
+                        item = EntityHead.VILLAGER_LIBRARIAN.getSkull(loreList);
                         HeadDropEvent headDropEvent2 = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent2);
                         if (!headDropEvent2.isCancelled()){
@@ -1372,7 +1387,7 @@ public class EntityDeath implements Listener {
 
                         break;
                     case FLETCHER:
-                        item = EntityHead.VILLAGER_FLETCHER.getItemStack(loreList);
+                        item = EntityHead.VILLAGER_FLETCHER.getSkull(loreList);
                         HeadDropEvent headDropEvent3 = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent3);
                         if (!headDropEvent3.isCancelled()){
@@ -1390,7 +1405,7 @@ public class EntityDeath implements Listener {
 
                         break;
                     case FISHERMAN:
-                        item = EntityHead.VILLAGER_FISHERMAN.getItemStack(loreList);
+                        item = EntityHead.VILLAGER_FISHERMAN.getSkull(loreList);
                         HeadDropEvent headDropEvent4 = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent4);
                         if (!headDropEvent4.isCancelled()){
@@ -1409,7 +1424,7 @@ public class EntityDeath implements Listener {
 
                         break;
                     case FARMER:
-                        item = EntityHead.VILLAGER_FARMER.getItemStack(loreList);
+                        item = EntityHead.VILLAGER_FARMER.getSkull(loreList);
                         HeadDropEvent headDropEvent5 = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent5);
                         if (!headDropEvent5.isCancelled()){
@@ -1428,7 +1443,7 @@ public class EntityDeath implements Listener {
 
                         break;
                     case CLERIC:
-                        item = EntityHead.VILLAGER_CLERIC.getItemStack(loreList);
+                        item = EntityHead.VILLAGER_CLERIC.getSkull(loreList);
                         HeadDropEvent headDropEvent6 = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent6);
                         if (!headDropEvent6.isCancelled()){
@@ -1447,7 +1462,7 @@ public class EntityDeath implements Listener {
 
                         break;
                     case CARTOGRAPHER:
-                        item = EntityHead.VILLAGER_CARTOGRAPHER.getItemStack(loreList);
+                        item = EntityHead.VILLAGER_CARTOGRAPHER.getSkull(loreList);
                         HeadDropEvent headDropEvent7 = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent7);
                         if (!headDropEvent7.isCancelled()){
@@ -1466,7 +1481,7 @@ public class EntityDeath implements Listener {
 
                         break;
                     case BUTCHER:
-                        item = EntityHead.VILLAGER_BUTCHER.getItemStack(loreList);
+                        item = EntityHead.VILLAGER_BUTCHER.getSkull(loreList);
                         HeadDropEvent headDropEvent8 = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent8);
                         if (!headDropEvent8.isCancelled()){
@@ -1484,7 +1499,7 @@ public class EntityDeath implements Listener {
 
                         break;
                     case ARMORER:
-                        item = EntityHead.VILLAGER_ARMORER.getItemStack(loreList);
+                        item = EntityHead.VILLAGER_ARMORER.getSkull(loreList);
                         HeadDropEvent headDropEvent9 = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent9);
                         if (!headDropEvent9.isCancelled()){
@@ -1499,13 +1514,63 @@ public class EntityDeath implements Listener {
                             }
                         }
 
-
                         break;
-                    default:
-                        item = EntityHead.VILLAGER_NULL.getItemStack(loreList);
+                    case LEATHERWORKER:
+                        item = EntityHead.VILLAGER_LEATHERWORKER.getSkull(loreList);
                         HeadDropEvent headDropEvent10 = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent10);
                         if (!headDropEvent10.isCancelled()){
+                            event.getDrops().add(item);
+
+                            if (killerExist) {
+                                updateDB(entity.getKiller());
+                            }
+
+                            if ((config.getBoolean("Bot.Enable")) && killerExist) {
+                                embed.msg(title, description, footer);
+                            }
+                        }
+
+                        break;
+                    case MASON:
+                        item = EntityHead.VILLAGER_MASON.getSkull(loreList);
+                        HeadDropEvent headDropEvent11 = new HeadDropEvent(item, entity.getKiller(), entity);
+                        Bukkit.getServer().getPluginManager().callEvent(headDropEvent11);
+                        if (!headDropEvent11.isCancelled()){
+                            event.getDrops().add(item);
+
+                            if (killerExist) {
+                                updateDB(entity.getKiller());
+                            }
+
+                            if ((config.getBoolean("Bot.Enable")) && killerExist) {
+                                embed.msg(title, description, footer);
+                            }
+                        }
+
+                        break;
+                    case TOOLSMITH:
+                        item = EntityHead.VILLAGER_TOOLSMITH.getSkull(loreList);
+                        HeadDropEvent headDropEvent13 = new HeadDropEvent(item, entity.getKiller(), entity);
+                        Bukkit.getServer().getPluginManager().callEvent(headDropEvent13);
+                        if (!headDropEvent13.isCancelled()){
+                            event.getDrops().add(item);
+
+                            if (killerExist) {
+                                updateDB(entity.getKiller());
+                            }
+
+                            if ((config.getBoolean("Bot.Enable")) && killerExist) {
+                                embed.msg(title, description, footer);
+                            }
+                        }
+
+                        break;
+                    default:
+                        item = EntityHead.VILLAGER_NULL.getSkull(loreList);
+                        HeadDropEvent headDropEvent14 = new HeadDropEvent(item, entity.getKiller(), entity);
+                        Bukkit.getServer().getPluginManager().callEvent(headDropEvent14);
+                        if (!headDropEvent14.isCancelled()){
                             event.getDrops().add(item);
 
 
@@ -1536,7 +1601,7 @@ public class EntityDeath implements Listener {
                 switch (rabbit.getRabbitType()) {
 
                     case BROWN:
-                        item = EntityHead.RABBIT_BROWN.getItemStack(loreList);
+                        item = EntityHead.RABBIT_BROWN.getSkull(loreList);
                         HeadDropEvent headDropEvent = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent);
                         if (!headDropEvent.isCancelled()){
@@ -1554,7 +1619,7 @@ public class EntityDeath implements Listener {
 
                         break;
                     case WHITE:
-                        item = EntityHead.RABBIT_WHITE.getItemStack(loreList);
+                        item = EntityHead.RABBIT_WHITE.getSkull(loreList);
                         HeadDropEvent headDropEvent1 = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent1);
                         if (!headDropEvent1.isCancelled()){
@@ -1572,7 +1637,7 @@ public class EntityDeath implements Listener {
 
                         break;
                     case BLACK:
-                        item = EntityHead.RABBIT_BLACK.getItemStack(loreList);
+                        item = EntityHead.RABBIT_BLACK.getSkull(loreList);
                         HeadDropEvent headDropEvent2 = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent2);
                         if (!headDropEvent2.isCancelled()){
@@ -1590,7 +1655,7 @@ public class EntityDeath implements Listener {
 
                         break;
                     case BLACK_AND_WHITE:
-                        item = EntityHead.RABBIT_BLACK_AND_WHITE.getItemStack(loreList);
+                        item = EntityHead.RABBIT_BLACK_AND_WHITE.getSkull(loreList);
                         HeadDropEvent headDropEvent3 = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent3);
                         if (!headDropEvent3.isCancelled()){
@@ -1607,7 +1672,7 @@ public class EntityDeath implements Listener {
 
                         break;
                     case GOLD:
-                        item = EntityHead.RABBIT_GOLD.getItemStack(loreList);
+                        item = EntityHead.RABBIT_GOLD.getSkull(loreList);
                         HeadDropEvent headDropEvent4 = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent4);
                         if (!headDropEvent4.isCancelled()){
@@ -1624,7 +1689,7 @@ public class EntityDeath implements Listener {
 
                         break;
                     case SALT_AND_PEPPER:
-                        item = EntityHead.RABBIT_SALT_AND_PEPPER.getItemStack(loreList);
+                        item = EntityHead.RABBIT_SALT_AND_PEPPER.getSkull(loreList);
                         HeadDropEvent headDropEvent5 = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent5);
                         if (!headDropEvent5.isCancelled()){
@@ -1641,7 +1706,7 @@ public class EntityDeath implements Listener {
 
                         break;
                     case THE_KILLER_BUNNY:
-                        item = EntityHead.RABBIT_THE_KILLER_BUNNY.getItemStack(loreList);
+                        item = EntityHead.RABBIT_THE_KILLER_BUNNY.getSkull(loreList);
                         HeadDropEvent headDropEvent6 = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent6);
                         if (!headDropEvent6.isCancelled()){
@@ -1669,7 +1734,7 @@ public class EntityDeath implements Listener {
                         .map(lore -> lore.replace("{DATE}", LocalDate.now().toString()))
                         .collect(Collectors.toList());
 
-                item = EntityHead.ENDERMITE.getItemStack(loreList);
+                item = EntityHead.ENDERMITE.getSkull(loreList);
 
                 HeadDropEvent headDropEvent = new HeadDropEvent(item, entity.getKiller(), entity);
                 Bukkit.getServer().getPluginManager().callEvent(headDropEvent);
@@ -1695,7 +1760,7 @@ public class EntityDeath implements Listener {
                         .map(lore -> lore.replace("{DATE}", LocalDate.now().toString()))
                         .collect(Collectors.toList());
 
-                item = EntityHead.GUARDIAN.getItemStack(loreList);
+                item = EntityHead.GUARDIAN.getSkull(loreList);
 
                 HeadDropEvent headDropEvent = new HeadDropEvent(item, entity.getKiller(), entity);
                 Bukkit.getServer().getPluginManager().callEvent(headDropEvent);
@@ -1723,7 +1788,7 @@ public class EntityDeath implements Listener {
                         .map(lore -> lore.replace("{DATE}", LocalDate.now().toString()))
                         .collect(Collectors.toList());
 
-                item = EntityHead.SHULKER.getItemStack(loreList);
+                item = EntityHead.SHULKER.getSkull(loreList);
 
                 HeadDropEvent headDropEvent = new HeadDropEvent(item, entity.getKiller(), entity);
                 Bukkit.getServer().getPluginManager().callEvent(headDropEvent);
@@ -1750,7 +1815,7 @@ public class EntityDeath implements Listener {
                         .map(lore -> lore.replace("{DATE}", LocalDate.now().toString()))
                         .collect(Collectors.toList());
 
-                item = EntityHead.POLAR_BEAR.getItemStack(loreList);
+                item = EntityHead.POLAR_BEAR.getSkull(loreList);
 
                 HeadDropEvent headDropEvent = new HeadDropEvent(item, entity.getKiller(), entity);
                 Bukkit.getServer().getPluginManager().callEvent(headDropEvent);
@@ -1780,7 +1845,7 @@ public class EntityDeath implements Listener {
 
                 switch (zombieVillager.getVillagerProfession()) {
                     case ARMORER:
-                        item = EntityHead.ZOMBIE_VILLAGER_ARMORER.getItemStack(loreList);
+                        item = EntityHead.ZOMBIE_VILLAGER_ARMORER.getSkull(loreList);
 
                         HeadDropEvent headDropEvent = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent);
@@ -1799,7 +1864,7 @@ public class EntityDeath implements Listener {
 
                         break;
                     case BUTCHER:
-                        item = EntityHead.ZOMBIE_VILLAGER_BUTCHER.getItemStack(loreList);
+                        item = EntityHead.ZOMBIE_VILLAGER_BUTCHER.getSkull(loreList);
                         HeadDropEvent headDropEvent1 = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent1);
                         if (!headDropEvent1.isCancelled()) {
@@ -1816,7 +1881,7 @@ public class EntityDeath implements Listener {
 
                         break;
                     case CARTOGRAPHER:
-                        item = EntityHead.ZOMBIE_VILLAGER_CARTOGRAPHER.getItemStack(loreList);
+                        item = EntityHead.ZOMBIE_VILLAGER_CARTOGRAPHER.getSkull(loreList);
                         HeadDropEvent headDropEvent2 = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent2);
                         if (!headDropEvent2.isCancelled()) {
@@ -1833,7 +1898,7 @@ public class EntityDeath implements Listener {
 
                         break;
                     case CLERIC:
-                        item = EntityHead.ZOMBIE_VILLAGER_CLERIC.getItemStack(loreList);
+                        item = EntityHead.ZOMBIE_VILLAGER_CLERIC.getSkull(loreList);
                         HeadDropEvent headDropEvent3 = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent3);
                         if (!headDropEvent3.isCancelled()) {
@@ -1851,7 +1916,7 @@ public class EntityDeath implements Listener {
 
                         break;
                     case FARMER:
-                        item = EntityHead.ZOMBIE_VILLAGER_FARMER.getItemStack(loreList);
+                        item = EntityHead.ZOMBIE_VILLAGER_FARMER.getSkull(loreList);
                         HeadDropEvent headDropEvent4 = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent4);
                         if (!headDropEvent4.isCancelled()) {
@@ -1868,7 +1933,7 @@ public class EntityDeath implements Listener {
 
                         break;
                     case FISHERMAN:
-                        item = EntityHead.ZOMBIE_VILLAGER_FISHERMAN.getItemStack(loreList);
+                        item = EntityHead.ZOMBIE_VILLAGER_FISHERMAN.getSkull(loreList);
                         HeadDropEvent headDropEvent5 = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent5);
                         if (!headDropEvent5.isCancelled()) {
@@ -1885,7 +1950,7 @@ public class EntityDeath implements Listener {
 
                         break;
                     case FLETCHER:
-                        item = EntityHead.ZOMBIE_VILLAGER_FLETCHER.getItemStack(loreList);
+                        item = EntityHead.ZOMBIE_VILLAGER_FLETCHER.getSkull(loreList);
                         HeadDropEvent headDropEvent6 = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent6);
                         if (!headDropEvent6.isCancelled()) {
@@ -1903,7 +1968,7 @@ public class EntityDeath implements Listener {
 
                         break;
                     case LIBRARIAN:
-                        item = EntityHead.ZOMBIE_VILLAGER_LIBRARIAN.getItemStack(loreList);
+                        item = EntityHead.ZOMBIE_VILLAGER_LIBRARIAN.getSkull(loreList);
                         HeadDropEvent headDropEvent7 = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent7);
                         if (!headDropEvent7.isCancelled()) {
@@ -1920,7 +1985,7 @@ public class EntityDeath implements Listener {
 
                         break;
                     case SHEPHERD:
-                        item = EntityHead.ZOMBIE_VILLAGER_SHEPHERD.getItemStack(loreList);
+                        item = EntityHead.ZOMBIE_VILLAGER_SHEPHERD.getSkull(loreList);
                         HeadDropEvent headDropEvent8 = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent8);
                         if (!headDropEvent8.isCancelled()) {
@@ -1937,7 +2002,7 @@ public class EntityDeath implements Listener {
 
                         break;
                     case WEAPONSMITH:
-                        item = EntityHead.ZOMBIE_VILLAGER_WEAPONSMITH.getItemStack(loreList);
+                        item = EntityHead.ZOMBIE_VILLAGER_WEAPONSMITH.getSkull(loreList);
                         HeadDropEvent headDropEvent9 = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent9);
                         if (!headDropEvent9.isCancelled()) {
@@ -1954,7 +2019,7 @@ public class EntityDeath implements Listener {
 
                         break;
                     default:
-                        item = EntityHead.ZOMBIE_VILLAGER_NULL.getItemStack(loreList);
+                        item = EntityHead.ZOMBIE_VILLAGER_NULL.getSkull(loreList);
                         HeadDropEvent headDropEvent10 = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent10);
                         if (!headDropEvent10.isCancelled()) {
@@ -1982,7 +2047,7 @@ public class EntityDeath implements Listener {
                         .map(lore -> lore.replace("{DATE}", LocalDate.now().toString()))
                         .collect(Collectors.toList());
 
-                item = EntityHead.VINDICATOR.getItemStack(loreList);
+                item = EntityHead.VINDICATOR.getSkull(loreList);
 
                 HeadDropEvent headDropEvent = new HeadDropEvent(item, entity.getKiller(), entity);
                 Bukkit.getServer().getPluginManager().callEvent(headDropEvent);
@@ -2011,10 +2076,10 @@ public class EntityDeath implements Listener {
                         .collect(Collectors.toList());
 
                 if (vex.isCharging()) {
-                    item = EntityHead.VEX_CHARGE.getItemStack(loreList);
+                    item = EntityHead.VEX_CHARGE.getSkull(loreList);
 
                 } else {
-                    item = EntityHead.VEX.getItemStack(loreList);
+                    item = EntityHead.VEX.getSkull(loreList);
                 }
 
                 HeadDropEvent headDropEvent = new HeadDropEvent(item, entity.getKiller(), entity);
@@ -2041,7 +2106,7 @@ public class EntityDeath implements Listener {
                         .map(lore -> lore.replace("{DATE}", LocalDate.now().toString()))
                         .collect(Collectors.toList());
 
-                item = EntityHead.EVOKER.getItemStack(loreList);
+                item = EntityHead.EVOKER.getSkull(loreList);
 
                 HeadDropEvent headDropEvent = new HeadDropEvent(item, entity.getKiller(), entity);
                 Bukkit.getServer().getPluginManager().callEvent(headDropEvent);
@@ -2067,7 +2132,7 @@ public class EntityDeath implements Listener {
                         .map(lore -> lore.replace("{DATE}", LocalDate.now().toString()))
                         .collect(Collectors.toList());
 
-                item = EntityHead.HUSK.getItemStack(loreList);
+                item = EntityHead.HUSK.getSkull(loreList);
 
                 HeadDropEvent headDropEvent = new HeadDropEvent(item, entity.getKiller(), entity);
                 Bukkit.getServer().getPluginManager().callEvent(headDropEvent);
@@ -2093,7 +2158,7 @@ public class EntityDeath implements Listener {
                         .map(lore -> lore.replace("{DATE}", LocalDate.now().toString()))
                         .collect(Collectors.toList());
 
-                item = EntityHead.STRAY.getItemStack(loreList);
+                item = EntityHead.STRAY.getSkull(loreList);
 
                 HeadDropEvent headDropEvent = new HeadDropEvent(item, entity.getKiller(), entity);
                 Bukkit.getServer().getPluginManager().callEvent(headDropEvent);
@@ -2119,7 +2184,7 @@ public class EntityDeath implements Listener {
                         .map(lore -> lore.replace("{DATE}", LocalDate.now().toString()))
                         .collect(Collectors.toList());
 
-                item = EntityHead.ELDER_GUARDIAN.getItemStack(loreList);
+                item = EntityHead.ELDER_GUARDIAN.getSkull(loreList);
 
                 HeadDropEvent headDropEvent = new HeadDropEvent(item, entity.getKiller(), entity);
                 Bukkit.getServer().getPluginManager().callEvent(headDropEvent);
@@ -2145,7 +2210,7 @@ public class EntityDeath implements Listener {
                         .map(lore -> lore.replace("{DATE}", LocalDate.now().toString()))
                         .collect(Collectors.toList());
 
-                item = EntityHead.DONKEY.getItemStack(loreList);
+                item = EntityHead.DONKEY.getSkull(loreList);
 
                 HeadDropEvent headDropEvent = new HeadDropEvent(item, entity.getKiller(), entity);
                 Bukkit.getServer().getPluginManager().callEvent(headDropEvent);
@@ -2171,7 +2236,7 @@ public class EntityDeath implements Listener {
                         .map(lore -> lore.replace("{DATE}", LocalDate.now().toString()))
                         .collect(Collectors.toList());
 
-                item = EntityHead.ZOMBIE_HORSE.getItemStack(loreList);
+                item = EntityHead.ZOMBIE_HORSE.getSkull(loreList);
 
                 HeadDropEvent headDropEvent = new HeadDropEvent(item, entity.getKiller(), entity);
                 Bukkit.getServer().getPluginManager().callEvent(headDropEvent);
@@ -2197,7 +2262,7 @@ public class EntityDeath implements Listener {
                         .map(lore -> lore.replace("{DATE}", LocalDate.now().toString()))
                         .collect(Collectors.toList());
 
-                item = EntityHead.SKELETON_HORSE.getItemStack(loreList);
+                item = EntityHead.SKELETON_HORSE.getSkull(loreList);
 
                 HeadDropEvent headDropEvent = new HeadDropEvent(item, entity.getKiller(), entity);
                 Bukkit.getServer().getPluginManager().callEvent(headDropEvent);
@@ -2223,7 +2288,7 @@ public class EntityDeath implements Listener {
                         .map(lore -> lore.replace("{DATE}", LocalDate.now().toString()))
                         .collect(Collectors.toList());
 
-                item = EntityHead.MULE.getItemStack(loreList);
+                item = EntityHead.MULE.getSkull(loreList);
 
                 HeadDropEvent headDropEvent = new HeadDropEvent(item, entity.getKiller(), entity);
                 Bukkit.getServer().getPluginManager().callEvent(headDropEvent);
@@ -2254,7 +2319,7 @@ public class EntityDeath implements Listener {
 
                 switch (parrot.getVariant()) {
                     case BLUE:
-                        item = EntityHead.PARROT_BLUE.getItemStack(loreList);
+                        item = EntityHead.PARROT_BLUE.getSkull(loreList);
                         HeadDropEvent headDropEvent = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent);
                         if (!headDropEvent.isCancelled()){
@@ -2271,7 +2336,7 @@ public class EntityDeath implements Listener {
 
                         break;
                     case CYAN:
-                        item = EntityHead.PARROT_CYAN.getItemStack(loreList);
+                        item = EntityHead.PARROT_CYAN.getSkull(loreList);
                         HeadDropEvent headDropEvent1 = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent1);
                         if (!headDropEvent1.isCancelled()){
@@ -2288,7 +2353,7 @@ public class EntityDeath implements Listener {
 
                         break;
                     case GRAY:
-                        item = EntityHead.PARROT_GRAY.getItemStack(loreList);
+                        item = EntityHead.PARROT_GRAY.getSkull(loreList);
                         HeadDropEvent headDropEvent2 = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent2);
                         if (!headDropEvent2.isCancelled()){
@@ -2305,7 +2370,7 @@ public class EntityDeath implements Listener {
 
                         break;
                     case RED:
-                        item = EntityHead.PARROT_RED.getItemStack(loreList);
+                        item = EntityHead.PARROT_RED.getSkull(loreList);
                         HeadDropEvent headDropEvent3 = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent3);
                         if (!headDropEvent3.isCancelled()){
@@ -2322,7 +2387,7 @@ public class EntityDeath implements Listener {
 
                         break;
                     case GREEN:
-                        item = EntityHead.PARROT_GREEN.getItemStack(loreList);
+                        item = EntityHead.PARROT_GREEN.getSkull(loreList);
                         HeadDropEvent headDropEvent4 = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent4);
                         if (!headDropEvent4.isCancelled()){
@@ -2355,7 +2420,7 @@ public class EntityDeath implements Listener {
 
                 switch (tropicalFish.getBodyColor()) {
                     case MAGENTA:
-                        item = EntityHead.TROPICAL_FISH_MAGENTA.getItemStack(loreList);
+                        item = EntityHead.TROPICAL_FISH_MAGENTA.getSkull(loreList);
                         HeadDropEvent headDropEvent = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent);
                         if (!headDropEvent.isCancelled()){
@@ -2374,7 +2439,7 @@ public class EntityDeath implements Listener {
 
                         break;
                     case LIGHT_BLUE:
-                        item = EntityHead.TROPICAL_FISH_LIGHT_BLUE.getItemStack(loreList);
+                        item = EntityHead.TROPICAL_FISH_LIGHT_BLUE.getSkull(loreList);
                         HeadDropEvent headDropEvent1 = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent1);
                         if (!headDropEvent1.isCancelled()){
@@ -2391,7 +2456,7 @@ public class EntityDeath implements Listener {
 
                         break;
                     case YELLOW:
-                        item = EntityHead.TROPICAL_FISH_YELLOW.getItemStack(loreList);
+                        item = EntityHead.TROPICAL_FISH_YELLOW.getSkull(loreList);
                         HeadDropEvent headDropEvent2 = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent2);
                         if (!headDropEvent2.isCancelled()){
@@ -2408,7 +2473,7 @@ public class EntityDeath implements Listener {
 
                         break;
                     case PINK:
-                        item = EntityHead.TROPICAL_FISH_PINK.getItemStack(loreList);
+                        item = EntityHead.TROPICAL_FISH_PINK.getSkull(loreList);
                         HeadDropEvent headDropEvent3 = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent3);
                         if (!headDropEvent3.isCancelled()){
@@ -2425,7 +2490,7 @@ public class EntityDeath implements Listener {
 
                         break;
                     case GRAY:
-                        item = EntityHead.TROPICAL_FISH_GRAY.getItemStack(loreList);
+                        item = EntityHead.TROPICAL_FISH_GRAY.getSkull(loreList);
                         HeadDropEvent headDropEvent4 = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent4);
                         if (!headDropEvent4.isCancelled()){
@@ -2442,7 +2507,7 @@ public class EntityDeath implements Listener {
 
                         break;
                     case LIGHT_GRAY:
-                        item = EntityHead.TROPICAL_FISH_LIGHT_GRAY.getItemStack(loreList);
+                        item = EntityHead.TROPICAL_FISH_LIGHT_GRAY.getSkull(loreList);
                         HeadDropEvent headDropEvent5 = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent5);
                         if (!headDropEvent5.isCancelled()){
@@ -2459,7 +2524,7 @@ public class EntityDeath implements Listener {
 
                         break;
                     case CYAN:
-                        item = EntityHead.TROPICAL_FISH_CYAN.getItemStack(loreList);
+                        item = EntityHead.TROPICAL_FISH_CYAN.getSkull(loreList);
                         HeadDropEvent headDropEvent6 = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent6);
                         if (!headDropEvent6.isCancelled()){
@@ -2476,7 +2541,7 @@ public class EntityDeath implements Listener {
 
                         break;
                     case BLUE:
-                        item = EntityHead.TROPICAL_FISH_BLUE.getItemStack(loreList);
+                        item = EntityHead.TROPICAL_FISH_BLUE.getSkull(loreList);
                         HeadDropEvent headDropEvent7 = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent7);
                         if (!headDropEvent7.isCancelled()){
@@ -2494,7 +2559,7 @@ public class EntityDeath implements Listener {
 
                         break;
                     case GREEN:
-                        item = EntityHead.TROPICAL_FISH_GREEN.getItemStack(loreList);
+                        item = EntityHead.TROPICAL_FISH_GREEN.getSkull(loreList);
                         HeadDropEvent headDropEvent8 = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent8);
                         if (!headDropEvent8.isCancelled()){
@@ -2511,7 +2576,7 @@ public class EntityDeath implements Listener {
 
                         break;
                     case RED:
-                        item = EntityHead.TROPICAL_FISH_RED.getItemStack(loreList);
+                        item = EntityHead.TROPICAL_FISH_RED.getSkull(loreList);
                         HeadDropEvent headDropEvent9 = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent9);
                         if (!headDropEvent9.isCancelled()){
@@ -2529,7 +2594,7 @@ public class EntityDeath implements Listener {
 
                         break;
                     case BLACK:
-                        item = EntityHead.TROPICAL_FISH_BLACK.getItemStack(loreList);
+                        item = EntityHead.TROPICAL_FISH_BLACK.getSkull(loreList);
                         HeadDropEvent headDropEvent10 = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent10);
                         if (!headDropEvent10.isCancelled()){
@@ -2547,7 +2612,7 @@ public class EntityDeath implements Listener {
                         break;
 
                     default:
-                        item = EntityHead.TROPICAL_FISH_ORANGE.getItemStack(loreList);
+                        item = EntityHead.TROPICAL_FISH_ORANGE.getSkull(loreList);
 
                         HeadDropEvent headDropEvent11 = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent11);
@@ -2573,7 +2638,7 @@ public class EntityDeath implements Listener {
                         .map(lore -> lore.replace("{DATE}", LocalDate.now().toString()))
                         .collect(Collectors.toList());
 
-                item = EntityHead.PUFFERFISH.getItemStack(loreList);
+                item = EntityHead.PUFFERFISH.getSkull(loreList);
 
                 HeadDropEvent headDropEvent = new HeadDropEvent(item, entity.getKiller(), entity);
                 Bukkit.getServer().getPluginManager().callEvent(headDropEvent);
@@ -2599,7 +2664,7 @@ public class EntityDeath implements Listener {
                         .map(lore -> lore.replace("{DATE}", LocalDate.now().toString()))
                         .collect(Collectors.toList());
 
-                item = EntityHead.SALMON.getItemStack(loreList);
+                item = EntityHead.SALMON.getSkull(loreList);
 
                 HeadDropEvent headDropEvent = new HeadDropEvent(item, entity.getKiller(), entity);
                 Bukkit.getServer().getPluginManager().callEvent(headDropEvent);
@@ -2625,7 +2690,7 @@ public class EntityDeath implements Listener {
                         .map(lore -> lore.replace("{DATE}", LocalDate.now().toString()))
                         .collect(Collectors.toList());
 
-                item = EntityHead.COD.getItemStack(loreList);
+                item = EntityHead.COD.getSkull(loreList);
 
                 HeadDropEvent headDropEvent = new HeadDropEvent(item, entity.getKiller(), entity);
                 Bukkit.getServer().getPluginManager().callEvent(headDropEvent);
@@ -2650,7 +2715,7 @@ public class EntityDeath implements Listener {
                         .map(lore -> lore.replace("{DATE}", LocalDate.now().toString()))
                         .collect(Collectors.toList());
 
-                item = EntityHead.TURTLE.getItemStack(loreList);
+                item = EntityHead.TURTLE.getSkull(loreList);
 
                 HeadDropEvent headDropEvent = new HeadDropEvent(item, entity.getKiller(), entity);
                 Bukkit.getServer().getPluginManager().callEvent(headDropEvent);
@@ -2676,7 +2741,7 @@ public class EntityDeath implements Listener {
                         .map(lore -> lore.replace("{DATE}", LocalDate.now().toString()))
                         .collect(Collectors.toList());
 
-                item = EntityHead.DOLPHIN.getItemStack(loreList);
+                item = EntityHead.DOLPHIN.getSkull(loreList);
 
                 HeadDropEvent headDropEvent = new HeadDropEvent(item, entity.getKiller(), entity);
                 Bukkit.getServer().getPluginManager().callEvent(headDropEvent);
@@ -2702,7 +2767,7 @@ public class EntityDeath implements Listener {
                         .map(lore -> lore.replace("{DATE}", LocalDate.now().toString()))
                         .collect(Collectors.toList());
 
-                item = EntityHead.PHANTOM.getItemStack(loreList);
+                item = EntityHead.PHANTOM.getSkull(loreList);
 
                 HeadDropEvent headDropEvent = new HeadDropEvent(item, entity.getKiller(), entity);
                 Bukkit.getServer().getPluginManager().callEvent(headDropEvent);
@@ -2727,7 +2792,7 @@ public class EntityDeath implements Listener {
                         .map(lore -> lore.replace("{DATE}", LocalDate.now().toString()))
                         .collect(Collectors.toList());
 
-                item = EntityHead.DROWNED.getItemStack(loreList);
+                item = EntityHead.DROWNED.getSkull(loreList);
 
                 HeadDropEvent headDropEvent = new HeadDropEvent(item, entity.getKiller(), entity);
                 Bukkit.getServer().getPluginManager().callEvent(headDropEvent);
@@ -2755,7 +2820,7 @@ public class EntityDeath implements Listener {
                         .map(lore -> lore.replace("{DATE}", LocalDate.now().toString()))
                         .collect(Collectors.toList());
 
-                item = EntityHead.WANDERING_TRADER.getItemStack(loreList);
+                item = EntityHead.WANDERING_TRADER.getSkull(loreList);
 
                 HeadDropEvent headDropEvent = new HeadDropEvent(item, entity.getKiller(), entity);
                 Bukkit.getServer().getPluginManager().callEvent(headDropEvent);
@@ -2773,7 +2838,7 @@ public class EntityDeath implements Listener {
 
             }
         } else if (type == EntityType.TRADER_LLAMA) {
-            if ((config.getBoolean("TRADER_LLAMA.Drop")) && x <= config.getInt("TRADER_LLAMA.Chance.Name")) {
+            if ((config.getBoolean("TRADER_LLAMA.Drop")) && x <= config.getInt("TRADER_LLAMA.Chance")) {
                 TraderLlama traderLlama = (TraderLlama) entity;
 
                 List<String> loreList = config.getStringList("TRADER_LLAMA.Lore");
@@ -2784,7 +2849,7 @@ public class EntityDeath implements Listener {
 
                 switch (traderLlama.getColor()) {
                     case BROWN:
-                        item = EntityHead.TRADER_LLAMA_BROWN.getItemStack(loreList);
+                        item = EntityHead.TRADER_LLAMA_BROWN.getSkull(loreList);
                         HeadDropEvent headDropEvent = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent);
                         if (!headDropEvent.isCancelled()){
@@ -2801,7 +2866,7 @@ public class EntityDeath implements Listener {
 
                         break;
                     case WHITE:
-                        item = EntityHead.TRADER_LLAMA_WHITE.getItemStack(loreList);
+                        item = EntityHead.TRADER_LLAMA_WHITE.getSkull(loreList);
                         HeadDropEvent headDropEvent1 = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent1);
                         if (!headDropEvent1.isCancelled()){
@@ -2818,7 +2883,7 @@ public class EntityDeath implements Listener {
 
                         break;
                     case GRAY:
-                        item = EntityHead.TRADER_LLAMA_GRAY.getItemStack(loreList);
+                        item = EntityHead.TRADER_LLAMA_GRAY.getSkull(loreList);
                         HeadDropEvent headDropEvent2 = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent2);
                         if (!headDropEvent2.isCancelled()){
@@ -2835,7 +2900,7 @@ public class EntityDeath implements Listener {
 
                         break;
                     case CREAMY:
-                        item = EntityHead.TRADER_LLAMA_CREAMY.getItemStack(loreList);
+                        item = EntityHead.TRADER_LLAMA_CREAMY.getSkull(loreList);
                         HeadDropEvent headDropEvent3 = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent3);
                         if (!headDropEvent3.isCancelled()){
@@ -2867,7 +2932,7 @@ public class EntityDeath implements Listener {
 
                 switch (llama.getColor()) {
                     case BROWN:
-                        item = EntityHead.LLAMA_BROWN.getItemStack(loreList);
+                        item = EntityHead.LLAMA_BROWN.getSkull(loreList);
                         HeadDropEvent headDropEvent = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent);
                         if (!headDropEvent.isCancelled()){
@@ -2884,7 +2949,7 @@ public class EntityDeath implements Listener {
 
                         break;
                     case GRAY:
-                        item = EntityHead.LLAMA_GRAY.getItemStack(loreList);
+                        item = EntityHead.LLAMA_GRAY.getSkull(loreList);
                         HeadDropEvent headDropEvent1 = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent1);
                         if (!headDropEvent1.isCancelled()){
@@ -2900,7 +2965,7 @@ public class EntityDeath implements Listener {
                         }
                         break;
                     case CREAMY:
-                        item = EntityHead.LLAMA_CREAMY.getItemStack(loreList);
+                        item = EntityHead.LLAMA_CREAMY.getSkull(loreList);
                         HeadDropEvent headDropEvent2 = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent2);
                         if (!headDropEvent2.isCancelled()){
@@ -2917,7 +2982,7 @@ public class EntityDeath implements Listener {
 
                         break;
                     case WHITE:
-                        item = EntityHead.LLAMA_WHITE.getItemStack(loreList);
+                        item = EntityHead.LLAMA_WHITE.getSkull(loreList);
                         HeadDropEvent headDropEvent3 = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent3);
                         if (!headDropEvent3.isCancelled()){
@@ -2944,7 +3009,7 @@ public class EntityDeath implements Listener {
                         .map(lore -> lore.replace("{DATE}", LocalDate.now().toString()))
                         .collect(Collectors.toList());
 
-                item = EntityHead.RAVAGER.getItemStack(loreList);
+                item = EntityHead.RAVAGER.getSkull(loreList);
 
                 HeadDropEvent headDropEvent = new HeadDropEvent(item, entity.getKiller(), entity);
                 Bukkit.getServer().getPluginManager().callEvent(headDropEvent);
@@ -2968,7 +3033,7 @@ public class EntityDeath implements Listener {
                         .map(lore -> lore.replace("{DATE}", LocalDate.now().toString()))
                         .collect(Collectors.toList());
 
-                item = EntityHead.PILLAGER.getItemStack(loreList);
+                item = EntityHead.PILLAGER.getSkull(loreList);
 
                 HeadDropEvent headDropEvent = new HeadDropEvent(item, entity.getKiller(), entity);
                 Bukkit.getServer().getPluginManager().callEvent(headDropEvent);
@@ -2995,9 +3060,9 @@ public class EntityDeath implements Listener {
                         .collect(Collectors.toList());
 
                 if (panda.getMainGene() == Panda.Gene.BROWN) {
-                    item = EntityHead.PANDA_BROWN.getItemStack(loreList);
+                    item = EntityHead.PANDA_BROWN.getSkull(loreList);
                 } else {
-                    item = EntityHead.PANDA.getItemStack(loreList);
+                    item = EntityHead.PANDA.getSkull(loreList);
                 }
 
                 HeadDropEvent headDropEvent = new HeadDropEvent(item, entity.getKiller(), entity);
@@ -3027,7 +3092,7 @@ public class EntityDeath implements Listener {
                 switch (fox.getFoxType()) {
                     case RED:
 
-                        item = EntityHead.FOX.getItemStack(loreList);
+                        item = EntityHead.FOX.getSkull(loreList);
                         HeadDropEvent headDropEvent = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent);
                         if (!headDropEvent.isCancelled()){
@@ -3045,7 +3110,7 @@ public class EntityDeath implements Listener {
                         break;
                     case SNOW:
 
-                        item = EntityHead.FOX_WHITE.getItemStack(loreList);
+                        item = EntityHead.FOX_WHITE.getSkull(loreList);
                         HeadDropEvent headDropEvent1 = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent1);
                         if (!headDropEvent1.isCancelled()) {
@@ -3073,7 +3138,7 @@ public class EntityDeath implements Listener {
 
                 switch (cat.getCatType()) {
                     case BLACK:
-                        item = EntityHead.CAT_BLACK.getItemStack(loreList);
+                        item = EntityHead.CAT_BLACK.getSkull(loreList);
                         HeadDropEvent headDropEvent = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent);
                         if (!headDropEvent.isCancelled()){
@@ -3090,7 +3155,7 @@ public class EntityDeath implements Listener {
 
                         break;
                     case BRITISH_SHORTHAIR:
-                        item = EntityHead.CAT_BRITISH.getItemStack(loreList);
+                        item = EntityHead.CAT_BRITISH.getSkull(loreList);
                         HeadDropEvent headDropEvent1 = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent1);
                         if (!headDropEvent1.isCancelled()){
@@ -3107,7 +3172,7 @@ public class EntityDeath implements Listener {
 
                         break;
                     case CALICO:
-                        item = EntityHead.CAT_CALICO.getItemStack(loreList);
+                        item = EntityHead.CAT_CALICO.getSkull(loreList);
                         HeadDropEvent headDropEvent2 = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent2);
                         if (!headDropEvent2.isCancelled()){
@@ -3124,7 +3189,7 @@ public class EntityDeath implements Listener {
 
                         break;
                     case JELLIE:
-                        item = EntityHead.CAT_JELLIE.getItemStack(loreList);
+                        item = EntityHead.CAT_JELLIE.getSkull(loreList);
                         HeadDropEvent headDropEvent3 = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent3);
                         if (!headDropEvent3.isCancelled()){
@@ -3141,7 +3206,7 @@ public class EntityDeath implements Listener {
 
                         break;
                     case PERSIAN:
-                        item = EntityHead.CAT_PERSIAN.getItemStack(loreList);
+                        item = EntityHead.CAT_PERSIAN.getSkull(loreList);
                         HeadDropEvent headDropEvent4 = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent4);
                         if (!headDropEvent4.isCancelled()){
@@ -3158,7 +3223,7 @@ public class EntityDeath implements Listener {
 
                         break;
                     case RAGDOLL:
-                        item = EntityHead.CAT_RAGDOLL.getItemStack(loreList);
+                        item = EntityHead.CAT_RAGDOLL.getSkull(loreList);
                         HeadDropEvent headDropEvent5 = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent5);
                         if (!headDropEvent5.isCancelled()){
@@ -3175,7 +3240,7 @@ public class EntityDeath implements Listener {
 
                         break;
                     case RED:
-                        item = EntityHead.CAT_RED.getItemStack(loreList);
+                        item = EntityHead.CAT_RED.getSkull(loreList);
                         HeadDropEvent headDropEvent6 = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent6);
                         if (!headDropEvent6.isCancelled()){
@@ -3192,7 +3257,7 @@ public class EntityDeath implements Listener {
 
                         break;
                     case SIAMESE:
-                        item = EntityHead.CAT_SIAMESE.getItemStack(loreList);
+                        item = EntityHead.CAT_SIAMESE.getSkull(loreList);
                         HeadDropEvent headDropEvent7 = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent7);
                         if (!headDropEvent7.isCancelled()){
@@ -3209,7 +3274,7 @@ public class EntityDeath implements Listener {
 
                         break;
                     case TABBY:
-                        item = EntityHead.CAT_TABBY.getItemStack(loreList);
+                        item = EntityHead.CAT_TABBY.getSkull(loreList);
                         HeadDropEvent headDropEvent8 = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent8);
                         if (!headDropEvent8.isCancelled()){
@@ -3223,13 +3288,27 @@ public class EntityDeath implements Listener {
                                 embed.msg(title, description, footer);
                             }
                         }
-
-                        break;
-                    case WHITE:
-                        item = EntityHead.CAT_WHITE.getItemStack(loreList);
+                    case ALL_BLACK:
+                        item = EntityHead.CAT_ALL_BLACK.getSkull(loreList);
                         HeadDropEvent headDropEvent9 = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent9);
                         if (!headDropEvent9.isCancelled()){
+                            event.getDrops().add(item);
+
+                            if (killerExist) {
+                                updateDB(entity.getKiller());
+                            }
+
+                            if ((config.getBoolean("Bot.Enable")) && killerExist) {
+                                embed.msg(title, description, footer);
+                            }
+                        }
+                        break;
+                    case WHITE:
+                        item = EntityHead.CAT_WHITE.getSkull(loreList);
+                        HeadDropEvent headDropEvent10 = new HeadDropEvent(item, entity.getKiller(), entity);
+                        Bukkit.getServer().getPluginManager().callEvent(headDropEvent10);
+                        if (!headDropEvent10.isCancelled()){
                             event.getDrops().add(item);
 
                             if (killerExist) {
@@ -3256,9 +3335,9 @@ public class EntityDeath implements Listener {
                         .collect(Collectors.toList());
 
                 if (bee.getAnger() > 0) {
-                    item = EntityHead.BEE_AWARE.getItemStack(loreList);
+                    item = EntityHead.BEE_AWARE.getSkull(loreList);
                 } else {
-                    item = EntityHead.BEE.getItemStack(loreList);
+                    item = EntityHead.BEE.getSkull(loreList);
                 }
 
                 HeadDropEvent headDropEvent = new HeadDropEvent(item, entity.getKiller(), entity);
@@ -3285,7 +3364,7 @@ public class EntityDeath implements Listener {
                         .map(lore -> lore.replace("{DATE}", LocalDate.now().toString()))
                         .collect(Collectors.toList());
 
-                item = EntityHead.ZOGLIN.getItemStack(loreList);
+                item = EntityHead.ZOGLIN.getSkull(loreList);
 
                 HeadDropEvent headDropEvent = new HeadDropEvent(item, entity.getKiller(), entity);
                 Bukkit.getServer().getPluginManager().callEvent(headDropEvent);
@@ -3310,7 +3389,7 @@ public class EntityDeath implements Listener {
                         .map(lore -> lore.replace("{DATE}", LocalDate.now().toString()))
                         .collect(Collectors.toList());
 
-                item = EntityHead.STRIDER.getItemStack(loreList);
+                item = EntityHead.STRIDER.getSkull(loreList);
 
                 HeadDropEvent headDropEvent = new HeadDropEvent(item, entity.getKiller(), entity);
                 Bukkit.getServer().getPluginManager().callEvent(headDropEvent);
@@ -3336,13 +3415,17 @@ public class EntityDeath implements Listener {
                         .collect(Collectors.toList());
                 //PIGLIN_HEAD added in 1.20
                 if (Bukkit.getServer().getVersion().contains("1.19")){
-                    item = EntityHead.PIGLIN.getItemStack(loreList);
+                    item = EntityHead.PIGLIN.getSkull(loreList);
                 }else {
                     try {
-                        item = utils.rename(new ItemStack(Material.PIGLIN_HEAD), config.getString("PIGLIN.Name"), loreList);
+                        item = new ItemStack(Material.PIGLIN_HEAD);
+                        ItemMeta meta = item.getItemMeta();
+                        meta.setLore(loreList);
+                        item.setItemMeta(meta);
+                        event.getDrops().removeIf(head -> head.getType() == Material.PIGLIN_HEAD);
 
                     } catch (NoSuchFieldError e) {
-                        item = EntityHead.PIGLIN.getItemStack(loreList);
+                        item = EntityHead.PIGLIN.getSkull(loreList);
                     }
                 }
                 HeadDropEvent headDropEvent = new HeadDropEvent(item, entity.getKiller(), entity);
@@ -3368,7 +3451,7 @@ public class EntityDeath implements Listener {
                         .map(lore -> lore.replace("{DATE}", LocalDate.now().toString()))
                         .collect(Collectors.toList());
 
-                item = EntityHead.HOGLIN.getItemStack(loreList);
+                item = EntityHead.HOGLIN.getSkull(loreList);
 
                 HeadDropEvent headDropEvent = new HeadDropEvent(item, entity.getKiller(), entity);
                 Bukkit.getServer().getPluginManager().callEvent(headDropEvent);
@@ -3393,7 +3476,7 @@ public class EntityDeath implements Listener {
                         .map(lore -> lore.replace("{DATE}", LocalDate.now().toString()))
                         .collect(Collectors.toList());
 
-                item = EntityHead.PIGLIN_BRUTE.getItemStack(loreList);
+                item = EntityHead.PIGLIN_BRUTE.getSkull(loreList);
 
                 HeadDropEvent headDropEvent = new HeadDropEvent(item, entity.getKiller(), entity);
                 Bukkit.getServer().getPluginManager().callEvent(headDropEvent);
@@ -3420,7 +3503,7 @@ public class EntityDeath implements Listener {
                         .map(lore -> lore.replace("{DATE}", LocalDate.now().toString()))
                         .collect(Collectors.toList());
 
-                item = EntityHead.GLOW_SQUID.getItemStack(loreList);
+                item = EntityHead.GLOW_SQUID.getSkull(loreList);
 
                 HeadDropEvent headDropEvent = new HeadDropEvent(item, entity.getKiller(), entity);
                 Bukkit.getServer().getPluginManager().callEvent(headDropEvent);
@@ -3445,7 +3528,7 @@ public class EntityDeath implements Listener {
                         .map(lore -> lore.replace("{DATE}", LocalDate.now().toString()))
                         .collect(Collectors.toList());
 
-                item = EntityHead.GOAT.getItemStack(loreList);
+                item = EntityHead.GOAT.getSkull(loreList);
 
                 HeadDropEvent headDropEvent = new HeadDropEvent(item, entity.getKiller(), entity);
                 Bukkit.getServer().getPluginManager().callEvent(headDropEvent);
@@ -3473,7 +3556,7 @@ public class EntityDeath implements Listener {
 
                 switch (axolotl.getVariant()) {
                     case LUCY:
-                        item = EntityHead.AXOLOTL_LUCY.getItemStack(loreList);
+                        item = EntityHead.AXOLOTL_LUCY.getSkull(loreList);
                         HeadDropEvent headDropEvent = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent);
                         if (!headDropEvent.isCancelled()){
@@ -3489,7 +3572,7 @@ public class EntityDeath implements Listener {
                         }
                         break;
                     case BLUE:
-                        item = EntityHead.AXOLOTL_BLUE.getItemStack(loreList);
+                        item = EntityHead.AXOLOTL_BLUE.getSkull(loreList);
                         HeadDropEvent headDropEvent1 = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent1);
                         if (!headDropEvent1.isCancelled()){
@@ -3505,7 +3588,7 @@ public class EntityDeath implements Listener {
                         }
                         break;
                     case WILD:
-                        item = EntityHead.AXOLOTL_WILD.getItemStack(loreList);
+                        item = EntityHead.AXOLOTL_WILD.getSkull(loreList);
                         HeadDropEvent headDropEvent2 = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent2);
                         if (!headDropEvent2.isCancelled()){
@@ -3521,7 +3604,7 @@ public class EntityDeath implements Listener {
                         }
                         break;
                     case CYAN:
-                        item = EntityHead.AXOLOTL_CYAN.getItemStack(loreList);
+                        item = EntityHead.AXOLOTL_CYAN.getSkull(loreList);
                         HeadDropEvent headDropEvent3 = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent3);
                         if (!headDropEvent3.isCancelled()){
@@ -3537,7 +3620,7 @@ public class EntityDeath implements Listener {
                         }
                         break;
                     case GOLD:
-                        item = EntityHead.AXOLOTL_GOLD.getItemStack(loreList);
+                        item = EntityHead.AXOLOTL_GOLD.getSkull(loreList);
                         HeadDropEvent headDropEvent4 = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent4);
                         if (!headDropEvent4.isCancelled()){
@@ -3565,7 +3648,7 @@ public class EntityDeath implements Listener {
                         .map(lore -> lore.replace("{DATE}", LocalDate.now().toString()))
                         .collect(Collectors.toList());
 
-                item = EntityHead.ALLAY.getItemStack(loreList);
+                item = EntityHead.ALLAY.getSkull(loreList);
 
                 HeadDropEvent headDropEvent = new HeadDropEvent(item, entity.getKiller(), entity);
                 Bukkit.getServer().getPluginManager().callEvent(headDropEvent);
@@ -3593,7 +3676,7 @@ public class EntityDeath implements Listener {
 
                 switch (frog.getVariant()) {
                     case TEMPERATE:
-                        item = EntityHead.FROG_TEMPERATE.getItemStack(loreList);
+                        item = EntityHead.FROG_TEMPERATE.getSkull(loreList);
                         HeadDropEvent headDropEvent = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent);
                         if (!headDropEvent.isCancelled()){
@@ -3610,7 +3693,7 @@ public class EntityDeath implements Listener {
 
                         break;
                     case WARM:
-                        item = EntityHead.FROG_WARM.getItemStack(loreList);
+                        item = EntityHead.FROG_WARM.getSkull(loreList);
                         HeadDropEvent headDropEvent1 = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent1);
                         if (!headDropEvent1.isCancelled()){
@@ -3627,7 +3710,7 @@ public class EntityDeath implements Listener {
 
                         break;
                     case COLD:
-                        item = EntityHead.FROG_COLD.getItemStack(loreList);
+                        item = EntityHead.FROG_COLD.getSkull(loreList);
                         HeadDropEvent headDropEvent2 = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent2);
                         if (!headDropEvent2.isCancelled()){
@@ -3655,7 +3738,7 @@ public class EntityDeath implements Listener {
                         .map(lore -> lore.replace("{DATE}", LocalDate.now().toString()))
                         .collect(Collectors.toList());
 
-                item = EntityHead.TADPOLE.getItemStack(loreList);
+                item = EntityHead.TADPOLE.getSkull(loreList);
 
                 HeadDropEvent headDropEvent = new HeadDropEvent(item, entity.getKiller(), entity);
                 Bukkit.getServer().getPluginManager().callEvent(headDropEvent);
@@ -3680,7 +3763,7 @@ public class EntityDeath implements Listener {
                         .map(lore -> lore.replace("{DATE}", LocalDate.now().toString()))
                         .collect(Collectors.toList());
 
-                item = EntityHead.WARDEN.getItemStack(loreList);
+                item = EntityHead.WARDEN.getSkull(loreList);
 
                 HeadDropEvent headDropEvent = new HeadDropEvent(item, entity.getKiller(), entity);
                 Bukkit.getServer().getPluginManager().callEvent(headDropEvent);
@@ -3707,7 +3790,7 @@ public class EntityDeath implements Listener {
                         .map(lore -> lore.replace("{DATE}", LocalDate.now().toString()))
                         .collect(Collectors.toList());
 
-                item = EntityHead.CAMEL.getItemStack(loreList);
+                item = EntityHead.CAMEL.getSkull(loreList);
 
                 HeadDropEvent headDropEvent = new HeadDropEvent(item, entity.getKiller(), entity);
                 Bukkit.getServer().getPluginManager().callEvent(headDropEvent);
@@ -3732,7 +3815,7 @@ public class EntityDeath implements Listener {
                         .map(lore -> lore.replace("{DATE}", LocalDate.now().toString()))
                         .collect(Collectors.toList());
 
-                item = EntityHead.SNIFFER.getItemStack(loreList);
+                item = EntityHead.SNIFFER.getSkull(loreList);
 
                 HeadDropEvent headDropEvent = new HeadDropEvent(item, entity.getKiller(), entity);
                 Bukkit.getServer().getPluginManager().callEvent(headDropEvent);

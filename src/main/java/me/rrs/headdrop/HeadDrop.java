@@ -65,6 +65,7 @@ public class HeadDrop extends JavaPlugin {
                     DumperSettings.DEFAULT,
                     UpdaterSettings.builder().setAutoSave(true).setVersioning(new Pattern(Segment.range(1, Integer.MAX_VALUE),
                             Segment.literal("."), Segment.range(0, 100)), "Config.Version").build());
+
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -73,8 +74,9 @@ public class HeadDrop extends JavaPlugin {
         database.setupDataSource();
         database.createTable();
 
-        if (config.getBoolean("Hooks.WorldGuard")){
+        try {
             new WorldGuardSupport();
+        }catch (NoClassDefFoundError ignored){
         }
 
     }
@@ -120,7 +122,7 @@ public class HeadDrop extends JavaPlugin {
                 public void run() {
                     updateChecker();
                 }
-            }.runTaskTimerAsynchronously(this, 0L, 20L * 60 * config.getInt("Config.Update-Checker-Interval"));
+            }.runTaskTimerAsynchronously(this, 0L, 20L * 60L * 30L);
         }catch (UnsupportedOperationException ignored) {}
 
 
@@ -153,15 +155,23 @@ public class HeadDrop extends JavaPlugin {
 
         if (updateAPI.hasGithubUpdate("RRS-9747", "HeadDrop")) {
             String newVersion = updateAPI.getGithubVersion("RRS-9747", "HeadDrop");
-            for (Player p : Bukkit.getOnlinePlayers()) {
-                if (p.hasPermission("headdrop.notify")) {
-                    p.sendMessage("--------------------------------");
-                    p.sendMessage("You are using HeadDrop " + getDescription().getVersion());
-                    p.sendMessage("However version " + newVersion + " is available.");
-                    p.sendMessage("You can download it from: " + "https://www.spigotmc.org/resources/99976/");
-                    p.sendMessage("--------------------------------");
+            if (config.getBoolean("Config.Update-Notify")) {
+                for (Player p : Bukkit.getOnlinePlayers()) {
+                    if (p.hasPermission("headdrop.notify")) {
+                        p.sendMessage("--------------------------------");
+                        p.sendMessage("You are using HeadDrop " + getDescription().getVersion());
+                        p.sendMessage("However version " + newVersion + " is available.");
+                        p.sendMessage("You can download it from: " + "https://www.spigotmc.org/resources/99976/");
+                        p.sendMessage("--------------------------------");
+                    }
                 }
             }
+            Bukkit.getLogger().info("--------------------------------");
+            Bukkit.getLogger().info("You are using HeadDrop " + getDescription().getVersion());
+            Bukkit.getLogger().info("However version " + newVersion + " is available.");
+            Bukkit.getLogger().info("You can download it from: " + "https://www.spigotmc.org/resources/99976/");
+            Bukkit.getLogger().info("--------------------------------");
+
         }
     }
 

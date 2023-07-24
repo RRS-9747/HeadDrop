@@ -10,6 +10,9 @@ import org.bukkit.inventory.meta.SkullMeta;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Base64;
 import java.util.UUID;
 
 public class SkullCreator {
@@ -19,7 +22,8 @@ public class SkullCreator {
 	private static boolean warningPosted = false;
 	private static Method metaSetProfileMethod;
 	private static Field metaProfileField;
-	private static ItemStack createSkull() {
+
+	public static ItemStack createSkull() {
 		checkLegacy();
 		try {
 			return new ItemStack(Material.valueOf("PLAYER_HEAD"));
@@ -28,24 +32,60 @@ public class SkullCreator {
 		}
 	}
 
-
-	public static ItemStack createSkullWithName(String playerName) {
-		ItemStack head = createSkull();
-		SkullMeta meta = (SkullMeta) head.getItemMeta();
-		meta.setOwningPlayer(Bukkit.getOfflinePlayer(playerName));
-		head.setItemMeta(meta);
-		return head;
+	public static ItemStack createSkullWithName(String name) {
+		return itemWithName(createSkull(), name);
 	}
 
 	public static ItemStack createSkullWithBase64(String base64) {
-		ItemStack skull = createSkull();
-		SkullMeta meta = (SkullMeta) skull.getItemMeta();
+		return itemWithBase64(createSkull(), base64);
+	}
+
+	public static ItemStack itemWithName(ItemStack item, String name) {
+		notNull(item, "item");
+		notNull(name, "name");
+
+		SkullMeta meta = (SkullMeta) item.getItemMeta();
+		meta.setOwningPlayer(Bukkit.getOfflinePlayer(name));
+		item.setItemMeta(meta);
+
+		return item;
+	}
+
+
+	private static ItemStack itemWithBase64(ItemStack item, String base64) {
+		notNull(item, "item");
+		notNull(base64, "base64");
+
+		if (!(item.getItemMeta() instanceof SkullMeta)) {
+			return null;
+		}
+		SkullMeta meta = (SkullMeta) item.getItemMeta();
 		mutateItemMeta(meta, base64);
-		skull.setItemMeta(meta);
-		return skull;
+		item.setItemMeta(meta);
+
+		return item;
+	}
+
+	private static void notNull(Object o, String name) {
+		if (o == null) {
+			throw new NullPointerException(name + " should not be null!");
+		}
+	}
+
+	private static String urlToBase64(String url) {
+
+		URI actualUrl;
+		try {
+			actualUrl = new URI(url);
+		} catch (URISyntaxException e) {
+			throw new RuntimeException(e);
+		}
+		String toEncode = "{\"textures\":{\"SKIN\":{\"url\":\"" + actualUrl.toString() + "\"}}}";
+		return Base64.getEncoder().encodeToString(toEncode.getBytes());
 	}
 
 	private static GameProfile makeProfile(String b64) {
+		// random uuid based on the b64 string
 		UUID id = new UUID(
 				b64.substring(b64.length() - 20).hashCode(),
 				b64.substring(b64.length() - 10).hashCode()
@@ -56,7 +96,6 @@ public class SkullCreator {
 	}
 
 	private static void mutateItemMeta(SkullMeta meta, String b64) {
-
 		try {
 			if (metaSetProfileMethod == null) {
 				metaSetProfileMethod = meta.getClass().getDeclaredMethod("setProfile", GameProfile.class);
@@ -77,15 +116,18 @@ public class SkullCreator {
 		}
 	}
 
+	@SuppressWarnings("JavaReflectionMemberAccess")
 	private static void checkLegacy() {
 		try {
+			// if both of these succeed, then we are running
+			// in a legacy api, but on a modern (1.13+) server.
 			Material.class.getDeclaredField("PLAYER_HEAD");
 			Material.valueOf("SKULL");
 
 			if (!warningPosted) {
-				Bukkit.getLogger().warning("[HeadDrop] - Using the legacy bukkit API with 1.13+ bukkit versions is not supported!");
+				Bukkit.getLogger().warning("SKULLCREATOR API - Using the legacy bukkit API with 1.13+ bukkit versions is not supported!");
 				warningPosted = true;
 			}
-		} catch (NoSuchFieldException | IllegalArgumentException ignored){}
+		} catch (NoSuchFieldException | IllegalArgumentException ignored) {}
 	}
 }

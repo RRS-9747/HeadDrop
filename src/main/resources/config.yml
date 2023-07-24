@@ -13,7 +13,7 @@
 
 Config:
   Version: ${project.version}
-  Update-Checker-Interval: 10 # In Minute.
+  Update-Notify: true
   Require-Killer-Player: true
   Require-Charged-Creeper: false
   Killer-Require-Permission: false
@@ -23,9 +23,6 @@ Config:
   Disable-Worlds:
     - demoWorld
     - demoWorld2
-
-Hooks:
-  WorldGuard: false
 
 Database:
   Online: true
@@ -54,6 +51,7 @@ PLAYER:
     - "Killed on {DATE}"
 
 ZOMBIE:
+  Name: "Zombie"
   Drop: true
   Chance: 100
   Lore:
@@ -61,6 +59,7 @@ ZOMBIE:
     - "Killed on {DATE}"
 
 WITHER_SKELETON:
+  Name: "Wither Skeleton"
   Drop: true
   Chance: 100
   Lore:
@@ -68,6 +67,7 @@ WITHER_SKELETON:
     - "Killed on {DATE}"
 
 CREEPER:
+  Name: "Creeper"
   Drop: true
   Chance: 100
   Lore:
@@ -75,6 +75,7 @@ CREEPER:
     - "Killed on {DATE}"
 
 SKELETON:
+  Name: "Skeleton"
   Drop: true
   Chance: 100
   Lore:

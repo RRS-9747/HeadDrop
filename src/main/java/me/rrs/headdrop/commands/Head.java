@@ -14,7 +14,7 @@ public class Head implements CommandExecutor {
     final Lang lang = new Lang();
 
     @Override
-    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, String[] args) {
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, @NotNull String[] args) {
         if (sender instanceof Player) {
             Player player = (Player) sender;
             ItemStack skull = (args.length > 0) ? SkullCreator.createSkullWithName(args[0]) : SkullCreator.createSkullWithName(player.getName());
