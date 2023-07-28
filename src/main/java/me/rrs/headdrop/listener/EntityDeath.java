@@ -22,6 +22,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 
@@ -53,8 +54,8 @@ public class EntityDeath implements Listener {
         String description = null;
         String footer = null;
         String title = null;
-        Random random = new Random();
-        float x = random.nextFloat() * 101.0F;
+        ThreadLocalRandom random = ThreadLocalRandom.current();
+        float x = random.nextFloat(0.01F, 100.0F);
 
         final LivingEntity entity = event.getEntity();
         boolean killerExist = entity.getKiller() != null;
@@ -84,7 +85,7 @@ public class EntityDeath implements Listener {
             footer = placeholdersEnabled ? PlaceholderAPI.setPlaceholders(entity.getKiller(), footer) : footer;
         }
 
-        int lootLvl = 0;
+        float lootLvl = 0.00F;
         if (HeadDrop.getConfiguration().getBoolean("Config.Enable-Looting")) {
             lootLvl = killerExist && entity.getKiller().getInventory().getItemInMainHand().containsEnchantment(Enchantment.LOOT_BONUS_MOBS) ?
                     entity.getKiller().getInventory().getItemInMainHand().getEnchantmentLevel(Enchantment.LOOT_BONUS_MOBS) : 0;
@@ -92,7 +93,7 @@ public class EntityDeath implements Listener {
 
         if (HeadDrop.getConfiguration().getBoolean("Config.Enable-Perm-Chance")) {
             if (killerExist) {
-                for (int i = 100; i > 0; i--) {
+                for (float i = 100; i > 0; i--) {
                     if (entity.getKiller().hasPermission("headdrop.chance" + i)) {
                         lootLvl = lootLvl + i;
                     }
@@ -121,7 +122,7 @@ public class EntityDeath implements Listener {
             if ((config.getBoolean("PLAYER.Require-Permission")) && !entity.hasPermission("headdrop.player")) {
                 return;
             }
-            if ((config.getBoolean("PLAYER.Drop")) && x <= config.getInt("PLAYER.Chance") + lootLvl) {
+            if ((config.getBoolean("PLAYER.Drop")) && x <= config.getFloat("PLAYER.Chance") + lootLvl) {
                 ItemStack skull = SkullCreator.createSkullWithName(entity.getName());
 
                 List<String> loreList = config.getStringList("PLAYER.Lore");
@@ -147,7 +148,7 @@ public class EntityDeath implements Listener {
 
             }
         } else if (type == EntityType.BAT) {
-            if ((config.getBoolean("BAT.Drop")) && x <= config.getInt("BAT.Chance") + lootLvl) {
+            if ((config.getBoolean("BAT.Drop")) && x <= config.getFloat("BAT.Chance") + lootLvl) {
                 List<String> loreList = config.getStringList("BAT.Lore");
                 loreList = loreList.stream()
                         .map(lore -> lore.replace("{KILLER}", entity.getKiller() != null ? entity.getKiller().getName() : "Unknown"))
@@ -171,7 +172,7 @@ public class EntityDeath implements Listener {
 
             }
         } else if (type == EntityType.ENDER_DRAGON) {
-            if ((config.getBoolean("ENDER_DRAGON.Drop")) && x <= config.getInt("ENDER_DRAGON.Chance") + lootLvl) {
+            if ((config.getBoolean("ENDER_DRAGON.Drop")) && x <= config.getFloat("ENDER_DRAGON.Chance") + lootLvl) {
 
                 List<String> loreList = config.getStringList("ENDER_DRAGON.Lore");
                 loreList = loreList.stream()
@@ -199,7 +200,7 @@ public class EntityDeath implements Listener {
 
             }
         } else if (type == EntityType.ZOMBIE) {
-            if ((config.getBoolean("ZOMBIE.Drop")) && x <= config.getInt("ZOMBIE.Chance") + lootLvl) {
+            if ((config.getBoolean("ZOMBIE.Drop")) && x <= config.getFloat("ZOMBIE.Chance") + lootLvl) {
                 event.getDrops().removeIf(head -> head.getType() == Material.ZOMBIE_HEAD);
 
                 List<String> loreList = config.getStringList("ZOMBIE.Lore");
@@ -228,7 +229,7 @@ public class EntityDeath implements Listener {
 
             }
         } else if (type == EntityType.WITHER_SKELETON) {
-            if ((config.getBoolean("WITHER_SKELETON.Drop")) && x <= config.getInt("WITHER_SKELETON.Chance") + lootLvl) {
+            if ((config.getBoolean("WITHER_SKELETON.Drop")) && x <= config.getFloat("WITHER_SKELETON.Chance") + lootLvl) {
                 event.getDrops().removeIf(head -> head.getType() == Material.WITHER_SKELETON_SKULL);
 
                 List<String> loreList = config.getStringList("WITHER_SKELETON.Lore");
@@ -258,7 +259,9 @@ public class EntityDeath implements Listener {
 
             }
         } else if (type == EntityType.CREEPER) {
-            if ((config.getBoolean("CREEPER.Drop")) && x <= config.getInt("CREEPER.Chance") + lootLvl) {
+            System.out.println(x);
+            if ((config.getBoolean("CREEPER.Drop")) && x <= config.getFloat("CREEPER.Chance") + lootLvl) {
+                System.out.println("WORKINGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG");
                 event.getDrops().removeIf(head -> head.getType() == Material.CREEPER_HEAD);
 
                 List<String> loreList = config.getStringList("CREEPER.Lore");
@@ -289,7 +292,7 @@ public class EntityDeath implements Listener {
 
             }
         } else if (type == EntityType.SKELETON) {
-            if ((config.getBoolean("SKELETON.Drop")) && x <= config.getInt("SKELETON.Chance") + lootLvl) {
+            if ((config.getBoolean("SKELETON.Drop")) && x <= config.getFloat("SKELETON.Chance") + lootLvl) {
                 event.getDrops().removeIf(head -> head.getType() == Material.SKELETON_SKULL);
 
                 List<String> loreList = config.getStringList("SKELETON.Lore");
@@ -319,7 +322,7 @@ public class EntityDeath implements Listener {
 
             }
         } else if (type == EntityType.BLAZE) {
-            if ((config.getBoolean("BLAZE.Drop")) && x <= config.getInt("BLAZE.Chance") + lootLvl) {
+            if ((config.getBoolean("BLAZE.Drop")) && x <= config.getFloat("BLAZE.Chance") + lootLvl) {
                 List<String> loreList = config.getStringList("BLAZE.Lore");
                 loreList = loreList.stream()
                         .map(lore -> lore.replace("{KILLER}", entity.getKiller() != null ? entity.getKiller().getName() : "Unknown"))
@@ -344,7 +347,7 @@ public class EntityDeath implements Listener {
 
             }
         } else if (type == EntityType.SPIDER) {
-            if ((config.getBoolean("SPIDER.Drop")) && x <= config.getInt("SPIDER.Chance") + lootLvl) {
+            if ((config.getBoolean("SPIDER.Drop")) && x <= config.getFloat("SPIDER.Chance") + lootLvl) {
                 List<String> loreList = config.getStringList("SPIDER.Lore");
                 loreList = loreList.stream()
                         .map(lore -> lore.replace("{KILLER}", entity.getKiller() != null ? entity.getKiller().getName() : "Unknown"))
@@ -369,7 +372,7 @@ public class EntityDeath implements Listener {
 
             }
         } else if (type == EntityType.CAVE_SPIDER) {
-            if ((config.getBoolean("CAVE_SPIDER.Drop")) && x <= config.getInt("CAVE_SPIDER.Chance") + lootLvl) {
+            if ((config.getBoolean("CAVE_SPIDER.Drop")) && x <= config.getFloat("CAVE_SPIDER.Chance") + lootLvl) {
                 List<String> loreList = config.getStringList("CAVE_SPIDER.Lore");
                 loreList = loreList.stream()
                         .map(lore -> lore.replace("{KILLER}", entity.getKiller() != null ? entity.getKiller().getName() : "Unknown"))
@@ -393,7 +396,7 @@ public class EntityDeath implements Listener {
 
             }
         } else if (type == EntityType.CHICKEN) {
-            if ((config.getBoolean("CHICKEN.Drop")) && x <= config.getInt("CHICKEN.Chance") + lootLvl) {
+            if ((config.getBoolean("CHICKEN.Drop")) && x <= config.getFloat("CHICKEN.Chance") + lootLvl) {
                 List<String> loreList = config.getStringList("CHICKEN.Lore");
                 loreList = loreList.stream()
                         .map(lore -> lore.replace("{KILLER}", entity.getKiller() != null ? entity.getKiller().getName() : "Unknown"))
@@ -417,7 +420,7 @@ public class EntityDeath implements Listener {
 
             }
         } else if (type == EntityType.COW) {
-            if ((config.getBoolean("COW.Drop")) && x <= config.getInt("COW.Chance") + lootLvl) {
+            if ((config.getBoolean("COW.Drop")) && x <= config.getFloat("COW.Chance") + lootLvl) {
                 List<String> loreList = config.getStringList("COW.Lore");
                 loreList = loreList.stream()
                         .map(lore -> lore.replace("{KILLER}", entity.getKiller() != null ? entity.getKiller().getName() : "Unknown"))
@@ -441,7 +444,7 @@ public class EntityDeath implements Listener {
 
             }
         } else if (type == EntityType.ENDERMAN) {
-            if ((config.getBoolean("ENDERMAN.Drop")) && x <= config.getInt("ENDERMAN.Chance") + lootLvl) {
+            if ((config.getBoolean("ENDERMAN.Drop")) && x <= config.getFloat("ENDERMAN.Chance") + lootLvl) {
                 List<String> loreList = config.getStringList("ENDERMAN.Lore");
                 loreList = loreList.stream()
                         .map(lore -> lore.replace("{KILLER}", entity.getKiller() != null ? entity.getKiller().getName() : "Unknown"))
@@ -465,7 +468,7 @@ public class EntityDeath implements Listener {
 
             }
         } else if (type == EntityType.GIANT) {
-            if ((config.getBoolean("GIANT.Drop")) && x <= config.getInt("GIANT.Chance") + lootLvl) {
+            if ((config.getBoolean("GIANT.Drop")) && x <= config.getFloat("GIANT.Chance") + lootLvl) {
                 List<String> loreList = config.getStringList("GIANT.Lore");
                 loreList = loreList.stream()
                         .map(lore -> lore.replace("{KILLER}", entity.getKiller() != null ? entity.getKiller().getName() : "Unknown"))
@@ -489,7 +492,7 @@ public class EntityDeath implements Listener {
 
             }
         } else if (type == EntityType.HORSE) {
-            if ((config.getBoolean("HORSE.Drop")) && x <= config.getInt("HORSE.Chance") + lootLvl) {
+            if ((config.getBoolean("HORSE.Drop")) && x <= config.getFloat("HORSE.Chance") + lootLvl) {
                 Horse horse = (Horse) entity;
                 List<String> loreList = config.getStringList("HORSE.Lore");
                 loreList = loreList.stream()
@@ -619,7 +622,7 @@ public class EntityDeath implements Listener {
                 }
             }
         } else if (type == EntityType.ILLUSIONER) {
-            if ((config.getBoolean("ILLUSIONER.Drop")) && x <= config.getInt("ILLUSIONER.Chance") + lootLvl) {
+            if ((config.getBoolean("ILLUSIONER.Drop")) && x <= config.getFloat("ILLUSIONER.Chance") + lootLvl) {
                 List<String> loreList = config.getStringList("ILLUSIONER.Lore");
                 loreList = loreList.stream()
                         .map(lore -> lore.replace("{KILLER}", entity.getKiller() != null ? entity.getKiller().getName() : "Unknown"))
@@ -644,7 +647,7 @@ public class EntityDeath implements Listener {
 
             }
         } else if (type == EntityType.IRON_GOLEM) {
-            if ((config.getBoolean("IRON_GOLEM.Drop")) && x <= config.getInt("IRON_GOLEM.Chance") + lootLvl) {
+            if ((config.getBoolean("IRON_GOLEM.Drop")) && x <= config.getFloat("IRON_GOLEM.Chance") + lootLvl) {
                 List<String> loreList = config.getStringList("IRON_GOLEM.Lore");
                 loreList = loreList.stream()
                         .map(lore -> lore.replace("{KILLER}", entity.getKiller() != null ? entity.getKiller().getName() : "Unknown"))
@@ -669,7 +672,7 @@ public class EntityDeath implements Listener {
 
             }
         } else if (type == EntityType.MAGMA_CUBE) {
-            if ((config.getBoolean("MAGMA_CUBE.Drop")) && x <= config.getInt("MAGMA_CUBE.Chance") + lootLvl) {
+            if ((config.getBoolean("MAGMA_CUBE.Drop")) && x <= config.getFloat("MAGMA_CUBE.Chance") + lootLvl) {
                 List<String> loreList = config.getStringList("MAGMA_CUBE.Lore");
                 loreList = loreList.stream()
                         .map(lore -> lore.replace("{KILLER}", entity.getKiller() != null ? entity.getKiller().getName() : "Unknown"))
@@ -694,7 +697,7 @@ public class EntityDeath implements Listener {
 
             }
         } else if (type == EntityType.MUSHROOM_COW) {
-            if ((config.getBoolean("MUSHROOM_COW.Drop")) && x <= config.getInt("MUSHROOM_COW.Chance") + lootLvl) {
+            if ((config.getBoolean("MUSHROOM_COW.Drop")) && x <= config.getFloat("MUSHROOM_COW.Chance") + lootLvl) {
                 MushroomCow mushroomCow = (MushroomCow) entity;
                 List<String> loreList = config.getStringList("MUSHROOM_COW.Lore");
                 loreList = loreList.stream()
@@ -741,7 +744,7 @@ public class EntityDeath implements Listener {
 
             }
         } else if (type == EntityType.OCELOT) {
-            if ((config.getBoolean("OCELOT.Drop")) && x <= config.getInt("OCELOT.Chance") + lootLvl) {
+            if ((config.getBoolean("OCELOT.Drop")) && x <= config.getFloat("OCELOT.Chance") + lootLvl) {
                 List<String> loreList = config.getStringList("OCELOT.Lore");
                 loreList = loreList.stream()
                         .map(lore -> lore.replace("{KILLER}", entity.getKiller() != null ? entity.getKiller().getName() : "Unknown"))
@@ -766,7 +769,7 @@ public class EntityDeath implements Listener {
 
             }
         } else if (type == EntityType.PIG) {
-            if ((config.getBoolean("PIG.Drop")) && x <= config.getInt("PIG.Chance") + lootLvl) {
+            if ((config.getBoolean("PIG.Drop")) && x <= config.getFloat("PIG.Chance") + lootLvl) {
                 List<String> loreList = config.getStringList("PIG.Lore");
                 loreList = loreList.stream()
                         .map(lore -> lore.replace("{KILLER}", entity.getKiller() != null ? entity.getKiller().getName() : "Unknown"))
@@ -790,7 +793,7 @@ public class EntityDeath implements Listener {
 
             }
         } else if (type == EntityType.SHEEP) {
-            if ((config.getBoolean("SHEEP.Drop")) && x <= config.getInt("SHEEP.Chance") + lootLvl) {
+            if ((config.getBoolean("SHEEP.Drop")) && x <= config.getFloat("SHEEP.Chance") + lootLvl) {
                 Sheep sheep = (Sheep) entity;
 
 
@@ -1100,7 +1103,7 @@ public class EntityDeath implements Listener {
 
             }
         } else if (type == EntityType.SILVERFISH) {
-            if ((config.getBoolean("SILVERFISH.Drop")) && x <= config.getInt("SILVERFISH.Chance") + lootLvl) {
+            if ((config.getBoolean("SILVERFISH.Drop")) && x <= config.getFloat("SILVERFISH.Chance") + lootLvl) {
                 List<String> loreList = config.getStringList("SILVERFISH.Lore");
                 loreList = loreList.stream()
                         .map(lore -> lore.replace("{KILLER}", entity.getKiller() != null ? entity.getKiller().getName() : "Unknown"))
@@ -1125,7 +1128,7 @@ public class EntityDeath implements Listener {
 
             }
         } else if (type == EntityType.SLIME) {
-            if ((config.getBoolean("SLIME.Drop")) && x <= config.getInt("SLIME.Chance") + lootLvl) {
+            if ((config.getBoolean("SLIME.Drop")) && x <= config.getFloat("SLIME.Chance") + lootLvl) {
                 List<String> loreList = config.getStringList("SLIME.Lore");
                 loreList = loreList.stream()
                         .map(lore -> lore.replace("{KILLER}", entity.getKiller() != null ? entity.getKiller().getName() : "Unknown"))
@@ -1149,7 +1152,7 @@ public class EntityDeath implements Listener {
 
             }
         } else if (type == EntityType.SNOWMAN) {
-            if ((config.getBoolean("SNOW_GOLEM.Drop")) && x <= config.getInt("SNOW_GOLEM.Chance") + lootLvl) {
+            if ((config.getBoolean("SNOW_GOLEM.Drop")) && x <= config.getFloat("SNOW_GOLEM.Chance") + lootLvl) {
                 List<String> loreList = config.getStringList("SNOW_GOLEM.Lore");
                 loreList = loreList.stream()
                         .map(lore -> lore.replace("{KILLER}", entity.getKiller() != null ? entity.getKiller().getName() : "Unknown"))
@@ -1173,7 +1176,7 @@ public class EntityDeath implements Listener {
 
             }
         } else if (type == EntityType.SQUID) {
-            if ((config.getBoolean("SQUID.Drop")) && x <= config.getInt("SQUID.Chance") + lootLvl) {
+            if ((config.getBoolean("SQUID.Drop")) && x <= config.getFloat("SQUID.Chance") + lootLvl) {
                 List<String> loreList = config.getStringList("SQUID.Lore");
                 loreList = loreList.stream()
                         .map(lore -> lore.replace("{KILLER}", entity.getKiller() != null ? entity.getKiller().getName() : "Unknown"))
@@ -1196,7 +1199,7 @@ public class EntityDeath implements Listener {
 
             }
         } else if (type == EntityType.WITCH) {
-            if ((config.getBoolean("WITCH.Drop")) && x <= config.getInt("WITCH.Chance") + lootLvl) {
+            if ((config.getBoolean("WITCH.Drop")) && x <= config.getFloat("WITCH.Chance") + lootLvl) {
                 List<String> loreList = config.getStringList("WITCH.Lore");
                 loreList = loreList.stream()
                         .map(lore -> lore.replace("{KILLER}", entity.getKiller() != null ? entity.getKiller().getName() : "Unknown"))
@@ -1219,7 +1222,7 @@ public class EntityDeath implements Listener {
 
             }
         } else if (type == EntityType.WITHER) {
-            if ((config.getBoolean("WITHER.Drop")) && x <= config.getInt("WITHER.Chance") + lootLvl) {
+            if ((config.getBoolean("WITHER.Drop")) && x <= config.getFloat("WITHER.Chance") + lootLvl) {
                 List<String> loreList = config.getStringList("WITHER.Lore");
                 loreList = loreList.stream()
                         .map(lore -> lore.replace("{KILLER}", entity.getKiller() != null ? entity.getKiller().getName() : "Unknown"))
@@ -1243,7 +1246,7 @@ public class EntityDeath implements Listener {
 
             }
         } else if (type == EntityType.ZOMBIFIED_PIGLIN) {
-            if ((config.getBoolean("ZOMBIFIED_PIGLIN.Drop")) && x <= config.getInt("ZOMBIFIED_PIGLIN.Chance") + lootLvl) {
+            if ((config.getBoolean("ZOMBIFIED_PIGLIN.Drop")) && x <= config.getFloat("ZOMBIFIED_PIGLIN.Chance") + lootLvl) {
                 List<String> loreList = config.getStringList("ZOMBIFIED_PIGLIN.Lore");
                 loreList = loreList.stream()
                         .map(lore -> lore.replace("{KILLER}", entity.getKiller() != null ? entity.getKiller().getName() : "Unknown"))
@@ -1267,7 +1270,7 @@ public class EntityDeath implements Listener {
 
             }
         } else if (type == EntityType.GHAST) {
-            if ((config.getBoolean("GHAST.Drop")) && x <= config.getInt("GHAST.Chance") + lootLvl) {
+            if ((config.getBoolean("GHAST.Drop")) && x <= config.getFloat("GHAST.Chance") + lootLvl) {
                 List<String> loreList = config.getStringList("GHAST.Lore");
                 loreList = loreList.stream()
                         .map(lore -> lore.replace("{KILLER}", entity.getKiller() != null ? entity.getKiller().getName() : "Unknown"))
@@ -1290,7 +1293,7 @@ public class EntityDeath implements Listener {
 
             }
         } else if (type == EntityType.WOLF) {
-            if ((config.getBoolean("WOLF.Drop")) && x <= config.getInt("WOLF.Chance") + lootLvl) {
+            if ((config.getBoolean("WOLF.Drop")) && x <= config.getFloat("WOLF.Chance") + lootLvl) {
                 Wolf wolf = (Wolf) entity;
 
                 List<String> loreList = config.getStringList("WOLF.Lore");
@@ -1321,7 +1324,7 @@ public class EntityDeath implements Listener {
 
             }
         } else if (type == EntityType.VILLAGER) {
-            if ((config.getBoolean("VILLAGER.Drop")) && x <= config.getInt("VILLAGER.Chance") + lootLvl) {
+            if ((config.getBoolean("VILLAGER.Drop")) && x <= config.getFloat("VILLAGER.Chance") + lootLvl) {
                 Villager villager = (Villager) entity;
 
                 List<String> loreList = config.getStringList("VILLAGER.Lore");
@@ -1589,7 +1592,7 @@ public class EntityDeath implements Listener {
 
             //1.8 Mob
         } else if (type == EntityType.RABBIT) {
-            if ((config.getBoolean("RABBIT.Drop")) && x <= config.getInt("RABBIT.Chance") + lootLvl) {
+            if ((config.getBoolean("RABBIT.Drop")) && x <= config.getFloat("RABBIT.Chance") + lootLvl) {
                 Rabbit rabbit = (Rabbit) entity;
 
                 List<String> loreList = config.getStringList("RABBIT.Lore");
@@ -1726,7 +1729,7 @@ public class EntityDeath implements Listener {
                 }
             }
         } else if (type == EntityType.ENDERMITE) {
-            if ((config.getBoolean("ENDERMITE.Drop")) && x <= config.getInt("ENDERMITE.Chance") + lootLvl) {
+            if ((config.getBoolean("ENDERMITE.Drop")) && x <= config.getFloat("ENDERMITE.Chance") + lootLvl) {
 
                 List<String> loreList = config.getStringList("ENDERMITE.Lore");
                 loreList = loreList.stream()
@@ -1752,7 +1755,7 @@ public class EntityDeath implements Listener {
 
             }
         } else if (type == EntityType.GUARDIAN) {
-            if ((config.getBoolean("GUARDIAN.Drop")) && x <= config.getInt("GUARDIAN.Chance") + lootLvl) {
+            if ((config.getBoolean("GUARDIAN.Drop")) && x <= config.getFloat("GUARDIAN.Chance") + lootLvl) {
 
                 List<String> loreList = config.getStringList("GUARDIAN.Lore");
                 loreList = loreList.stream()
@@ -1780,7 +1783,7 @@ public class EntityDeath implements Listener {
 
             //1.9 Mob
         } else if (type == EntityType.SHULKER) {
-            if ((config.getBoolean("SHULKER.Drop")) && x <= config.getInt("SHULKER.Chance") + lootLvl) {
+            if ((config.getBoolean("SHULKER.Drop")) && x <= config.getFloat("SHULKER.Chance") + lootLvl) {
 
                 List<String> loreList = config.getStringList("SHULKER.Lore");
                 loreList = loreList.stream()
@@ -1807,7 +1810,7 @@ public class EntityDeath implements Listener {
             }
             //1.10 Mob
         } else if (type == EntityType.POLAR_BEAR) {
-            if ((config.getBoolean("POLAR_BEAR.Drop")) && x <= config.getInt("POLAR_BEAR.Chance") + lootLvl) {
+            if ((config.getBoolean("POLAR_BEAR.Drop")) && x <= config.getFloat("POLAR_BEAR.Chance") + lootLvl) {
 
                 List<String> loreList = config.getStringList("POLAR_BEAR.Lore");
                 loreList = loreList.stream()
@@ -1834,7 +1837,7 @@ public class EntityDeath implements Listener {
             }
             //1.11 Mob
         } else if (type == EntityType.ZOMBIE_VILLAGER) {
-            if ((config.getBoolean("ZOMBIE_VILLAGER.Drop")) && x <= config.getInt("ZOMBIE_VILLAGER.Chance") + lootLvl) {
+            if ((config.getBoolean("ZOMBIE_VILLAGER.Drop")) && x <= config.getFloat("ZOMBIE_VILLAGER.Chance") + lootLvl) {
                 ZombieVillager zombieVillager = (ZombieVillager) entity;
 
                 List<String> loreList = config.getStringList("ZOMBIE_VILLAGER.Lore");
@@ -2039,7 +2042,7 @@ public class EntityDeath implements Listener {
                 }
             }
         } else if (type == EntityType.VINDICATOR) {
-            if ((config.getBoolean("VINDICATOR.Drop")) && x <= config.getInt("VINDICATOR.Chance") + lootLvl) {
+            if ((config.getBoolean("VINDICATOR.Drop")) && x <= config.getFloat("VINDICATOR.Chance") + lootLvl) {
 
                 List<String> loreList = config.getStringList("VINDICATOR.Lore");
                 loreList = loreList.stream()
@@ -2065,7 +2068,7 @@ public class EntityDeath implements Listener {
 
             }
         } else if (type == EntityType.VEX) {
-            if ((config.getBoolean("VEX.Drop")) && x <= config.getInt("VEX.Chance") + lootLvl) {
+            if ((config.getBoolean("VEX.Drop")) && x <= config.getFloat("VEX.Chance") + lootLvl) {
 
                 Vex vex = (Vex) entity;
 
@@ -2098,7 +2101,7 @@ public class EntityDeath implements Listener {
 
             }
         } else if (type == EntityType.EVOKER) {
-            if ((config.getBoolean("EVOKER.Drop")) && x <= config.getInt("EVOKER.Chance") + lootLvl) {
+            if ((config.getBoolean("EVOKER.Drop")) && x <= config.getFloat("EVOKER.Chance") + lootLvl) {
 
                 List<String> loreList = config.getStringList("EVOKER.Lore");
                 loreList = loreList.stream()
@@ -2124,7 +2127,7 @@ public class EntityDeath implements Listener {
 
             }
         } else if (type == EntityType.HUSK) {
-            if ((config.getBoolean("HUSK.Drop")) && x <= config.getInt("HUSK.Chance") + lootLvl) {
+            if ((config.getBoolean("HUSK.Drop")) && x <= config.getFloat("HUSK.Chance") + lootLvl) {
 
                 List<String> loreList = config.getStringList("HUSK.Lore");
                 loreList = loreList.stream()
@@ -2150,7 +2153,7 @@ public class EntityDeath implements Listener {
 
             }
         } else if (type == EntityType.STRAY) {
-            if ((config.getBoolean("STRAY.Drop")) && x <= config.getInt("STRAY.Chance") + lootLvl) {
+            if ((config.getBoolean("STRAY.Drop")) && x <= config.getFloat("STRAY.Chance") + lootLvl) {
 
                 List<String> loreList = config.getStringList("STRAY.Lore");
                 loreList = loreList.stream()
@@ -2176,7 +2179,7 @@ public class EntityDeath implements Listener {
 
             }
         } else if (type == EntityType.ELDER_GUARDIAN) {
-            if ((config.getBoolean("ELDER_GUARDIAN.Drop")) && x <= config.getInt("ELDER_GUARDIAN.Chance") + lootLvl) {
+            if ((config.getBoolean("ELDER_GUARDIAN.Drop")) && x <= config.getFloat("ELDER_GUARDIAN.Chance") + lootLvl) {
 
                 List<String> loreList = config.getStringList("ELDER_GUARDIAN.Lore");
                 loreList = loreList.stream()
@@ -2202,7 +2205,7 @@ public class EntityDeath implements Listener {
 
             }
         } else if (type == EntityType.DONKEY) {
-            if ((config.getBoolean("DONKEY.Drop")) && x <= config.getInt("DONKEY.Chance") + lootLvl) {
+            if ((config.getBoolean("DONKEY.Drop")) && x <= config.getFloat("DONKEY.Chance") + lootLvl) {
 
                 List<String> loreList = config.getStringList("DONKEY.Lore");
                 loreList = loreList.stream()
@@ -2228,7 +2231,7 @@ public class EntityDeath implements Listener {
 
             }
         } else if (type == EntityType.ZOMBIE_HORSE) {
-            if ((config.getBoolean("ZOMBIE_HORSE.Drop")) && x <= config.getInt("ZOMBIE_HORSE.Chance") + lootLvl) {
+            if ((config.getBoolean("ZOMBIE_HORSE.Drop")) && x <= config.getFloat("ZOMBIE_HORSE.Chance") + lootLvl) {
 
                 List<String> loreList = config.getStringList("ZOMBIE_HORSE.Lore");
                 loreList = loreList.stream()
@@ -2254,7 +2257,7 @@ public class EntityDeath implements Listener {
 
             }
         } else if (type == EntityType.SKELETON_HORSE) {
-            if ((config.getBoolean("SKELETON_HORSE.Drop")) && x <= config.getInt("SKELETON_HORSE.Chance") + lootLvl) {
+            if ((config.getBoolean("SKELETON_HORSE.Drop")) && x <= config.getFloat("SKELETON_HORSE.Chance") + lootLvl) {
 
                 List<String> loreList = config.getStringList("SKELETON_HORSE.Lore");
                 loreList = loreList.stream()
@@ -2280,7 +2283,7 @@ public class EntityDeath implements Listener {
 
             }
         } else if (type == EntityType.MULE) {
-            if ((config.getBoolean("MULE.Drop")) && x <= config.getInt("MULE.Chance") + lootLvl) {
+            if ((config.getBoolean("MULE.Drop")) && x <= config.getFloat("MULE.Chance") + lootLvl) {
 
                 List<String> loreList = config.getStringList("MULE.Lore");
                 loreList = loreList.stream()
@@ -2307,7 +2310,7 @@ public class EntityDeath implements Listener {
             }
             //1.12 Mob
         } else if (type == EntityType.PARROT) {
-            if ((config.getBoolean("PARROT.Drop")) && x <= config.getInt("PARROT.Chance") + lootLvl) {
+            if ((config.getBoolean("PARROT.Drop")) && x <= config.getFloat("PARROT.Chance") + lootLvl) {
                 Parrot parrot = (Parrot) entity;
 
 
@@ -2407,7 +2410,7 @@ public class EntityDeath implements Listener {
 
             //1.13 Mob
         } else if (type == EntityType.TROPICAL_FISH) {
-            if ((config.getBoolean("TROPICAL_FISH.Drop")) && x <= config.getInt("TROPICAL_FISH.Chance") + lootLvl) {
+            if ((config.getBoolean("TROPICAL_FISH.Drop")) && x <= config.getFloat("TROPICAL_FISH.Chance") + lootLvl) {
 
                 TropicalFish tropicalFish = (TropicalFish) entity;
 
@@ -2630,7 +2633,7 @@ public class EntityDeath implements Listener {
                 }
             }
         } else if (type == EntityType.PUFFERFISH) {
-            if ((config.getBoolean("PUFFERFISH.Drop")) && x <= config.getInt("PUFFERFISH.Chance") + lootLvl) {
+            if ((config.getBoolean("PUFFERFISH.Drop")) && x <= config.getFloat("PUFFERFISH.Chance") + lootLvl) {
 
                 List<String> loreList = config.getStringList("PUFFERFISH.Lore");
                 loreList = loreList.stream()
@@ -2656,7 +2659,7 @@ public class EntityDeath implements Listener {
 
             }
         } else if (type == EntityType.SALMON) {
-            if ((config.getBoolean("SALMON.Drop")) && x <= config.getInt("SALMON.Chance") + lootLvl) {
+            if ((config.getBoolean("SALMON.Drop")) && x <= config.getFloat("SALMON.Chance") + lootLvl) {
 
                 List<String> loreList = config.getStringList("SALMON.Lore");
                 loreList = loreList.stream()
@@ -2682,7 +2685,7 @@ public class EntityDeath implements Listener {
 
             }
         } else if (type == EntityType.COD) {
-            if ((config.getBoolean("COD.Drop")) && x <= config.getInt("COD.Chance") + lootLvl) {
+            if ((config.getBoolean("COD.Drop")) && x <= config.getFloat("COD.Chance") + lootLvl) {
 
                 List<String> loreList = config.getStringList("COD.Lore");
                 loreList = loreList.stream()
@@ -2707,7 +2710,7 @@ public class EntityDeath implements Listener {
                 }
             }
         } else if (type == EntityType.TURTLE) {
-            if ((config.getBoolean("TURTLE.Drop")) && x <= config.getInt("TURTLE.Chance") + lootLvl) {
+            if ((config.getBoolean("TURTLE.Drop")) && x <= config.getFloat("TURTLE.Chance") + lootLvl) {
 
                 List<String> loreList = config.getStringList("TURTLE.Lore");
                 loreList = loreList.stream()
@@ -2733,7 +2736,7 @@ public class EntityDeath implements Listener {
 
             }
         } else if (type == EntityType.DOLPHIN) {
-            if ((config.getBoolean("DOLPHIN.Drop")) && x <= config.getInt("DOLPHIN.Chance") + lootLvl) {
+            if ((config.getBoolean("DOLPHIN.Drop")) && x <= config.getFloat("DOLPHIN.Chance") + lootLvl) {
 
                 List<String> loreList = config.getStringList("DOLPHIN.Lore");
                 loreList = loreList.stream()
@@ -2759,7 +2762,7 @@ public class EntityDeath implements Listener {
 
             }
         } else if (type == EntityType.PHANTOM) {
-            if ((config.getBoolean("PHANTOM.Drop")) && x <= config.getInt("PHANTOM.Chance") + lootLvl) {
+            if ((config.getBoolean("PHANTOM.Drop")) && x <= config.getFloat("PHANTOM.Chance") + lootLvl) {
 
                 List<String> loreList = config.getStringList("PHANTOM.Lore");
                 loreList = loreList.stream()
@@ -2784,7 +2787,7 @@ public class EntityDeath implements Listener {
                 }
             }
         } else if (type == EntityType.DROWNED) {
-            if ((config.getBoolean("DROWNED.Drop")) && x <= config.getInt("DROWNED.Chance") + lootLvl) {
+            if ((config.getBoolean("DROWNED.Drop")) && x <= config.getFloat("DROWNED.Chance") + lootLvl) {
 
                 List<String> loreList = config.getStringList("DROWNED.Lore");
                 loreList = loreList.stream()
@@ -2812,7 +2815,7 @@ public class EntityDeath implements Listener {
 
             //1.14 Mob
         } else if (type == EntityType.WANDERING_TRADER) {
-            if ((config.getBoolean("WANDERING_TRADER.Drop")) && x <= config.getInt("WANDERING_TRADER.Chance") + lootLvl) {
+            if ((config.getBoolean("WANDERING_TRADER.Drop")) && x <= config.getFloat("WANDERING_TRADER.Chance") + lootLvl) {
 
                 List<String> loreList = config.getStringList("WANDERING_TRADER.Lore");
                 loreList = loreList.stream()
@@ -2838,7 +2841,7 @@ public class EntityDeath implements Listener {
 
             }
         } else if (type == EntityType.TRADER_LLAMA) {
-            if ((config.getBoolean("TRADER_LLAMA.Drop")) && x <= config.getInt("TRADER_LLAMA.Chance")) {
+            if ((config.getBoolean("TRADER_LLAMA.Drop")) && x <= config.getFloat("TRADER_LLAMA.Chance")) {
                 TraderLlama traderLlama = (TraderLlama) entity;
 
                 List<String> loreList = config.getStringList("TRADER_LLAMA.Lore");
@@ -2920,7 +2923,7 @@ public class EntityDeath implements Listener {
                 }
             }
         } else if (type == EntityType.LLAMA) {
-            if ((config.getBoolean("LLAMA.Drop")) && x <= config.getInt("LLAMA.Chance") + lootLvl) {
+            if ((config.getBoolean("LLAMA.Drop")) && x <= config.getFloat("LLAMA.Chance") + lootLvl) {
                 Llama llama = (Llama) entity;
 
                 List<String> loreList = config.getStringList("LLAMA.Lore");
@@ -3001,7 +3004,7 @@ public class EntityDeath implements Listener {
                 }
             }
         } else if (type == EntityType.RAVAGER) {
-            if ((config.getBoolean("RAVAGER.Drop")) && x <= config.getInt("RAVAGER.Chance") + lootLvl) {
+            if ((config.getBoolean("RAVAGER.Drop")) && x <= config.getFloat("RAVAGER.Chance") + lootLvl) {
 
                 List<String> loreList = config.getStringList("RAVAGER.Lore");
                 loreList = loreList.stream()
@@ -3025,7 +3028,7 @@ public class EntityDeath implements Listener {
                 }
             }
         } else if (type == EntityType.PILLAGER) {
-            if ((config.getBoolean("PILLAGER.Drop")) && x <= config.getInt("PILLAGER.Chance") + lootLvl) {
+            if ((config.getBoolean("PILLAGER.Drop")) && x <= config.getFloat("PILLAGER.Chance") + lootLvl) {
 
                 List<String> loreList = config.getStringList("PILLAGER.Lore");
                 loreList = loreList.stream()
@@ -3050,7 +3053,7 @@ public class EntityDeath implements Listener {
                 }
             }
         } else if (type == EntityType.PANDA) {
-            if ((config.getBoolean("PANDA.Drop")) && x <= config.getInt("PANDA.Chance") + lootLvl) {
+            if ((config.getBoolean("PANDA.Drop")) && x <= config.getFloat("PANDA.Chance") + lootLvl) {
                 Panda panda = (Panda) entity;
 
                 List<String> loreList = config.getStringList("PANDA.Lore");
@@ -3080,7 +3083,7 @@ public class EntityDeath implements Listener {
                 }
             }
         } else if (type == EntityType.FOX) {
-            if ((config.getBoolean("FOX.Drop")) && x <= config.getInt("FOX.Chance") + lootLvl) {
+            if ((config.getBoolean("FOX.Drop")) && x <= config.getFloat("FOX.Chance") + lootLvl) {
                 Fox fox = (Fox) entity;
 
                 List<String> loreList = config.getStringList("FOX.Lore");
@@ -3127,7 +3130,7 @@ public class EntityDeath implements Listener {
                 }
             }
         } else if (type == EntityType.CAT) {
-            if ((config.getBoolean("CAT.Drop")) && x <= config.getInt("CAT.Chance") + lootLvl) {
+            if ((config.getBoolean("CAT.Drop")) && x <= config.getFloat("CAT.Chance") + lootLvl) {
                 Cat cat = (Cat) entity;
 
                 List<String> loreList = config.getStringList("CAT.Lore");
@@ -3325,7 +3328,7 @@ public class EntityDeath implements Listener {
 
             //1.15 Mob
         } else if (type == EntityType.BEE) {
-            if ((config.getBoolean("BEE.Drop")) && x <= config.getInt("BEE.Chance") + lootLvl) {
+            if ((config.getBoolean("BEE.Drop")) && x <= config.getFloat("BEE.Chance") + lootLvl) {
                 Bee bee = (Bee) entity;
 
                 List<String> loreList = config.getStringList("BEE.Lore");
@@ -3356,7 +3359,7 @@ public class EntityDeath implements Listener {
             }
             //1.16 Mob
         } else if (type == EntityType.ZOGLIN) {
-            if ((config.getBoolean("ZOGLIN.Drop")) && x <= config.getInt("ZOGLIN.Chance") + lootLvl) {
+            if ((config.getBoolean("ZOGLIN.Drop")) && x <= config.getFloat("ZOGLIN.Chance") + lootLvl) {
 
                 List<String> loreList = config.getStringList("ZOGLIN.Lore");
                 loreList = loreList.stream()
@@ -3381,7 +3384,7 @@ public class EntityDeath implements Listener {
                 }
             }
         } else if (type == EntityType.STRIDER) {
-            if ((config.getBoolean("STRIDER.Drop")) && x <= config.getInt("STRIDER.Chance") + lootLvl) {
+            if ((config.getBoolean("STRIDER.Drop")) && x <= config.getFloat("STRIDER.Chance") + lootLvl) {
 
                 List<String> loreList = config.getStringList("STRIDER.Lore");
                 loreList = loreList.stream()
@@ -3406,7 +3409,7 @@ public class EntityDeath implements Listener {
                 }
             }
         } else if (type == EntityType.PIGLIN) {
-            if ((config.getBoolean("PIGLIN.Drop")) && x <= config.getInt("PIGLIN.Chance") + lootLvl) {
+            if ((config.getBoolean("PIGLIN.Drop")) && x <= config.getFloat("PIGLIN.Chance") + lootLvl) {
 
                 List<String> loreList = config.getStringList("PIGLIN.Lore");
                 loreList = loreList.stream()
@@ -3443,7 +3446,7 @@ public class EntityDeath implements Listener {
                 }
             }
         } else if (type == EntityType.HOGLIN) {
-            if ((config.getBoolean("HOGLIN.Drop")) && x <= config.getInt("HOGLIN.Chance") + lootLvl) {
+            if ((config.getBoolean("HOGLIN.Drop")) && x <= config.getFloat("HOGLIN.Chance") + lootLvl) {
 
                 List<String> loreList = config.getStringList("HOGLIN.Lore");
                 loreList = loreList.stream()
@@ -3468,7 +3471,7 @@ public class EntityDeath implements Listener {
                 }
             }
         } else if (type == EntityType.PIGLIN_BRUTE) {
-            if ((config.getBoolean("PIGLIN_BRUTE.Drop")) && x <= config.getInt("PIGLIN_BRUTE.Chance") + lootLvl) {
+            if ((config.getBoolean("PIGLIN_BRUTE.Drop")) && x <= config.getFloat("PIGLIN_BRUTE.Chance") + lootLvl) {
 
                 List<String> loreList = config.getStringList("PIGLIN_BRUTE.Lore");
                 loreList = loreList.stream()
@@ -3495,7 +3498,7 @@ public class EntityDeath implements Listener {
 
             // 1.17 Mob
         } else if (type == EntityType.GLOW_SQUID) {
-            if ((config.getBoolean("GLOW_SQUID.Drop")) && x <= config.getInt("GLOW_SQUID.Chance") + lootLvl) {
+            if ((config.getBoolean("GLOW_SQUID.Drop")) && x <= config.getFloat("GLOW_SQUID.Chance") + lootLvl) {
 
                 List<String> loreList = config.getStringList("GLOW_SQUID.Lore");
                 loreList = loreList.stream()
@@ -3520,7 +3523,7 @@ public class EntityDeath implements Listener {
                 }
             }
         } else if (type == EntityType.GOAT) {
-            if ((config.getBoolean("GOAT.Drop")) && x <= config.getInt("GOAT.Chance") + lootLvl) {
+            if ((config.getBoolean("GOAT.Drop")) && x <= config.getFloat("GOAT.Chance") + lootLvl) {
 
                 List<String> loreList = config.getStringList("GOAT.Lore");
                 loreList = loreList.stream()
@@ -3545,7 +3548,7 @@ public class EntityDeath implements Listener {
                 }
             }
         } else if (type == EntityType.AXOLOTL) {
-            if ((config.getBoolean("AXOLOTL.Drop")) && x <= config.getInt("AXOLOTL.Chance") + lootLvl) {
+            if ((config.getBoolean("AXOLOTL.Drop")) && x <= config.getFloat("AXOLOTL.Chance") + lootLvl) {
                 Axolotl axolotl = (Axolotl) entity;
 
                 List<String> loreList = config.getStringList("AXOLOTL.Lore");
@@ -3640,7 +3643,7 @@ public class EntityDeath implements Listener {
 
             //1.19 Mob
         } else if (type == EntityType.ALLAY) {
-            if ((config.getBoolean("ALLAY.Drop")) && x <= config.getInt("ALLAY.Chance") + lootLvl) {
+            if ((config.getBoolean("ALLAY.Drop")) && x <= config.getFloat("ALLAY.Chance") + lootLvl) {
 
                 List<String> loreList = config.getStringList("ALLAY.Lore");
                 loreList = loreList.stream()
@@ -3665,7 +3668,7 @@ public class EntityDeath implements Listener {
                 }
             }
         } else if (type == EntityType.FROG) {
-            if ((config.getBoolean("FROG.Drop")) && x <= config.getInt("FROG.Chance") + lootLvl) {
+            if ((config.getBoolean("FROG.Drop")) && x <= config.getFloat("FROG.Chance") + lootLvl) {
                 Frog frog = (Frog) entity;
 
                 List<String> loreList = config.getStringList("FROG.Lore");
@@ -3730,7 +3733,7 @@ public class EntityDeath implements Listener {
                     embed.msg(title, description, footer);
             }
         } else if (type == EntityType.TADPOLE) {
-            if ((config.getBoolean("TADPOLE.Drop")) && x <= config.getInt("TADPOLE.Chance") + lootLvl) {
+            if ((config.getBoolean("TADPOLE.Drop")) && x <= config.getFloat("TADPOLE.Chance") + lootLvl) {
 
                 List<String> loreList = config.getStringList("TADPOLE.Lore");
                 loreList = loreList.stream()
@@ -3755,7 +3758,7 @@ public class EntityDeath implements Listener {
                 }
             }
         } else if (type == EntityType.WARDEN) {
-            if ((config.getBoolean("WARDEN.Drop")) && x <= config.getInt("WARDEN.Chance") + lootLvl) {
+            if ((config.getBoolean("WARDEN.Drop")) && x <= config.getFloat("WARDEN.Chance") + lootLvl) {
 
                 List<String> loreList = config.getStringList("WARDEN.Lore");
                 loreList = loreList.stream()
@@ -3782,7 +3785,7 @@ public class EntityDeath implements Listener {
 
             //1.20 Mob
         } else if (type == EntityType.CAMEL) {
-            if ((config.getBoolean("CAMEL.Drop")) && x <= config.getInt("CAMEL.Chance") + lootLvl) {
+            if ((config.getBoolean("CAMEL.Drop")) && x <= config.getFloat("CAMEL.Chance") + lootLvl) {
 
                 List<String> loreList = config.getStringList("CAMEL.Lore");
                 loreList = loreList.stream()
@@ -3807,7 +3810,7 @@ public class EntityDeath implements Listener {
                 }
             }
         } else if (type == EntityType.SNIFFER) {
-            if ((config.getBoolean("SNIFFER.Drop")) && x <= config.getInt("SNIFFER.Chance") + lootLvl) {
+            if ((config.getBoolean("SNIFFER.Drop")) && x <= config.getFloat("SNIFFER.Chance") + lootLvl) {
 
                 List<String> loreList = config.getStringList("SNIFFER.Lore");
                 loreList = loreList.stream()

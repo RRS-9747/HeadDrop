@@ -553,7 +553,7 @@ ENDER_DRAGON:
     - "Killed on {DATE}"
 
 WITHER:
-  Name: "Witch"
+  Name: "Wither"
   Drop: true
   Chance: 100
   Lore:

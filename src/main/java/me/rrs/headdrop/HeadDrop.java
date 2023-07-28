@@ -31,7 +31,6 @@ public class HeadDrop extends JavaPlugin {
     private static YamlDocument config;
     private static Database database;
 
-
     public static YamlDocument getConfiguration() {
         return config;
     }
