@@ -8,6 +8,7 @@ import me.rrs.headdrop.hook.WorldGuardSupport;
 import me.rrs.headdrop.util.Embed;
 import me.rrs.headdrop.util.ItemUtils;
 import me.rrs.headdrop.util.SkullCreator;
+import me.rrs.headdrop.util.TropicalFishPicker;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
@@ -2421,216 +2422,23 @@ public class EntityDeath implements Listener {
                         .map(lore -> lore.replace("{DATE}", LocalDate.now().toString()))
                         .collect(Collectors.toList());
 
-                switch (tropicalFish.getBodyColor()) {
-                    case MAGENTA:
-                        item = EntityHead.TROPICAL_FISH_MAGENTA.getSkull(loreList);
-                        HeadDropEvent headDropEvent = new HeadDropEvent(item, entity.getKiller(), entity);
-                        Bukkit.getServer().getPluginManager().callEvent(headDropEvent);
-                        if (!headDropEvent.isCancelled()){
-                            event.getDrops().add(item);
+                EntityHead tropicalFishEntityHead = TropicalFishPicker.getRandomEntityHead();
+                item = tropicalFishEntityHead.getSkull(loreList);
+                HeadDropEvent headDropEvent = new HeadDropEvent(item, entity.getKiller(), entity);
+                Bukkit.getServer().getPluginManager().callEvent(headDropEvent);
+                if (!headDropEvent.isCancelled()){
+                    event.getDrops().add(item);
 
-                            if (killerExist) {
-                                updateDB(entity.getKiller());
-                            }
+                    if (killerExist) {
+                        updateDB(entity.getKiller());
+                    }
 
-                            if ((config.getBoolean("Bot.Enable")) && killerExist) {
-                                embed.msg(title, description, footer);
-                            }
+                    if ((config.getBoolean("Bot.Enable")) && killerExist) {
+                        embed.msg(title, description, footer);
+                    }
 
-                        }
-
-
-                        break;
-                    case LIGHT_BLUE:
-                        item = EntityHead.TROPICAL_FISH_LIGHT_BLUE.getSkull(loreList);
-                        HeadDropEvent headDropEvent1 = new HeadDropEvent(item, entity.getKiller(), entity);
-                        Bukkit.getServer().getPluginManager().callEvent(headDropEvent1);
-                        if (!headDropEvent1.isCancelled()){
-                            event.getDrops().add(item);
-
-                            if (killerExist) {
-                                updateDB(entity.getKiller());
-                            }
-
-                            if ((config.getBoolean("Bot.Enable")) && killerExist) {
-                                embed.msg(title, description, footer);
-                            }
-                        }
-
-                        break;
-                    case YELLOW:
-                        item = EntityHead.TROPICAL_FISH_YELLOW.getSkull(loreList);
-                        HeadDropEvent headDropEvent2 = new HeadDropEvent(item, entity.getKiller(), entity);
-                        Bukkit.getServer().getPluginManager().callEvent(headDropEvent2);
-                        if (!headDropEvent2.isCancelled()){
-                            event.getDrops().add(item);
-
-                            if (killerExist) {
-                                updateDB(entity.getKiller());
-                            }
-
-                            if ((config.getBoolean("Bot.Enable")) && killerExist) {
-                                embed.msg(title, description, footer);
-                            }
-                        }
-
-                        break;
-                    case PINK:
-                        item = EntityHead.TROPICAL_FISH_PINK.getSkull(loreList);
-                        HeadDropEvent headDropEvent3 = new HeadDropEvent(item, entity.getKiller(), entity);
-                        Bukkit.getServer().getPluginManager().callEvent(headDropEvent3);
-                        if (!headDropEvent3.isCancelled()){
-                            event.getDrops().add(item);
-
-                            if (killerExist) {
-                                updateDB(entity.getKiller());
-                            }
-
-                            if ((config.getBoolean("Bot.Enable")) && killerExist) {
-                                embed.msg(title, description, footer);
-                            }
-                        }
-
-                        break;
-                    case GRAY:
-                        item = EntityHead.TROPICAL_FISH_GRAY.getSkull(loreList);
-                        HeadDropEvent headDropEvent4 = new HeadDropEvent(item, entity.getKiller(), entity);
-                        Bukkit.getServer().getPluginManager().callEvent(headDropEvent4);
-                        if (!headDropEvent4.isCancelled()){
-                            event.getDrops().add(item);
-
-                            if (killerExist) {
-                                updateDB(entity.getKiller());
-                            }
-
-                            if ((config.getBoolean("Bot.Enable")) && killerExist) {
-                                embed.msg(title, description, footer);
-                            }
-                        }
-
-                        break;
-                    case LIGHT_GRAY:
-                        item = EntityHead.TROPICAL_FISH_LIGHT_GRAY.getSkull(loreList);
-                        HeadDropEvent headDropEvent5 = new HeadDropEvent(item, entity.getKiller(), entity);
-                        Bukkit.getServer().getPluginManager().callEvent(headDropEvent5);
-                        if (!headDropEvent5.isCancelled()){
-                            event.getDrops().add(item);
-
-                            if (killerExist) {
-                                updateDB(entity.getKiller());
-                            }
-
-                            if ((config.getBoolean("Bot.Enable")) && killerExist) {
-                                embed.msg(title, description, footer);
-                            }
-                        }
-
-                        break;
-                    case CYAN:
-                        item = EntityHead.TROPICAL_FISH_CYAN.getSkull(loreList);
-                        HeadDropEvent headDropEvent6 = new HeadDropEvent(item, entity.getKiller(), entity);
-                        Bukkit.getServer().getPluginManager().callEvent(headDropEvent6);
-                        if (!headDropEvent6.isCancelled()){
-                            event.getDrops().add(item);
-
-                            if (killerExist) {
-                                updateDB(entity.getKiller());
-                            }
-
-                            if ((config.getBoolean("Bot.Enable")) && killerExist) {
-                                embed.msg(title, description, footer);
-                            }
-                        }
-
-                        break;
-                    case BLUE:
-                        item = EntityHead.TROPICAL_FISH_BLUE.getSkull(loreList);
-                        HeadDropEvent headDropEvent7 = new HeadDropEvent(item, entity.getKiller(), entity);
-                        Bukkit.getServer().getPluginManager().callEvent(headDropEvent7);
-                        if (!headDropEvent7.isCancelled()){
-                            event.getDrops().add(item);
-
-                            if (killerExist) {
-                                updateDB(entity.getKiller());
-                            }
-
-                            if ((config.getBoolean("Bot.Enable")) && killerExist) {
-                                embed.msg(title, description, footer);
-                            }
-                        }
-
-
-                        break;
-                    case GREEN:
-                        item = EntityHead.TROPICAL_FISH_GREEN.getSkull(loreList);
-                        HeadDropEvent headDropEvent8 = new HeadDropEvent(item, entity.getKiller(), entity);
-                        Bukkit.getServer().getPluginManager().callEvent(headDropEvent8);
-                        if (!headDropEvent8.isCancelled()){
-                            event.getDrops().add(item);
-
-                            if (killerExist) {
-                                updateDB(entity.getKiller());
-                            }
-
-                            if ((config.getBoolean("Bot.Enable")) && killerExist) {
-                                embed.msg(title, description, footer);
-                            }
-                        }
-
-                        break;
-                    case RED:
-                        item = EntityHead.TROPICAL_FISH_RED.getSkull(loreList);
-                        HeadDropEvent headDropEvent9 = new HeadDropEvent(item, entity.getKiller(), entity);
-                        Bukkit.getServer().getPluginManager().callEvent(headDropEvent9);
-                        if (!headDropEvent9.isCancelled()){
-                            event.getDrops().add(item);
-
-                            if (killerExist) {
-                                updateDB(entity.getKiller());
-                            }
-
-                            if ((config.getBoolean("Bot.Enable")) && killerExist) {
-                                embed.msg(title, description, footer);
-                            }
-                        }
-
-
-                        break;
-                    case BLACK:
-                        item = EntityHead.TROPICAL_FISH_BLACK.getSkull(loreList);
-                        HeadDropEvent headDropEvent10 = new HeadDropEvent(item, entity.getKiller(), entity);
-                        Bukkit.getServer().getPluginManager().callEvent(headDropEvent10);
-                        if (!headDropEvent10.isCancelled()){
-                            event.getDrops().add(item);
-
-                            if (killerExist) {
-                                updateDB(entity.getKiller());
-                            }
-
-                            if ((config.getBoolean("Bot.Enable")) && killerExist) {
-                                embed.msg(title, description, footer);
-                            }
-                        }
-
-                        break;
-
-                    default:
-                        item = EntityHead.TROPICAL_FISH_ORANGE.getSkull(loreList);
-
-                        HeadDropEvent headDropEvent11 = new HeadDropEvent(item, entity.getKiller(), entity);
-                        Bukkit.getServer().getPluginManager().callEvent(headDropEvent11);
-                        if (!headDropEvent11.isCancelled()){
-                            event.getDrops().add(item);
-
-                            if (killerExist) {
-                                updateDB(entity.getKiller());
-                            }
-
-                            if ((config.getBoolean("Bot.Enable")) && killerExist) {
-                                embed.msg(title, description, footer);
-                            }
-                        }
                 }
+
             }
         } else if (type == EntityType.PUFFERFISH) {
             if ((config.getBoolean("PUFFERFISH.Drop")) && x <= config.getFloat("PUFFERFISH.Chance") + lootLvl) {
