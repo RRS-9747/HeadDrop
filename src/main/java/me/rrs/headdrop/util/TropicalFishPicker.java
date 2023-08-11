@@ -25,10 +25,10 @@ public class TropicalFishPicker {
         TROPICAL_FISH_BLACK,
         TROPICAL_FISH_LIGHT_GRAY
     );
+    private static int headListSize = headList.size();
     private static Random rng = new Random();
     public static EntityHead getRandomEntityHead() {
-        int randomUpperBound = rng.nextInt(headList.size());
-        int tropicalFishListIndex = rng.nextInt(randomUpperBound);
+        int tropicalFishListIndex = rng.nextInt(headListSize);
 
         EntityHead entityHead = headList.get(tropicalFishListIndex);
         return entityHead;
