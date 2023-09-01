@@ -181,7 +181,7 @@ public enum EntityHead {
       FROG_COLD("FROG", "entity.frog.ambient", SkullCreator.createSkullWithBase64("eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvY2U2MmU4YTA0OGQwNDBlYjA1MzNiYTI2YTg2NmNkOWMyZDA5MjhjOTMxYzUwYjQ0ODJhYzNhMzI2MWZhYjZmMCJ9fX0="));
 
 
-      private final String name;
+      private final String id;
       private final String sound;
       private final ItemStack itemStack;
 
@@ -190,8 +190,8 @@ public enum EntityHead {
 
      final ItemUtils utils = new ItemUtils();
 
-      EntityHead(String name, String sound, ItemStack itemStack) {
-            this.name = name;
+      EntityHead(String id, String sound, ItemStack itemStack) {
+            this.id = id;
             this.itemStack = itemStack;
             this.sound = sound;
       }
@@ -205,11 +205,11 @@ public enum EntityHead {
                   }catch (NoSuchMethodError ignored){}
 
             }
-          return utils.rename(itemStack, config.getString(name + ".Name"), lore);
+          return utils.rename(itemStack, config.getString(id + ".Name"), lore);
      }
 
-      public String getName() {
-            return name;
+      public String getID() {
+            return id;
       }
       public String getSound(){
             return sound;

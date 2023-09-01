@@ -30,8 +30,6 @@ public class ItemUtils {
             meta.setLore(finalLore);
         }
         head.setItemMeta(meta);
-
-
         return head;
     }
 
@@ -47,8 +45,8 @@ public class ItemUtils {
                 }
             }
             meta.setLore(finalLore);
-            head.setItemMeta(meta);
         }
+        head.setItemMeta(meta);
         return head;
     }
 

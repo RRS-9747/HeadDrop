@@ -101,8 +101,6 @@ public class EntityDeath implements Listener {
             }
         }
 
-        if (!entity.getPersistentDataContainer().getKeys().isEmpty() && entity.getType() != EntityType.PLAYER) return;
-
         if (config.getBoolean("Config.Require-Killer-Player") && entity.getKiller() == null) return;
 
         if (config.getBoolean("Config.Killer-Require-Permission") && (entity.getKiller() == null ||
@@ -259,9 +257,7 @@ public class EntityDeath implements Listener {
 
             }
         } else if (type == EntityType.CREEPER) {
-            System.out.println(x);
             if ((config.getBoolean("CREEPER.Drop")) && x <= config.getFloat("CREEPER.Chance") + lootLvl) {
-                System.out.println("WORKINGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGGG");
                 event.getDrops().removeIf(head -> head.getType() == Material.CREEPER_HEAD);
 
                 List<String> loreList = config.getStringList("CREEPER.Lore");
@@ -3094,7 +3090,6 @@ public class EntityDeath implements Listener {
 
                 switch (fox.getFoxType()) {
                     case RED:
-
                         item = EntityHead.FOX.getSkull(loreList);
                         HeadDropEvent headDropEvent = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent);
@@ -3112,11 +3107,11 @@ public class EntityDeath implements Listener {
 
                         break;
                     case SNOW:
-
                         item = EntityHead.FOX_WHITE.getSkull(loreList);
                         HeadDropEvent headDropEvent1 = new HeadDropEvent(item, entity.getKiller(), entity);
                         Bukkit.getServer().getPluginManager().callEvent(headDropEvent1);
                         if (!headDropEvent1.isCancelled()) {
+                            event.getDrops().add(item);
                             if (killerExist) {
                                 updateDB(entity.getKiller());
                             }
