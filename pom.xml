@@ -11,7 +11,7 @@
     </parent>
 
     <artifactId>HeadDrop-Free</artifactId>
-    <version>4.26</version>
+    <version>4.27</version>
 
     <build>
         <plugins>
@@ -114,7 +114,7 @@
         <dependency>
             <groupId>de.tr7zw</groupId>
             <artifactId>item-nbt-api</artifactId>
-            <version>2.11.3</version>
+            <version>2.12.0</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -126,7 +126,7 @@
         <dependency>
             <groupId>dev.dejvokep</groupId>
             <artifactId>boosted-yaml</artifactId>
-            <version>1.3</version>
+            <version>1.3.1</version>
             <scope>compile</scope>
         </dependency>
         <dependency>
@@ -175,7 +175,7 @@
         <dependency>
             <groupId>org.spigotmc</groupId>
             <artifactId>spigot-api</artifactId>
-            <version>1.20.1-R0.1-SNAPSHOT</version>
+            <version>1.20.2-R0.1-SNAPSHOT</version>
             <scope>provided</scope>
         </dependency>
     </dependencies>
