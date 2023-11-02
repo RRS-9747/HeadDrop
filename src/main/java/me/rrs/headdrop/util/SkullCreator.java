@@ -72,18 +72,6 @@ public class SkullCreator {
 		}
 	}
 
-	private static String urlToBase64(String url) {
-
-		URI actualUrl;
-		try {
-			actualUrl = new URI(url);
-		} catch (URISyntaxException e) {
-			throw new RuntimeException(e);
-		}
-		String toEncode = "{\"textures\":{\"SKIN\":{\"url\":\"" + actualUrl.toString() + "\"}}}";
-		return Base64.getEncoder().encodeToString(toEncode.getBytes());
-	}
-
 	private static GameProfile makeProfile(String b64) {
 		// random uuid based on the b64 string
 		UUID id = new UUID(

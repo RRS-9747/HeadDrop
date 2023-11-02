@@ -44,9 +44,18 @@ public class EntityDeath implements Listener {
 
     @EventHandler(priority = EventPriority.HIGH)
     public void entityDropHeadEvent(final EntityDeathEvent event) {
+        final LivingEntity entity = event.getEntity();
 
         if (Bukkit.getPluginManager().isPluginEnabled("WorldGuard")) {
-            if (!WorldGuardSupport.canDrop(event.getEntity().getLocation())) return;
+            if (!WorldGuardSupport.canDrop(entity.getLocation())) return;
+        }
+
+        if (!HeadDrop.getConfiguration().getBoolean("Config.Baby-HeadDrop")) {
+            if (entity instanceof Ageable) {
+                if (!((Ageable) entity).isAdult()) {
+                    return;
+                }
+            }
         }
 
         Embed embed = new Embed();
@@ -57,17 +66,7 @@ public class EntityDeath implements Listener {
         ThreadLocalRandom random = ThreadLocalRandom.current();
         float x = random.nextFloat(0.01F, 100.0F);
 
-        final LivingEntity entity = event.getEntity();
         boolean killerExist = entity.getKiller() != null;
-
-
-        if (!HeadDrop.getConfiguration().getBoolean("Config.Baby-HeadDrop")) {
-            if (entity instanceof Ageable) {
-                if (!((Ageable) entity).isAdult()) {
-                    return;
-                }
-            }
-        }
 
 
         if (config.getBoolean("Bot.Enable") && killerExist) {
@@ -115,14 +114,12 @@ public class EntityDeath implements Listener {
 
         ItemStack item;
 
-
         if (type == EntityType.PLAYER) {
             if ((config.getBoolean("PLAYER.Require-Permission")) && !entity.hasPermission("headdrop.player")) {
                 return;
             }
             if ((config.getBoolean("PLAYER.Drop")) && x <= config.getFloat("PLAYER.Chance") + lootLvl) {
                 ItemStack skull = SkullCreator.createSkullWithName(entity.getName());
-
                 List<String> loreList = config.getStringList("PLAYER.Lore");
                 loreList = loreList.stream()
                         .map(lore -> lore.replace("{KILLER}", entity.getKiller() != null ? entity.getKiller().getName() : "Unknown"))
