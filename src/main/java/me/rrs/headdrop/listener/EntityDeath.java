@@ -21,15 +21,14 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 import java.time.LocalDate;
 import java.util.List;
-import java.util.Random;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.stream.Collectors;
 
 
 public class EntityDeath implements Listener {
 
-    final YamlDocument config = HeadDrop.getConfiguration();
-    final ItemUtils utils = new ItemUtils();
+    private final YamlDocument config = HeadDrop.getConfiguration();
+    private final ItemUtils utils = new ItemUtils();
 
     private void updateDB(Player player){
         if (config.getBoolean("Database.Online")){
@@ -50,12 +49,8 @@ public class EntityDeath implements Listener {
             if (!WorldGuardSupport.canDrop(entity.getLocation())) return;
         }
 
-        if (!HeadDrop.getConfiguration().getBoolean("Config.Baby-HeadDrop")) {
-            if (entity instanceof Ageable) {
-                if (!((Ageable) entity).isAdult()) {
-                    return;
-                }
-            }
+        if (!config.getBoolean("Config.Baby-HeadDrop") && entity instanceof Ageable && !((Ageable) entity).isAdult()) {
+            return;
         }
 
         Embed embed = new Embed();
@@ -90,12 +85,10 @@ public class EntityDeath implements Listener {
                     entity.getKiller().getInventory().getItemInMainHand().getEnchantmentLevel(Enchantment.LOOT_BONUS_MOBS) : 0;
         }
 
-        if (HeadDrop.getConfiguration().getBoolean("Config.Enable-Perm-Chance")) {
-            if (killerExist) {
-                for (float i = 100; i > 0; i--) {
-                    if (entity.getKiller().hasPermission("headdrop.chance" + i)) {
-                        lootLvl = lootLvl + i;
-                    }
+        if (config.getBoolean("Config.Enable-Perm-Chance") && killerExist) {
+            for (float i = 100; i > 0; i--) {
+                if (entity.getKiller().hasPermission("headdrop.chance" + i)) {
+                    lootLvl += i;
                 }
             }
         }

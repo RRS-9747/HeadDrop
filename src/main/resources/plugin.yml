@@ -22,10 +22,10 @@ commands:
     description: Main command of HeadDrop plugin
 
 libraries:
-  - org.json:json:20230618
+  - org.json:json:20231013
   - com.googlecode.json-simple:json-simple:1.1.1
   - org.bstats:bstats-bukkit:3.0.2
-  - com.zaxxer:HikariCP:5.0.1
+  - com.zaxxer:HikariCP:5.1.0
 
 
 
