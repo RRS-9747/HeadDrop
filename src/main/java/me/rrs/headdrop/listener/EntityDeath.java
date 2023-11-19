@@ -30,7 +30,17 @@ public class EntityDeath implements Listener {
     private final YamlDocument config = HeadDrop.getConfiguration();
     private final ItemUtils utils = new ItemUtils();
 
-    private void updateDB(Player player){
+    private void updateDB(Player player) {
+        try {
+            Bukkit.getScheduler().runTaskAsynchronously(HeadDrop.getInstance(), () -> {
+                updateDatabase(player);
+            });
+        } catch (UnsupportedOperationException e) {
+            updateDatabase(player);
+        }
+    }
+
+    private void updateDatabase(Player player){
         if (config.getBoolean("Database.Online")){
             int count = HeadDrop.getDatabase().getDataByUuid(player.getUniqueId().toString());
             HeadDrop.getDatabase().updateDataByUuid(player.getUniqueId().toString(), player.getName(), count+1);

@@ -10,6 +10,7 @@ import dev.dejvokep.boostedyaml.settings.updater.UpdaterSettings;
 import me.rrs.headdrop.commands.Head;
 import me.rrs.headdrop.commands.MainCommand;
 import me.rrs.headdrop.database.Database;
+import me.rrs.headdrop.hook.GeyserMC;
 import me.rrs.headdrop.hook.WorldGuardSupport;
 import me.rrs.headdrop.listener.*;
 import me.rrs.headdrop.util.TabComplete;
@@ -20,6 +21,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
+import org.geysermc.geyser.api.GeyserApi;
+import org.geysermc.geyser.api.event.lifecycle.GeyserDefineCustomSkullsEvent;
 
 import java.io.File;
 import java.io.IOException;
@@ -108,6 +111,11 @@ public class HeadDrop extends JavaPlugin {
         getServer().getPluginManager().registerEvents(new PlayerJoin(), this);
         getServer().getPluginManager().registerEvents(new PoweredCreeper(), this);
         getServer().getPluginManager().registerEvents(new GUI(), this);
+
+        if (Bukkit.getPluginManager().isPluginEnabled("Geyser-Spigot")){
+            GeyserApi.api().eventBus().subscribe(new GeyserMC(), GeyserDefineCustomSkullsEvent.class, GeyserMC::onDefineCustomSkulls);
+            Bukkit.getLogger().info("Hooked into Geyser!");
+        }
 
 
 
