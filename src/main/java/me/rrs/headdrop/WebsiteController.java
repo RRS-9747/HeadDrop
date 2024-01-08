@@ -67,7 +67,8 @@ public class WebsiteController {
             int endIndex = Math.min(startIndex + ENTRIES_PER_PAGE, sortedPlayerData.size());
 
             // Generate the HTML for the leaderboard with responsive design
-            StringBuilder html = new StringBuilder("<html>\n<head>\n<title>Leaderboard</title>\n<style>\n");
+            StringBuilder html = new StringBuilder(2048);
+            html.append("<html>\n<head>\n<title>Leaderboard</title>\n<style>\n");
             html.append("body {\nbackground-color: #1e1e1e;\ncolor: #ffffff;\n}\n");
             html.append(".container {\nmax-width: 800px;\nmargin: 0 auto;\npadding: 16px;\n}\n");
             html.append("table {\nborder-collapse: collapse;\nwidth: 100%;\n}\n");

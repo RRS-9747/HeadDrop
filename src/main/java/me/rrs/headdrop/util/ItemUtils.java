@@ -21,8 +21,9 @@ public class ItemUtils {
             List<String> finalLore = new ArrayList<>();
             for (String lore : rawLore) {
                 if (lore.isEmpty()) continue;
+                lore = ChatColor.translateAlternateColorCodes('&', lore);
                 if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")){
-                    finalLore.add(PlaceholderAPI.setPlaceholders(null, ChatColor.translateAlternateColorCodes('&', lore)));
+                    finalLore.add(PlaceholderAPI.setPlaceholders(null, lore));
                 }else {
                     finalLore.add(lore);
                 }
@@ -38,8 +39,10 @@ public class ItemUtils {
         if (rawLore != null || !rawLore.isEmpty()) {
             List<String> finalLore = new ArrayList<>();
             for (String lore : rawLore) {
+                if (lore.isEmpty()) continue;
+                lore = ChatColor.translateAlternateColorCodes('&', lore);
                 if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")){
-                    finalLore.add(PlaceholderAPI.setPlaceholders(null, ChatColor.translateAlternateColorCodes('&', lore)));
+                    finalLore.add(PlaceholderAPI.setPlaceholders(null, lore));
                 }else {
                     finalLore.add(lore);
                 }
