@@ -68,6 +68,7 @@ public class WebsiteController {
 
             // Generate the HTML for the leaderboard with responsive design
             StringBuilder html = new StringBuilder(2048);
+            html.append("<!DOCTYPE html>");
             html.append("<html>\n<head>\n<title>Leaderboard</title>\n<style>\n");
             html.append("body {\nbackground-color: #1e1e1e;\ncolor: #ffffff;\n}\n");
             html.append(".container {\nmax-width: 800px;\nmargin: 0 auto;\npadding: 16px;\n}\n");
@@ -123,7 +124,7 @@ public class WebsiteController {
             // Send the HTML response
             String response = html.toString();
             exchange.getResponseHeaders().set("Content-Type", "text/html");
-            exchange.sendResponseHeaders(200, response.length());
+            exchange.sendResponseHeaders(200, response.getBytes().length);
             try (OutputStream os = exchange.getResponseBody()) {
                 os.write(response.getBytes());
             }

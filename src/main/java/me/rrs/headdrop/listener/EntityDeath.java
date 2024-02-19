@@ -42,6 +42,7 @@ public class EntityDeath implements Listener {
     }
 
     private void updateDatabase(Player player) {
+        if (!config.getBoolean("Database.Enable")) return;
         if (config.getBoolean("Database.Online")) {
             int count = HeadDrop.getDatabase().getDataByUuid(player.getUniqueId().toString());
             HeadDrop.getDatabase().updateDataByUuid(player.getUniqueId().toString(), player.getName(), count + 1);
@@ -56,13 +57,28 @@ public class EntityDeath implements Listener {
     public void entityDropHeadEvent(final EntityDeathEvent event) {
         final LivingEntity entity = event.getEntity();
 
-        if (Bukkit.getPluginManager().isPluginEnabled("WorldGuard")) {
-            if (!WorldGuardSupport.canDrop(entity.getLocation())) return;
-        }
+        if (config.getBoolean("Config.Require-Killer-Player") && entity.getKiller() == null) return;
 
         if (!config.getBoolean("Config.Baby-HeadDrop") && entity instanceof Ageable && !((Ageable) entity).isAdult()) {
             return;
         }
+
+        if (Bukkit.getPluginManager().isPluginEnabled("WorldGuard")) {
+            if (!WorldGuardSupport.canDrop(entity.getLocation())) return;
+        }
+
+        if (!Bukkit.getPluginManager().isPluginEnabled("LevelledMobs")) {
+            if (!entity.getPersistentDataContainer().getKeys().isEmpty() && entity.getType() != EntityType.PLAYER)
+                return;
+        }
+
+        if (config.getBoolean("Config.Killer-Require-Permission") && (entity.getKiller() == null ||
+                !entity.getKiller().hasPermission("headdrop.killer"))) {
+            return;
+        }
+
+        List<String> worldList = config.getStringList("Config.Disable-Worlds");
+        if (worldList.contains(entity.getWorld().getName())) return;
 
         Embed embed = new Embed();
 
@@ -73,11 +89,6 @@ public class EntityDeath implements Listener {
         float x = random.nextFloat(0.01F, 100.0F);
 
         boolean killerExist = entity.getKiller() != null;
-
-        if (!Bukkit.getPluginManager().isPluginEnabled("LevelledMobs")) {
-            if (!entity.getPersistentDataContainer().getKeys().isEmpty() && entity.getType() != EntityType.PLAYER)
-                return;
-        }
 
 
         if (config.getBoolean("Bot.Enable") && killerExist) {
@@ -108,16 +119,6 @@ public class EntityDeath implements Listener {
                 }
             }
         }
-
-        if (config.getBoolean("Config.Require-Killer-Player") && entity.getKiller() == null) return;
-
-        if (config.getBoolean("Config.Killer-Require-Permission") && (entity.getKiller() == null ||
-                !entity.getKiller().hasPermission("headdrop.killer"))) {
-            return;
-        }
-
-        List<String> worldList = config.getStringList("Config.Disable-Worlds");
-        if (worldList.contains(entity.getWorld().getName())) return;
 
         EntityType type = entity.getType();
 
@@ -162,7 +163,6 @@ public class EntityDeath implements Listener {
                 Bukkit.getServer().getPluginManager().callEvent(headDropEvent);
                 if (!headDropEvent.isCancelled()) {
                     event.getDrops().add(item);
-
                     if (killerExist) {
                         updateDB(entity.getKiller());
                     }

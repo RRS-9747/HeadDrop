@@ -22,13 +22,14 @@ Config:
     - demoWorld2
 
 Database:
+  Enable: false
   Online: true
   URL: "jdbc:sqlite:HeadDrop.sqlite"
   User:
   Password:
 
 Web:
-  Enable: false
+  Enable: false #Need to enable database as well
   Port: 8080
   Endpoint: "leaderboard" #make the website address https://localhost:8080/leaderboard
 
@@ -394,7 +395,7 @@ ZOMBIFIED_PIGLIN:
   Chance: 100
 
 MAGMA_CUBE:
-  Name: "Panda"
+  Name: "Magma"
   Drop: true
   Chance: 100
 

@@ -134,14 +134,16 @@ public class HeadDrop extends JavaPlugin {
 
 
         if (config.getBoolean("Web.Enable")) {
-            WebsiteController handler = new WebsiteController();
-            try {
-                handler.start(config.getInt("Web.Port"));
-                Bukkit.getLogger().info("[HeadDrop] Website is now online at " + config.getInt("Web.Port" + " port"));
-            } catch (IOException e) {
-                Bukkit.getLogger().severe("[HeadDrop] Something went wrong with the leaderboard website!");
-                throw new RuntimeException(e);
-            }
+            if (config.getBoolean("Database.Enable")){
+                WebsiteController handler = new WebsiteController();
+                try {
+                    handler.start(config.getInt("Web.Port"));
+                    Bukkit.getLogger().info("[HeadDrop] Website is now online at " + config.getInt("Web.Port" + " port"));
+                } catch (IOException e) {
+                    Bukkit.getLogger().severe("[HeadDrop] Something went wrong with the leaderboard website!");
+                    throw new RuntimeException(e);
+                }
+            }else Bukkit.getLogger().severe("[HeadDrop] Database need to be enable as well to host the leaderboard website!");
         }
 
         Bukkit.getLogger().info("[HeadDrop] Enabled successfully!");
@@ -153,6 +155,7 @@ public class HeadDrop extends JavaPlugin {
         if (config.getBoolean("Web.Enable")) {
             WebsiteController handler = new WebsiteController();
             handler.stop();
+
         }
         Bukkit.getLogger().info("HeadDrop Disabled.");
     }

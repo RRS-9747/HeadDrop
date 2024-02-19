@@ -8,6 +8,7 @@ prefix: HeadDrop
 softdepend:
   - PlaceholderAPI
   - WorldGuard
+  - Geyser-Spigot
 commands:
   head:
     aliases:
@@ -22,7 +23,7 @@ commands:
     description: Main command of HeadDrop plugin
 
 libraries:
-  - org.json:json:20231013
+  - org.json:json:20240205
   - com.googlecode.json-simple:json-simple:1.1.1
   - org.bstats:bstats-bukkit:3.0.2
   - com.zaxxer:HikariCP:5.1.0
