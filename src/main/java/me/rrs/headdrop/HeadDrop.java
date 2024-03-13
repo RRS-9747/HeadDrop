@@ -155,7 +155,6 @@ public class HeadDrop extends JavaPlugin {
         if (config.getBoolean("Web.Enable")) {
             WebsiteController handler = new WebsiteController();
             handler.stop();
-
         }
         Bukkit.getLogger().info("HeadDrop Disabled.");
     }
@@ -175,17 +174,15 @@ public class HeadDrop extends JavaPlugin {
                         p.sendMessage("--------------------------------");
                     }
                 }
+                if (!Bukkit.getOnlinePlayers().isEmpty()) {
+                    Bukkit.getLogger().info("--------------------------------");
+                    Bukkit.getLogger().info("You are using HeadDrop v" + getDescription().getVersion());
+                    Bukkit.getLogger().info("However version " + newVersion + " is available.");
+                    Bukkit.getLogger().info("You can download it from: " + "https://www.spigotmc.org/resources/99976/");
+                    Bukkit.getLogger().info("--------------------------------");
+                }
             }
-            if (!Bukkit.getOnlinePlayers().isEmpty()){
-                Bukkit.getLogger().info("--------------------------------");
-                Bukkit.getLogger().info("You are using HeadDrop v" + getDescription().getVersion());
-                Bukkit.getLogger().info("However version " + newVersion + " is available.");
-                Bukkit.getLogger().info("You can download it from: " + "https://www.spigotmc.org/resources/99976/");
-                Bukkit.getLogger().info("--------------------------------");
-            }
-
         }
     }
-
 
 }

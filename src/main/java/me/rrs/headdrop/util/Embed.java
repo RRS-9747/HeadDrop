@@ -25,6 +25,10 @@ public class Embed {
     }
 
     public void msg(@NotNull String title, String description, @NotNull String footer) {
-        embed(title, description, footer);
+        try {
+            HeadDrop.getInstance().getServer().getScheduler().runTaskAsynchronously(HeadDrop.getInstance(), () -> embed(title, description, footer));
+        }catch (UnsupportedOperationException ignored) {
+            embed(title, description, footer);
+        }
     }
 }
