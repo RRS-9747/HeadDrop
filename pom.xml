@@ -11,7 +11,7 @@
     </parent>
 
     <artifactId>HeadDrop-Free</artifactId>
-    <version>4.34</version>
+    <version>4.35</version>
 
     <build>
         <plugins>
