@@ -200,18 +200,22 @@ public enum EntityHead {
       }
       public ItemStack getSkull(List<String> lore) {
             ItemStack skull = SkullCreator.createSkullWithBase64(headHash);
-            if (skull.getType().equals(Material.PLAYER_HEAD)){
+            if (skull.getType().equals(Material.PLAYER_HEAD)) {
 
                   try {
                         SkullMeta meta = (SkullMeta) skull.getItemMeta();
-                        meta.setNoteBlockSound(NamespacedKey.minecraft(sound));
+                        if (HeadDrop.getConfiguration().getString(name + ".Sound").equals("default")) { //set default sound
+                              meta.setNoteBlockSound(NamespacedKey.minecraft(sound));
+                        } else
+                              meta.setNoteBlockSound(NamespacedKey.minecraft(HeadDrop.getConfiguration().getString(name + ".Sound")));
                         skull.setItemMeta(meta);
-                  }catch (NoSuchMethodError ignored){}
+                  } catch (NoSuchMethodError ignored) {
+                  }
             }
-            if (!config.getBoolean(name + ".Drop")){
+            if (!HeadDrop.getConfiguration().getBoolean(name + ".Drop")) {
                   return null;
             }
-            return utils.rename(skull, config.getString(name + ".Name"), lore);
+            return utils.rename(skull, HeadDrop.getConfiguration().getString(name + ".Name"), lore);
       }
 
       public String getName() {

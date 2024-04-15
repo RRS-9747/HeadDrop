@@ -14,8 +14,8 @@ Config:
   Require-Killer-Player: true
   Require-Charged-Creeper: false
   Killer-Require-Permission: false
-  Enable-Looting: true
-  Baby-HeadDrop: true
+  Enable-Looting: false
+  Baby-HeadDrop: false
   Enable-Perm-Chance: false
   Disable-Worlds:
     - demoWorld
@@ -35,12 +35,12 @@ Web:
 
 Bot:
   Enable: false
-  WebHook: ""
+  Channel-ID: ""
   Title: "HeadDrop"
   Description: "{KILLER} killed {MOB} and got a head!"
   Footer: "HeadDrop by RRS"
 
-# add a blank line/lore ("") if you want to disable lore.
+# add a blank line/lore if you want to disable lore.
 Lores:
   - "Killed by {KILLER}"
   - "Killed on {DATE}"
@@ -54,397 +54,477 @@ ZOMBIE:
   Name: "Zombie"
   Drop: true
   Chance: 100
+  Sound: "default"
 
 WITHER_SKELETON:
   Name: "Wither Skeleton"
   Drop: true
   Chance: 100
+  Sound: "default"
 
 CREEPER:
   Name: "Creeper"
   Drop: true
   Chance: 100
+  Sound: "default"
 
 SKELETON:
   Name: "Skeleton"
   Drop: true
   Chance: 100
+  Sound: "default"
 
 AXOLOTL:
   Name: "Axolotl"
   Drop: true
   Chance: 100
+  Sound: "default"
 
 BAT:
   Name: "Bat"
   Drop: true
   Chance: 100
+  Sound: "default"
 
 BEE:
   Name: "Bee"
   Drop: true
   Chance: 100
+  Sound: "default"
 
 BLAZE:
   Name: "Blaze"
   Drop: true
   Chance: 100
+  Sound: "default"
 
 CAT:
   Name: "Cat"
   Drop: true
   Chance: 100
+  Sound: "default"
 
 DOLPHIN:
   Name: "Dolphin"
   Drop: true
   Chance: 100
+  Sound: "default"
 
 DROWNED:
   Name: "Drowned"
   Drop: true
   Chance: 100
+  Sound: "default"
 
 SPIDER:
   Name: "Spider"
   Drop: true
   Chance: 100
+  Sound: "default"
 
 CAVE_SPIDER:
   Name: "Cave Spider"
   Drop: true
   Chance: 100
+  Sound: "default"
 
 CHICKEN:
   Name: "Chicken"
   Drop: true
   Chance: 100
+  Sound: "default"
 
 ENDERMAN:
   Name: "EnderMan"
   Drop: true
   Chance: 100
+  Sound: "default"
 
 COW:
   Name: "Cow"
   Drop: true
   Chance: 100
+  Sound: "default"
 
 ENDERMITE:
   Name: "EnderMite"
   Drop: true
   Chance: 100
+  Sound: "default"
 
 EVOKER:
   Name: "Evoker"
   Drop: true
   Chance: 100
+  Sound: "default"
 
 DONKEY:
   Name: "Donkey"
   Drop: true
   Chance: 100
+  Sound: "default"
 
 FOX:
   Name: "Fox"
   Drop: true
   Chance: 100
+  Sound: "default"
 
 SHEEP:
-    Name: "Sheep"
-    Drop: true
-    Chance: 100
+  Name: "Sheep"
+  Drop: true
+  Chance: 100
+  Sound: "default"
 
 GIANT:
   Name: "Giant"
   Drop: true
   Chance: 100
+  Sound: "default"
 
 HOGLIN:
   Name: "Hoglin"
   Drop: true
   Chance: 100
+  Sound: "default"
 
 HUSK:
   Name: "Husk"
   Drop: true
   Chance: 100
+  Sound: "default"
 
 GOAT:
   Name: "Goat"
   Drop: true
   Chance: 100
+  Sound: "default"
 
 IRON_GOLEM:
   Name: "Iron Golem"
   Drop: true
   Chance: 100
+  Sound: "default"
 
 ILLUSIONER:
   Name: "Illusioner"
   Drop: true
   Chance: 100
+  Sound: "default"
 
 HORSE:
   Name: "Horse"
   Drop: true
   Chance: 100
+  Sound: "default"
 
 GUARDIAN:
   Name: "Guardian"
   Drop: true
   Chance: 100
+  Sound: "default"
 
 MUSHROOM_COW:
   Name: "Mushroom Cow"
   Drop: true
   Chance: 100
+  Sound: "default"
 
 OCELOT:
   Name: "Ocelot"
   Drop: true
   Chance: 100
+  Sound: "default"
 
 PHANTOM:
   Name: "Phantom"
   Drop: true
   Chance: 100
+  Sound: "default"
 
 GLOW_SQUID:
   Name: "Glow Squid"
   Drop: true
   Chance: 100
+  Sound: "default"
 
 PIG:
   Name: "Pig"
   Drop: true
   Chance: 100
+  Sound: "default"
 
 LLAMA:
   Name: "LLAMA"
   Drop: true
   Chance: 100
+  Sound: "default"
 
 MULE:
   Name: "Mule"
   Drop: true
   Chance: 100
+  Sound: "default"
 
 PIGLIN:
   Name: "Piglin"
   Drop: true
   Chance: 100
+  Sound: "default"
 
 PIGLIN_BRUTE:
   Name: "Piglin Brute"
   Drop: true
   Chance: 100
+  Sound: "default"
 
 ELDER_GUARDIAN:
   Name: "Elder Guardian"
   Drop: true
   Chance: 100
+  Sound: "default"
 
 PUFFERFISH:
   Name: "Puffer Fish"
   Drop: true
   Chance: 100
+  Sound: "default"
 
 SILVERFISH:
   Name: "Silver Fish"
   Drop: true
   Chance: 100
+  Sound: "default"
 
 POLAR_BEAR:
   Name: "Polar Bear"
   Drop: true
   Chance: 100
+  Sound: "default"
 
 SALMON:
   Name: "Salmon"
   Drop: true
   Chance: 100
+  Sound: "default"
 
 SHULKER:
   Name: "Shulker"
   Drop: true
   Chance: 100
+  Sound: "default"
 
 STRAY:
   Name: "Stray"
   Drop: true
   Chance: 100
+  Sound: "default"
 
 STRIDER:
   Name: "Strider"
   Drop: true
   Chance: 100
+  Sound: "default"
 
 SKELETON_HORSE:
   Name: "Skeleton Horse"
   Drop: true
   Chance: 100
+  Sound: "default"
 
 PILLAGER:
   Name: "Pillager"
   Drop: true
   Chance: 100
+  Sound: "default"
 
 SQUID:
   Name: "Squid"
   Drop: true
   Chance: 100
+  Sound: "default"
 
 WANDERING_TRADER:
   Name: "Wandering Trader"
   Drop: true
   Chance: 100
+  Sound: "default"
 
 TURTLE:
   Name: "Turtle"
   Drop: true
   Chance: 100
+  Sound: "default"
 
 SLIME:
   Name: "Slime"
   Drop: true
   Chance: 100
+  Sound: "default"
 
 COD:
   Name: "Cod"
   Drop: true
   Chance: 100
+  Sound: "default"
 
 RAVAGER:
   Name: "Ravager"
   Drop: true
   Chance: 100
+  Sound: "default"
 
 WITCH:
   Name: "Witch"
   Drop: true
   Chance: 100
+  Sound: "default"
 
 GHAST:
   Name: "Ghast"
   Drop: true
   Chance: 100
+  Sound: "default"
 
 ZOMBIE_HORSE:
   Name: "Zombie Horse"
   Drop: true
   Chance: 100
+  Sound: "default"
 
 WOLF:
   Name: "Wolf"
   Drop: true
   Chance: 100
+  Sound: "default"
 
 VINDICATOR:
   Name: "Vindicator"
   Drop: true
   Chance: 100
+  Sound: "default"
 
 ZOGLIN:
   Name: "Zoglin"
   Drop: true
   Chance: 100
+  Sound: "default"
 
 TRADER_LLAMA:
   Name: "LLama"
   Drop: true
   Chance: 100
+  Sound: "default"
 
 ZOMBIE_VILLAGER:
   Name: "Zombie Villager"
   Drop: true
   Chance: 100
+  Sound: "default"
 
 ENDER_DRAGON:
   Drop: true
   Chance: 100
+  Sound: "default"
 
 WITHER:
   Name: "Wither"
   Drop: true
   Chance: 100
+  Sound: "default"
 
 VILLAGER:
   Name: "Villager"
   Drop: true
   Chance: 100
+  Sound: "default"
 
 PARROT:
   Name: "Parrot"
   Drop: true
   Chance: 100
+  Sound: "default"
 
 TROPICAL_FISH:
   Name: "Tropical Fish"
   Drop: true
   Chance: 100
+  Sound: "default"
 
 VEX:
   Name: "Vex"
   Drop: true
   Chance: 100
+  Sound: "default"
 
 ZOMBIFIED_PIGLIN:
   Name: "Zombified Piglin"
   Drop: true
   Chance: 100
+  Sound: "default"
 
 MAGMA_CUBE:
   Name: "Magma"
   Drop: true
   Chance: 100
+  Sound: "default"
 
 PANDA:
   Name: "Panda"
   Drop: true
   Chance: 100
+  Sound: "default"
 
 SNOW_GOLEM:
   Name: "Snow Golem"
   Drop: true
   Chance: 100
+  Sound: "default"
 
 RABBIT:
   Name: "Rabbit"
   Drop: true
   Chance: 100
+  Sound: "default"
 
 ALLAY:
   Name: "Allay"
   Drop: true
   Chance: 100
+  Sound: "default"
 
 TADPOLE:
   Name: "Tadpole"
   Drop: true
   Chance: 100
+  Sound: "default"
 
 FROG:
   Name: "Frog"
   Drop: true
   Chance: 100
+  Sound: "default"
 
 WARDEN:
   Name: "Warden"
   Drop: true
   Chance: 100
+  Sound: "default"
 
 CAMEL:
   Name: "Camel"
   Drop: true
   Chance: 100
+  Sound: "default"
 
 SNIFFER:
   Name: "Sniffer"
   Drop: true
   Chance: 100
+  Sound: "default"
 
 BREEZE:
   Name: "Breeze"
   Drop: true
   Chance: 100
+  Sound: "default"

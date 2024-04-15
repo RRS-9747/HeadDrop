@@ -139,6 +139,13 @@
             <version>1.0</version>
             <scope>compile</scope>
         </dependency>
+
+        <dependency>
+            <groupId>com.github.RRS-9747</groupId>
+            <artifactId>DiscordUtils</artifactId>
+            <version>3.2.0</version>
+            <scope>provided</scope>
+        </dependency>
         <dependency>
             <groupId>org.geysermc.geyser</groupId>
             <artifactId>api</artifactId>

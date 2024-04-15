@@ -1,7 +1,9 @@
 package me.rrs.headdrop.util;
 
 
+import me.rrs.discordutils.DiscordUtils;
 import me.rrs.headdrop.HeadDrop;
+import net.dv8tion.jda.api.EmbedBuilder;
 import org.jetbrains.annotations.NotNull;
 import ru.sal4i.sdiscordwebhook.EmbedObject;
 import ru.sal4i.sdiscordwebhook.SDiscordWebhook;
@@ -12,15 +14,15 @@ import java.io.IOException;
 public class Embed {
 
     private void embed(String Title, String Description, String Footer){
-        SDiscordWebhook webhook = new SDiscordWebhook(HeadDrop.getConfiguration().getString("Bot.WebHook"));
-        webhook.addEmbed(new EmbedObject()
-                .setTitle(Title)
-                .setDescription(Description)
-                .setFooter(Footer, null));
+
         try {
-            webhook.execute();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
+            EmbedBuilder builder = new EmbedBuilder()
+                    .setTitle(Title)
+                    .setDescription(Description)
+                    .setFooter(Footer, null);
+            DiscordUtils.getInstance().getJda().getTextChannelById(HeadDrop.getConfiguration().getString("Bot.Channel-ID")).sendMessageEmbeds(builder.build()).queue();
+        }catch (NoClassDefFoundError ignore){
+            HeadDrop.getInstance().getLogger().severe("You need to install DiscordUtils for Discord notify to work!");
         }
     }
 
