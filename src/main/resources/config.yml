@@ -1,0 +1,454 @@
+# Thanks for using HeadDrop.
+# For bug report or suggestion, join https://discord.gg/fV4P2yMSgR
+
+Config:
+  Version: ${project.version}
+  Update-Notify: true
+  Require-Killer-Player: true
+  Require-Charged-Creeper: false
+  Killer-Require-Permission: false
+  Enable-Looting: false
+  Baby-HeadDrop: false
+  Enable-Perm-Chance: false
+  Disable-Worlds:
+    - demoWorld
+    - demoWorld2
+
+Database:
+  Enable: false
+  Online: true
+  URL: "jdbc:sqlite:HeadDrop.sqlite"
+  User:
+  Password:
+
+Web:
+  Enable: false
+  Port: 8080
+  Endpoint: "leaderboard"
+
+Bot:
+  Enable: false
+  Channel-ID: ""
+  Title: "HeadDrop"
+  Description: "{KILLER} killed {MOB} and got a head!"
+  Footer: "HeadDrop by RRS"
+
+# add a blank line/lore if you want to disable lore.
+Lores:
+  - "Killed by {KILLER}"
+  - "Killed on {DATE}"
+
+PLAYER:
+  Drop: true
+  Chance: 100
+  Require-Permission: false
+
+ZOMBIE:
+  Drop: true
+  Chance: 100
+  Sound: "default"
+
+WITHER_SKELETON:
+  Drop: true
+  Chance: 100
+  Sound: "default"
+
+CREEPER:
+  Drop: true
+  Chance: 100
+  Sound: "default"
+
+SKELETON:
+  Drop: true
+  Chance: 100
+  Sound: "default"
+
+AXOLOTL:
+  Drop: true
+  Chance: 100
+  Sound: "default"
+
+BAT:
+  Drop: true
+  Chance: 100
+  Sound: "default"
+
+BEE:
+  Drop: true
+  Chance: 100
+  Sound: "default"
+
+BLAZE:
+  Drop: true
+  Chance: 100
+  Sound: "default"
+
+CAT:
+  Drop: true
+  Chance: 100
+  Sound: "default"
+
+DOLPHIN:
+  Drop: true
+  Chance: 100
+  Sound: "default"
+
+DROWNED:
+  Drop: true
+  Chance: 100
+  Sound: "default"
+
+SPIDER:
+  Drop: true
+  Chance: 100
+  Sound: "default"
+
+CAVE_SPIDER:
+  Drop: true
+  Chance: 100
+  Sound: "default"
+
+CHICKEN:
+  Drop: true
+  Chance: 100
+  Sound: "default"
+
+ENDERMAN:
+  Drop: true
+  Chance: 100
+  Sound: "default"
+
+COW:
+  Drop: true
+  Chance: 100
+  Sound: "default"
+
+ENDERMITE:
+  Drop: true
+  Chance: 100
+  Sound: "default"
+
+EVOKER:
+  Drop: true
+  Chance: 100
+  Sound: "default"
+
+DONKEY:
+  Drop: true
+  Chance: 100
+  Sound: "default"
+
+FOX:
+  Drop: true
+  Chance: 100
+  Sound: "default"
+
+SHEEP:
+  Drop: true
+  Chance: 100
+  Sound: "default"
+
+GIANT:
+  Drop: true
+  Chance: 100
+  Sound: "default"
+
+HOGLIN:
+  Drop: true
+  Chance: 100
+  Sound: "default"
+
+HUSK:
+  Drop: true
+  Chance: 100
+  Sound: "default"
+
+GOAT:
+  Drop: true
+  Chance: 100
+  Sound: "default"
+
+IRON_GOLEM:
+  Drop: true
+  Chance: 100
+  Sound: "default"
+
+ILLUSIONER:
+  Drop: true
+  Chance: 100
+  Sound: "default"
+
+HORSE:
+  Drop: true
+  Chance: 100
+  Sound: "default"
+
+GUARDIAN:
+  Drop: true
+  Chance: 100
+  Sound: "default"
+
+MUSHROOM_COW:
+  Drop: true
+  Chance: 100
+  Sound: "default"
+
+OCELOT:
+  Drop: true
+  Chance: 100
+  Sound: "default"
+
+PHANTOM:
+  Drop: true
+  Chance: 100
+  Sound: "default"
+
+GLOW_SQUID:
+  Drop: true
+  Chance: 100
+  Sound: "default"
+
+PIG:
+  Drop: true
+  Chance: 100
+  Sound: "default"
+
+LLAMA:
+  Drop: true
+  Chance: 100
+  Sound: "default"
+
+MULE:
+  Drop: true
+  Chance: 100
+  Sound: "default"
+
+PIGLIN:
+  Drop: true
+  Chance: 100
+  Sound: "default"
+
+PIGLIN_BRUTE:
+  Drop: true
+  Chance: 100
+  Sound: "default"
+
+ELDER_GUARDIAN:
+  Drop: true
+  Chance: 100
+  Sound: "default"
+
+PUFFERFISH:
+  Drop: true
+  Chance: 100
+  Sound: "default"
+
+SILVERFISH:
+  Drop: true
+  Chance: 100
+  Sound: "default"
+
+POLAR_BEAR:
+  Drop: true
+  Chance: 100
+  Sound: "default"
+
+SALMON:
+  Drop: true
+  Chance: 100
+  Sound: "default"
+
+SHULKER:
+  Drop: true
+  Chance: 100
+  Sound: "default"
+
+STRAY:
+  Drop: true
+  Chance: 100
+  Sound: "default"
+
+STRIDER:
+  Drop: true
+  Chance: 100
+  Sound: "default"
+
+SKELETON_HORSE:
+  Drop: true
+  Chance: 100
+  Sound: "default"
+
+PILLAGER:
+  Drop: true
+  Chance: 100
+  Sound: "default"
+
+SQUID:
+  Drop: true
+  Chance: 100
+  Sound: "default"
+
+WANDERING_TRADER:
+  Drop: true
+  Chance: 100
+  Sound: "default"
+
+TURTLE:
+  Drop: true
+  Chance: 100
+  Sound: "default"
+
+SLIME:
+  Drop: true
+  Chance: 100
+  Sound: "default"
+
+COD:
+  Drop: true
+  Chance: 100
+  Sound: "default"
+
+RAVAGER:
+  Drop: true
+  Chance: 100
+  Sound: "default"
+
+WITCH:
+  Drop: true
+  Chance: 100
+  Sound: "default"
+
+GHAST:
+  Drop: true
+  Chance: 100
+  Sound: "default"
+
+ZOMBIE_HORSE:
+  Drop: true
+  Chance: 100
+  Sound: "default"
+
+WOLF:
+  Drop: true
+  Chance: 100
+  Sound: "default"
+
+VINDICATOR:
+  Drop: true
+  Chance: 100
+  Sound: "default"
+
+ZOGLIN:
+  Drop: true
+  Chance: 100
+  Sound: "default"
+
+TRADER_LLAMA:
+  Drop: true
+  Chance: 100
+  Sound: "default"
+
+ZOMBIE_VILLAGER:
+  Drop: true
+  Chance: 100
+  Sound: "default"
+
+ENDER_DRAGON:
+  Drop: true
+  Chance: 100
+  Sound: "default"
+
+WITHER:
+  Drop: true
+  Chance: 100
+  Sound: "default"
+
+VILLAGER:
+  Drop: true
+  Chance: 100
+  Sound: "default"
+
+PARROT:
+  Drop: true
+  Chance: 100
+  Sound: "default"
+
+TROPICAL_FISH:
+  Drop: true
+  Chance: 100
+  Sound: "default"
+
+VEX:
+  Drop: true
+  Chance: 100
+  Sound: "default"
+
+ZOMBIFIED_PIGLIN:
+  Drop: true
+  Chance: 100
+  Sound: "default"
+
+MAGMA_CUBE:
+  Drop: true
+  Chance: 100
+  Sound: "default"
+
+PANDA:
+  Drop: true
+  Chance: 100
+  Sound: "default"
+
+SNOW_GOLEM:
+  Drop: true
+  Chance: 100
+  Sound: "default"
+
+RABBIT:
+  Drop: true
+  Chance: 100
+  Sound: "default"
+
+ALLAY:
+  Drop: true
+  Chance: 100
+  Sound: "default"
+
+TADPOLE:
+  Drop: true
+  Chance: 100
+  Sound: "default"
+
+FROG:
+  Drop: true
+  Chance: 100
+  Sound: "default"
+
+WARDEN:
+  Drop: true
+  Chance: 100
+  Sound: "default"
+
+CAMEL:
+  Drop: true
+  Chance: 100
+  Sound: "default"
+
+SNIFFER:
+  Drop: true
+  Chance: 100
+  Sound: "default"
+
+BREEZE:
+  Drop: true
+  Chance: 100
+  Sound: "default"
+
+BOGGED:
+  Drop: true
+  Chance: 100
+  Sound: "default"
+
+ARMADILLO:
+  Drop: true
+  Chance: 100
+  Sound: "default"
