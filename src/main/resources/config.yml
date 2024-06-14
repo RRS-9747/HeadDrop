@@ -5,7 +5,6 @@ Config:
   Version: ${project.version}
   Update-Notify: true
   Require-Killer-Player: true
-  Require-Charged-Creeper: false
   Killer-Require-Permission: false
   Enable-Looting: false
   Baby-HeadDrop: false

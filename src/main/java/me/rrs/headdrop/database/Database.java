@@ -189,4 +189,10 @@ public class Database {
 
         this.dataSource = new HikariDataSource(config);
     }
+
+    public void close(){
+        if (dataSource != null && !dataSource.isClosed()){
+            dataSource.close();
+        }
+    }
 }

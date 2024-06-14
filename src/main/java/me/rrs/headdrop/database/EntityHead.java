@@ -196,10 +196,11 @@ public enum EntityHead {
             ItemStack skull = SkullCreator.createSkullWithBase64(headHash);
             if (skull.getType().equals(Material.PLAYER_HEAD)) {
                   SkullMeta meta = (SkullMeta) skull.getItemMeta();
-                  if (instance.getConfiguration().getString(name + ".Sound").equals("default")) { //set default sound
-                        meta.setNoteBlockSound(NamespacedKey.minecraft(sound));
-                  } else
-                        meta.setNoteBlockSound(NamespacedKey.minecraft(instance.getConfiguration().getString(name + ".Sound")));
+                  try {
+                        if (instance.getConfiguration().getString(name + ".Sound").equals("default")) { //set default sound
+                              meta.setNoteBlockSound(NamespacedKey.minecraft(sound));
+                        } else meta.setNoteBlockSound(NamespacedKey.minecraft(instance.getConfiguration().getString(name + ".Sound")));
+                  }catch (NoSuchMethodError ignored){}
                   skull.setItemMeta(meta);
             }
            if (!HeadDrop.getInstance().getConfiguration().getBoolean(name + ".Drop")){

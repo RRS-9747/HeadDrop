@@ -25,6 +25,7 @@ commands:
 
 libraries:
   - com.zaxxer:HikariCP:5.1.0
+  - org.json:json:20240303
 
 
 

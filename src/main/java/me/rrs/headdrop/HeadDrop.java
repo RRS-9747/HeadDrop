@@ -95,6 +95,8 @@ public class HeadDrop extends JavaPlugin {
         metrics.addCustomChart(new SimplePie("discord_bot", () -> String.valueOf(getConfig().getBoolean("Bot.Enable"))));
         metrics.addCustomChart(new SimplePie("web", () -> String.valueOf(getConfig().getBoolean("Web.Enable"))));
 
+        
+
         // Register events
         PluginManager pluginManager = getServer().getPluginManager();
         pluginManager.registerEvents(new EntityDeath(), this);
@@ -146,6 +148,9 @@ public class HeadDrop extends JavaPlugin {
             WebsiteController handler = new WebsiteController();
             handler.stop();
         }
+        Database db = new Database();
+        db.close();
+
         Bukkit.getLogger().info("HeadDrop Disabled.");
     }
     public void updateChecker() {
