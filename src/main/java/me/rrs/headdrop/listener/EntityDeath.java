@@ -791,11 +791,17 @@ public class EntityDeath implements Listener {
                 if ((config.getBoolean("WOLF.Drop")) && ThreadLocalRandom.current().nextFloat() * (100.0F - 0.01F) + 0.01F <= config.getFloat("WOLF.Chance") + lootLvl) {
                     Wolf wolf = (Wolf) event.getEntity();
 
-                    if (wolf.isAngry()) {
-                        item[0] = EntityHead.WOLF_ANGRY.getSkull();
-                    } else {
-                        item[0] = EntityHead.WOLF.getSkull();
-                    }
+                    item[0] = switch (wolf.getVariant()) {
+                        case ASHEN -> EntityHead.WOLF_ASHEN.getSkull();
+                        case BLACK -> EntityHead.WOLF_BLACK.getSkull();
+                        case CHESTNUT -> EntityHead.WOLF_CHESTNUT.getSkull();
+                        case PALE -> EntityHead.WOLF_PALE.getSkull();
+                        case RUSTY -> EntityHead.WOLF_RUSTY.getSkull();
+                        case SNOWY -> EntityHead.WOLF_SNOWY.getSkull();
+                        case SPOTTED -> EntityHead.WOLF_SPOTTED.getSkull();
+                        case STRIPED -> EntityHead.WOLF_STRIPED.getSkull();
+                        case WOODS -> EntityHead.WOLF_WOODS.getSkull();
+                    };
                     itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
                     event.getDrops().add(item[0]);
 
@@ -807,6 +813,8 @@ public class EntityDeath implements Listener {
                     }
 
                 }
+
+                //1.20.5 Mob Varients
             });
         } catch (NoSuchFieldError ignored) {
         }
