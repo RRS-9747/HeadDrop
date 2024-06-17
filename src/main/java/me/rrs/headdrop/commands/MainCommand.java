@@ -114,6 +114,7 @@ public class MainCommand implements CommandExecutor, TabCompleter {
                     writer.write("Require-Killer-Player: " + HeadDrop.getInstance().getConfiguration().getBoolean("Config.Require-Killer-Player") + "\n");
                     writer.write("Killer-Require-Permission: " + HeadDrop.getInstance().getConfiguration().getBoolean("Config.Killer-Require-Permission") + "\n");
                     writer.write("Enable-Looting: " + HeadDrop.getInstance().getConfiguration().getBoolean("Config.Enable-Looting") + "\n");
+                    writer.write("Require-Axe: " + HeadDrop.getInstance().getConfiguration().getBoolean("Config.Require-Axe") + "\n");
                     writer.write("Enable-Perm-Chance: " + HeadDrop.getInstance().getConfiguration().getBoolean("Config.Enable-Perm-Chance") + "\n");
                     writer.write("Database: " + HeadDrop.getInstance().getConfiguration().getBoolean("Database.Online") + "\n");
                     writer.write("Premium: " + "True" + "\n");
