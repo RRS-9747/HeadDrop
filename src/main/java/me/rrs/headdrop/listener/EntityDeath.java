@@ -87,6 +87,10 @@ public class EntityDeath implements Listener {
             if (!WorldGuardSupport.canDrop(entity.getLocation())) return;
         }
 
+        if (!config.getBoolean("Config.Require-Axe") && (killer == null || !killer.getInventory().getItemInMainHand().getType().toString().contains("_AXE"))) {
+            return;
+        }
+
         if (!config.getBoolean("Config.Baby-HeadDrop") && entity instanceof Ageable && !((Ageable) entity).isAdult()) {
             return;
         }
@@ -100,7 +104,7 @@ public class EntityDeath implements Listener {
 
         if (config.getBoolean("Config.Killer-Require-Permission") && (killer == null || !killer.hasPermission("headdrop.killer"))) {
             return;
-        }
+        } 
 
         if (config.getStringList("Config.Disable-Worlds").contains(entity.getWorld().getName())) return;
 
@@ -811,7 +815,7 @@ public class EntityDeath implements Listener {
                         }
                         updateDatabase(event.getEntity().getKiller());
                     }
-                    
+
                 }
 
                 //1.20.5 Mob Varients

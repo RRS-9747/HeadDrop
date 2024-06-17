@@ -7,6 +7,7 @@ Config:
   Require-Killer-Player: true
   Killer-Require-Permission: false
   Enable-Looting: false
+  Require-Axe: false
   Baby-HeadDrop: false
   Enable-Perm-Chance: false
   Disable-Worlds:
