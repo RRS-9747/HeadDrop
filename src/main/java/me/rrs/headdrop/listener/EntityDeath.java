@@ -87,7 +87,7 @@ public class EntityDeath implements Listener {
             if (!WorldGuardSupport.canDrop(entity.getLocation())) return;
         }
 
-        if (!config.getBoolean("Config.Require-Axe") && (killer == null || !killer.getInventory().getItemInMainHand().getType().toString().contains("_AXE"))) {
+        if (config.getBoolean("Config.Require-Axe") && (killer == null || !killer.getInventory().getItemInMainHand().getType().toString().contains("_AXE"))) {
             return;
         }
 
