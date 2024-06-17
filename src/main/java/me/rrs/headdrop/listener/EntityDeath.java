@@ -87,6 +87,10 @@ public class EntityDeath implements Listener {
             if (!WorldGuardSupport.canDrop(entity.getLocation())) return;
         }
 
+        if (config.getBoolean("Config.Require-Axe") && (killer == null || !killer.getInventory().getItemInMainHand().getType().toString().contains("_AXE"))) {
+            return;
+        }
+
         if (!config.getBoolean("Config.Baby-HeadDrop") && entity instanceof Ageable && !((Ageable) entity).isAdult()) {
             return;
         }
