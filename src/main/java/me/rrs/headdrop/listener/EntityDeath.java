@@ -25,6 +25,8 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Consumer;
 import java.util.stream.IntStream;
 
+import static org.bukkit.entity.Wolf.Variant.*;
+
 
 public class EntityDeath implements Listener {
 
@@ -87,11 +89,11 @@ public class EntityDeath implements Listener {
             if (!WorldGuardSupport.canDrop(entity.getLocation())) return;
         }
 
-        if (config.getBoolean("Config.Require-Axe") && (killer == null || !killer.getInventory().getItemInMainHand().getType().toString().contains("_AXE"))) {
+        if (!config.getBoolean("Config.Baby-HeadDrop") && entity instanceof Ageable && !((Ageable) entity).isAdult()) {
             return;
         }
 
-        if (!config.getBoolean("Config.Baby-HeadDrop") && entity instanceof Ageable && !((Ageable) entity).isAdult()) {
+        if (config.getBoolean("Config.Require-Axe") && (killer == null || !killer.getInventory().getItemInMainHand().getType().toString().contains("_AXE"))) {
             return;
         }
 
@@ -794,17 +796,18 @@ public class EntityDeath implements Listener {
             entityActions.put(EntityType.WOLF, event -> {
                 if ((config.getBoolean("WOLF.Drop")) && ThreadLocalRandom.current().nextFloat() * (100.0F - 0.01F) + 0.01F <= config.getFloat("WOLF.Chance") + lootLvl) {
                     Wolf wolf = (Wolf) event.getEntity();
+                    String variant = wolf.getVariant().toString().toUpperCase().replace("MINECRAFT:","");
 
-                    item[0] = switch (wolf.getVariant()) {
-                        case ASHEN -> EntityHead.WOLF_ASHEN.getSkull();
-                        case BLACK -> EntityHead.WOLF_BLACK.getSkull();
-                        case CHESTNUT -> EntityHead.WOLF_CHESTNUT.getSkull();
-                        case PALE -> EntityHead.WOLF_PALE.getSkull();
-                        case RUSTY -> EntityHead.WOLF_RUSTY.getSkull();
-                        case SNOWY -> EntityHead.WOLF_SNOWY.getSkull();
-                        case SPOTTED -> EntityHead.WOLF_SPOTTED.getSkull();
-                        case STRIPED -> EntityHead.WOLF_STRIPED.getSkull();
-                        case WOODS -> EntityHead.WOLF_WOODS.getSkull();
+                    item[0] = switch (variant) {
+                        case "ASHEN" -> EntityHead.WOLF_ASHEN.getSkull();
+                        case "BLACK" -> EntityHead.WOLF_BLACK.getSkull();
+                        case "CHESTNUT" -> EntityHead.WOLF_CHESTNUT.getSkull();
+                        case "RUSTY" -> EntityHead.WOLF_RUSTY.getSkull();
+                        case "SNOWY" -> EntityHead.WOLF_SNOWY.getSkull();
+                        case "SPOTTED" -> EntityHead.WOLF_SPOTTED.getSkull();
+                        case "STRIPED" -> EntityHead.WOLF_STRIPED.getSkull();
+                        case "WOODS" -> EntityHead.WOLF_WOODS.getSkull();
+                        default -> EntityHead.WOLF_PALE.getSkull();
                     };
                     itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
                     event.getDrops().add(item[0]);
@@ -818,7 +821,7 @@ public class EntityDeath implements Listener {
 
                 }
 
-                //1.20.5 Mob Varients
+                //1.20.5 Mob Variants
             });
         } catch (NoSuchFieldError ignored) {
         }
