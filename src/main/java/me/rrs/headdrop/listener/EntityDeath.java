@@ -25,8 +25,6 @@ import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Consumer;
 import java.util.stream.IntStream;
 
-import static org.bukkit.entity.Wolf.Variant.*;
-
 
 public class EntityDeath implements Listener {
 
@@ -830,20 +828,20 @@ public class EntityDeath implements Listener {
                 if ((config.getBoolean("VILLAGER.Drop")) && ThreadLocalRandom.current().nextFloat() * (100.0F - 0.01F) + 0.01F <= config.getFloat("VILLAGER.Chance") + lootLvl) {
                     Villager villager = (Villager) event.getEntity();
 
-                    item[0] = switch (villager.getProfession()) {
-                        case WEAPONSMITH -> EntityHead.VILLAGER_WEAPONSMITH.getSkull();
-                        case SHEPHERD -> EntityHead.VILLAGER_SHEPHERD.getSkull();
-                        case LIBRARIAN -> EntityHead.VILLAGER_LIBRARIAN.getSkull();
-                        case FLETCHER -> EntityHead.VILLAGER_FLETCHER.getSkull();
-                        case FISHERMAN -> EntityHead.VILLAGER_FISHERMAN.getSkull();
-                        case FARMER -> EntityHead.VILLAGER_FARMER.getSkull();
-                        case CLERIC -> EntityHead.VILLAGER_CLERIC.getSkull();
-                        case CARTOGRAPHER -> EntityHead.VILLAGER_CARTOGRAPHER.getSkull();
-                        case BUTCHER -> EntityHead.VILLAGER_BUTCHER.getSkull();
-                        case ARMORER -> EntityHead.VILLAGER_ARMORER.getSkull();
-                        case LEATHERWORKER -> EntityHead.VILLAGER_LEATHERWORKER.getSkull();
-                        case MASON -> EntityHead.VILLAGER_MASON.getSkull();
-                        case TOOLSMITH -> EntityHead.VILLAGER_TOOLSMITH.getSkull();
+                    item[0] = switch (villager.getProfession().toString()) {
+                        case "WEAPONSMITH" -> EntityHead.VILLAGER_WEAPONSMITH.getSkull();
+                        case "SHEPHERD" -> EntityHead.VILLAGER_SHEPHERD.getSkull();
+                        case "LIBRARIAN" -> EntityHead.VILLAGER_LIBRARIAN.getSkull();
+                        case "FLETCHER" -> EntityHead.VILLAGER_FLETCHER.getSkull();
+                        case "FISHERMAN" -> EntityHead.VILLAGER_FISHERMAN.getSkull();
+                        case "FARMER" -> EntityHead.VILLAGER_FARMER.getSkull();
+                        case "CLERIC" -> EntityHead.VILLAGER_CLERIC.getSkull();
+                        case "CARTOGRAPHER" -> EntityHead.VILLAGER_CARTOGRAPHER.getSkull();
+                        case "BUTCHER" -> EntityHead.VILLAGER_BUTCHER.getSkull();
+                        case "ARMORER" -> EntityHead.VILLAGER_ARMORER.getSkull();
+                        case "LEATHERWORKER" -> EntityHead.VILLAGER_LEATHERWORKER.getSkull();
+                        case "MASON" -> EntityHead.VILLAGER_MASON.getSkull();
+                        case "TOOLSMITH" -> EntityHead.VILLAGER_TOOLSMITH.getSkull();
                         default -> EntityHead.VILLAGER_NULL.getSkull();
                     };
 
@@ -851,16 +849,16 @@ public class EntityDeath implements Listener {
                     event.getDrops().add(item[0]);
 
                     if (event.getEntity().getKiller() != null) {
-                        if ((config.getBoolean("Bot.Enable"))) {
+                        if (config.getBoolean("Bot.Enable")) {
                             embed.msg(title, description, footer);
                         }
                         updateDatabase(event.getEntity().getKiller());
                     }
-
                 }
 
                 //1.8 Mob
             });
+
         } catch (NoSuchFieldError ignored) {
         }
         try {
@@ -976,17 +974,17 @@ public class EntityDeath implements Listener {
                 if ((config.getBoolean("ZOMBIE_VILLAGER.Drop")) && ThreadLocalRandom.current().nextFloat() * (100.0F - 0.01F) + 0.01F <= config.getFloat("ZOMBIE_VILLAGER.Chance") + lootLvl) {
                     ZombieVillager zombieVillager = (ZombieVillager) event.getEntity();
 
-                    item[0] = switch (zombieVillager.getVillagerProfession()) {
-                        case ARMORER -> EntityHead.ZOMBIE_VILLAGER_ARMORER.getSkull();
-                        case BUTCHER -> EntityHead.ZOMBIE_VILLAGER_BUTCHER.getSkull();
-                        case CARTOGRAPHER -> EntityHead.ZOMBIE_VILLAGER_CARTOGRAPHER.getSkull();
-                        case CLERIC -> EntityHead.ZOMBIE_VILLAGER_CLERIC.getSkull();
-                        case FARMER -> EntityHead.ZOMBIE_VILLAGER_FARMER.getSkull();
-                        case FISHERMAN -> EntityHead.ZOMBIE_VILLAGER_FISHERMAN.getSkull();
-                        case FLETCHER -> EntityHead.ZOMBIE_VILLAGER_FLETCHER.getSkull();
-                        case LIBRARIAN -> EntityHead.ZOMBIE_VILLAGER_LIBRARIAN.getSkull();
-                        case SHEPHERD -> EntityHead.ZOMBIE_VILLAGER_SHEPHERD.getSkull();
-                        case WEAPONSMITH -> EntityHead.ZOMBIE_VILLAGER_WEAPONSMITH.getSkull();
+                    item[0] = switch (zombieVillager.getVillagerProfession().toString()) {
+                        case "ARMORER" -> EntityHead.ZOMBIE_VILLAGER_ARMORER.getSkull();
+                        case "BUTCHER" -> EntityHead.ZOMBIE_VILLAGER_BUTCHER.getSkull();
+                        case "CARTOGRAPHER" -> EntityHead.ZOMBIE_VILLAGER_CARTOGRAPHER.getSkull();
+                        case "CLERIC" -> EntityHead.ZOMBIE_VILLAGER_CLERIC.getSkull();
+                        case "FARMER" -> EntityHead.ZOMBIE_VILLAGER_FARMER.getSkull();
+                        case "FISHERMAN" -> EntityHead.ZOMBIE_VILLAGER_FISHERMAN.getSkull();
+                        case "FLETCHER" -> EntityHead.ZOMBIE_VILLAGER_FLETCHER.getSkull();
+                        case "LIBRARIAN" -> EntityHead.ZOMBIE_VILLAGER_LIBRARIAN.getSkull();
+                        case "SHEPHERD" -> EntityHead.ZOMBIE_VILLAGER_SHEPHERD.getSkull();
+                        case "WEAPONSMITH" -> EntityHead.ZOMBIE_VILLAGER_WEAPONSMITH.getSkull();
                         default -> EntityHead.ZOMBIE_VILLAGER_NULL.getSkull();
                     };
                     itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
@@ -1558,22 +1556,23 @@ public class EntityDeath implements Listener {
                 if ((config.getBoolean("CAT.Drop")) && ThreadLocalRandom.current().nextFloat() * (100.0F - 0.01F) + 0.01F <= config.getFloat("CAT.Chance") + lootLvl) {
                     Cat cat = (Cat) event.getEntity();
 
-                    item[0] = switch (cat.getCatType()) {
-                        case BLACK -> EntityHead.CAT_BLACK.getSkull();
-                        case BRITISH_SHORTHAIR -> EntityHead.CAT_BRITISH.getSkull();
-                        case CALICO -> EntityHead.CAT_CALICO.getSkull();
-                        case JELLIE -> EntityHead.CAT_JELLIE.getSkull();
-                        case PERSIAN -> EntityHead.CAT_PERSIAN.getSkull();
-                        case RAGDOLL -> EntityHead.CAT_RAGDOLL.getSkull();
-                        case RED -> EntityHead.CAT_RED.getSkull();
-                        case SIAMESE -> EntityHead.CAT_SIAMESE.getSkull();
-                        case TABBY -> EntityHead.CAT_TABBY.getSkull();
-                        case ALL_BLACK -> EntityHead.CAT_ALL_BLACK.getSkull();
-                        case WHITE -> EntityHead.CAT_WHITE.getSkull();
+                    item[0] = switch (cat.getCatType().toString()) {
+                        case "BLACK" -> EntityHead.CAT_BLACK.getSkull();
+                        case "BRITISH_SHORTHAIR" -> EntityHead.CAT_BRITISH.getSkull();
+                        case "CALICO" -> EntityHead.CAT_CALICO.getSkull();
+                        case "JELLIE" -> EntityHead.CAT_JELLIE.getSkull();
+                        case "PERSIAN" -> EntityHead.CAT_PERSIAN.getSkull();
+                        case "RAGDOLL" -> EntityHead.CAT_RAGDOLL.getSkull();
+                        case "RED" -> EntityHead.CAT_RED.getSkull();
+                        case "SIAMESE" -> EntityHead.CAT_SIAMESE.getSkull();
+                        case "TABBY" -> EntityHead.CAT_TABBY.getSkull();
+                        case "ALL_BLACK" -> EntityHead.CAT_ALL_BLACK.getSkull();
+                        case "WHITE" -> EntityHead.CAT_WHITE.getSkull();
+                        default -> throw new IllegalStateException("Unexpected value: " + cat.getCatType());
                     };
                     itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
                     event.getDrops().add(item[0]);
-
+                    
                     if (event.getEntity().getKiller() != null) {
                         if ((config.getBoolean("Bot.Enable"))) {
                             embed.msg(title, description, footer);
@@ -1788,14 +1787,14 @@ public class EntityDeath implements Listener {
                 if ((config.getBoolean("FROG.Drop")) && ThreadLocalRandom.current().nextFloat() * (100.0F - 0.01F) + 0.01F <= config.getFloat("FROG.Chance") + lootLvl) {
                     Frog frog = (Frog) event.getEntity();
 
-                    item[0] = switch (frog.getVariant()) {
-                        case TEMPERATE -> EntityHead.FROG_TEMPERATE.getSkull();
-                        case WARM -> EntityHead.FROG_WARM.getSkull();
-                        case COLD -> EntityHead.FROG_COLD.getSkull();
+                    item[0] = switch (frog.getVariant().toString()) {
+                        case "TEMPERATE" -> EntityHead.FROG_TEMPERATE.getSkull();
+                        case "WARM" -> EntityHead.FROG_WARM.getSkull();
+                        case "COLD" -> EntityHead.FROG_COLD.getSkull();
+                        default -> throw new IllegalStateException("Unexpected value: " + frog.getVariant());
                     };
                     itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
                     event.getDrops().add(item[0]);
-
                     if (event.getEntity().getKiller() != null) {
                         if ((config.getBoolean("Bot.Enable"))) {
                             embed.msg(title, description, footer);

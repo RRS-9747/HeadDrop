@@ -452,3 +452,8 @@ ARMADILLO:
   Drop: true
   Chance: 100
   Sound: "default"
+
+CREAKING:
+  Drop: true
+  Chance: 100
+  Sound: "default"

@@ -24,7 +24,7 @@ commands:
     description: Main command of HeadDrop plugin
 
 libraries:
-  - com.zaxxer:HikariCP:5.1.0
+  - com.zaxxer:HikariCP:6.0.0
   - org.json:json:20240303
 
 
