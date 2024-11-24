@@ -156,7 +156,7 @@ public class EntityDeath implements Listener {
             if ((config.getBoolean("PLAYER.Require-Permission")) && !event.getEntity().hasPermission("headdrop.player")) {
                 return;
             }
-            if ((config.getBoolean("PLAYER.Drop")) && ThreadLocalRandom.current().nextFloat() * (100.0F - 0.01F) + 0.01F <= config.getFloat("PLAYER.Chance") + lootLvl) {
+            if ((config.getBoolean("PLAYER.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("PLAYER.Chance") + lootLvl) {
 
                 ItemStack skull = SkullCreator.createSkullWithName(event.getEntity().getName());
                 itemUtils.addLore(skull, loreList, event.getEntity().getKiller());
@@ -173,7 +173,7 @@ public class EntityDeath implements Listener {
         });
         try {
             entityActions.put(EntityType.BAT, event -> {
-                if ((config.getBoolean("BAT.Drop")) && ThreadLocalRandom.current().nextFloat() * (100.0F - 0.01F) + 0.01F <= config.getFloat("BAT.Chance") + lootLvl) {
+                if ((config.getBoolean("BAT.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("BAT.Chance") + lootLvl) {
 
                     item[0] = EntityHead.BAT.getSkull();
                     itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
@@ -191,7 +191,7 @@ public class EntityDeath implements Listener {
         }
         try {
             entityActions.put(EntityType.ENDER_DRAGON, event -> {
-                if ((config.getBoolean("ENDER_DRAGON.Drop")) && ThreadLocalRandom.current().nextFloat() * (100.0F - 0.01F) + 0.01F <= config.getFloat("ENDER_DRAGON.Chance") + lootLvl) {
+                if ((config.getBoolean("ENDER_DRAGON.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("ENDER_DRAGON.Chance") + lootLvl) {
 
                     item[0] = new ItemStack(Material.DRAGON_HEAD);
                     itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
@@ -209,7 +209,7 @@ public class EntityDeath implements Listener {
         }
         try {
             entityActions.put(EntityType.ZOMBIE, event -> {
-                if ((config.getBoolean("ZOMBIE.Drop")) && ThreadLocalRandom.current().nextFloat() * (100.0F - 0.01F) + 0.01F <= config.getFloat("ZOMBIE.Chance") + lootLvl) {
+                if ((config.getBoolean("ZOMBIE.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("ZOMBIE.Chance") + lootLvl) {
                     event.getDrops().removeIf(head -> head.getType() == Material.ZOMBIE_HEAD);
 
                     item[0] = new ItemStack(Material.ZOMBIE_HEAD);
@@ -229,7 +229,7 @@ public class EntityDeath implements Listener {
         }
         try {
             entityActions.put(EntityType.WITHER_SKELETON, event -> {
-                if ((config.getBoolean("WITHER_SKELETON.Drop")) && ThreadLocalRandom.current().nextFloat() * (100.0F - 0.01F) + 0.01F <= config.getFloat("WITHER_SKELETON.Chance") + lootLvl) {
+                if ((config.getBoolean("WITHER_SKELETON.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("WITHER_SKELETON.Chance") + lootLvl) {
                     event.getDrops().removeIf(head -> head.getType() == Material.WITHER_SKELETON_SKULL);
 
                     item[0] = new ItemStack(Material.WITHER_SKELETON_SKULL);
@@ -249,7 +249,7 @@ public class EntityDeath implements Listener {
         }
         try {
             entityActions.put(EntityType.CREEPER, event -> {
-                if ((config.getBoolean("CREEPER.Drop")) && ThreadLocalRandom.current().nextFloat() * (100.0F - 0.01F) + 0.01F <= config.getFloat("CREEPER.Chance") + lootLvl) {
+                if ((config.getBoolean("CREEPER.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("CREEPER.Chance") + lootLvl) {
                     event.getDrops().removeIf(head -> head.getType() == Material.CREEPER_HEAD);
 
                     item[0] = new ItemStack(Material.CREEPER_HEAD);
@@ -268,7 +268,7 @@ public class EntityDeath implements Listener {
         }
         try {
             entityActions.put(EntityType.SKELETON, event -> {
-                if ((config.getBoolean("SKELETON.Drop")) && ThreadLocalRandom.current().nextFloat() * (100.0F - 0.01F) + 0.01F <= config.getFloat("SKELETON.Chance") + lootLvl) {
+                if ((config.getBoolean("SKELETON.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("SKELETON.Chance") + lootLvl) {
                     event.getDrops().removeIf(head -> head.getType() == Material.SKELETON_SKULL);
 
                     item[0] = new ItemStack(Material.SKELETON_SKULL);
@@ -288,7 +288,7 @@ public class EntityDeath implements Listener {
         }
         try {
             entityActions.put(EntityType.BLAZE, event -> {
-                if ((config.getBoolean("BLAZE.Drop")) && ThreadLocalRandom.current().nextFloat() * (100.0F - 0.01F) + 0.01F <= config.getFloat("BLAZE.Chance") + lootLvl) {
+                if ((config.getBoolean("BLAZE.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("BLAZE.Chance") + lootLvl) {
 
                     item[0] = EntityHead.BLAZE.getSkull();
                     itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
@@ -308,7 +308,7 @@ public class EntityDeath implements Listener {
         }
         try {
             entityActions.put(EntityType.SPIDER, event -> {
-                if ((config.getBoolean("SPIDER.Drop")) && ThreadLocalRandom.current().nextFloat() * (100.0F - 0.01F) + 0.01F <= config.getFloat("SPIDER.Chance") + lootLvl) {
+                if ((config.getBoolean("SPIDER.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("SPIDER.Chance") + lootLvl) {
 
                     item[0] = EntityHead.SPIDER.getSkull();
                     itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
@@ -328,7 +328,7 @@ public class EntityDeath implements Listener {
         }
         try {
             entityActions.put(EntityType.CAVE_SPIDER, event -> {
-                if ((config.getBoolean("CAVE_SPIDER.Drop")) && ThreadLocalRandom.current().nextFloat() * (100.0F - 0.01F) + 0.01F <= config.getFloat("CAVE_SPIDER.Chance") + lootLvl) {
+                if ((config.getBoolean("CAVE_SPIDER.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("CAVE_SPIDER.Chance") + lootLvl) {
 
                     item[0] = EntityHead.CAVE_SPIDER.getSkull();
                     itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
@@ -346,7 +346,7 @@ public class EntityDeath implements Listener {
         }
         try {
             entityActions.put(EntityType.CHICKEN, event -> {
-                if ((config.getBoolean("CHICKEN.Drop")) && ThreadLocalRandom.current().nextFloat() * (100.0F - 0.01F) + 0.01F <= config.getFloat("CHICKEN.Chance") + lootLvl) {
+                if ((config.getBoolean("CHICKEN.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("CHICKEN.Chance") + lootLvl) {
 
                     item[0] = EntityHead.CHICKEN.getSkull();
                     itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
@@ -364,7 +364,7 @@ public class EntityDeath implements Listener {
         }
         try {
             entityActions.put(EntityType.COW, event -> {
-                if ((config.getBoolean("COW.Drop")) && ThreadLocalRandom.current().nextFloat() * (100.0F - 0.01F) + 0.01F <= config.getFloat("COW.Chance") + lootLvl) {
+                if ((config.getBoolean("COW.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("COW.Chance") + lootLvl) {
 
                     item[0] = EntityHead.COW.getSkull();
                     itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
@@ -384,7 +384,7 @@ public class EntityDeath implements Listener {
         }
         try {
             entityActions.put(EntityType.ENDERMAN, event -> {
-                if ((config.getBoolean("ENDERMAN.Drop")) && ThreadLocalRandom.current().nextFloat() * (100.0F - 0.01F) + 0.01F <= config.getFloat("ENDERMAN.Chance") + lootLvl) {
+                if ((config.getBoolean("ENDERMAN.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("ENDERMAN.Chance") + lootLvl) {
 
                     item[0] = EntityHead.ENDERMAN.getSkull();
                     itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
@@ -402,7 +402,7 @@ public class EntityDeath implements Listener {
         }
         try {
             entityActions.put(EntityType.GIANT, event -> {
-                if ((config.getBoolean("GIANT.Drop")) && ThreadLocalRandom.current().nextFloat() * (100.0F - 0.01F) + 0.01F <= config.getFloat("GIANT.Chance") + lootLvl) {
+                if ((config.getBoolean("GIANT.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("GIANT.Chance") + lootLvl) {
 
                     item[0] = EntityHead.GIANT.getSkull();
                     itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
@@ -422,7 +422,7 @@ public class EntityDeath implements Listener {
         }
         try {
             entityActions.put(EntityType.HORSE, event -> {
-                if ((config.getBoolean("HORSE.Drop")) && ThreadLocalRandom.current().nextFloat() * (100.0F - 0.01F) + 0.01F <= config.getFloat("HORSE.Chance") + lootLvl) {
+                if ((config.getBoolean("HORSE.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("HORSE.Chance") + lootLvl) {
                     Horse horse = (Horse) event.getEntity();
                     item[0] = switch (horse.getColor()) {
                         case WHITE -> EntityHead.HORSE_WHITE.getSkull();
@@ -448,7 +448,7 @@ public class EntityDeath implements Listener {
         }
         try {
             entityActions.put(EntityType.ILLUSIONER, event -> {
-                if ((config.getBoolean("ILLUSIONER.Drop")) && ThreadLocalRandom.current().nextFloat() * (100.0F - 0.01F) + 0.01F <= config.getFloat("ILLUSIONER.Chance") + lootLvl) {
+                if ((config.getBoolean("ILLUSIONER.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("ILLUSIONER.Chance") + lootLvl) {
 
                     item[0] = EntityHead.ILLUSIONER.getSkull();
                     itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
@@ -467,7 +467,7 @@ public class EntityDeath implements Listener {
         }
         try {
             entityActions.put(EntityType.IRON_GOLEM, event -> {
-                if ((config.getBoolean("IRON_GOLEM.Drop")) && ThreadLocalRandom.current().nextFloat() * (100.0F - 0.01F) + 0.01F <= config.getFloat("IRON_GOLEM.Chance") + lootLvl) {
+                if ((config.getBoolean("IRON_GOLEM.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("IRON_GOLEM.Chance") + lootLvl) {
 
                     item[0] = EntityHead.IRON_GOLEM.getSkull();
                     itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
@@ -486,7 +486,7 @@ public class EntityDeath implements Listener {
         }
         try {
             entityActions.put(EntityType.MAGMA_CUBE, event -> {
-                if ((config.getBoolean("MAGMA_CUBE.Drop")) && ThreadLocalRandom.current().nextFloat() * (100.0F - 0.01F) + 0.01F <= config.getFloat("MAGMA_CUBE.Chance") + lootLvl) {
+                if ((config.getBoolean("MAGMA_CUBE.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("MAGMA_CUBE.Chance") + lootLvl) {
 
                     item[0] = EntityHead.MAGMA_CUBE.getSkull();
                     itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
@@ -504,7 +504,7 @@ public class EntityDeath implements Listener {
         }
         try {
             entityActions.put(EntityType.MOOSHROOM, event -> {
-                if ((config.getBoolean("MUSHROOM_COW.Drop")) && ThreadLocalRandom.current().nextFloat() * (100.0F - 0.01F) + 0.01F <= config.getFloat("MUSHROOM_COW.Chance") + lootLvl) {
+                if ((config.getBoolean("MUSHROOM_COW.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("MUSHROOM_COW.Chance") + lootLvl) {
                     MushroomCow mushroomCow = (MushroomCow) event.getEntity();
 
                     if (mushroomCow.getVariant().equals(MushroomCow.Variant.RED)) {
@@ -528,7 +528,7 @@ public class EntityDeath implements Listener {
         }
         try {
             entityActions.put(EntityType.valueOf("MUSHROOM_COW"), event -> {
-                if ((config.getBoolean("MUSHROOM_COW.Drop")) && ThreadLocalRandom.current().nextFloat() * (100.0F - 0.01F) + 0.01F <= config.getFloat("MUSHROOM_COW.Chance") + lootLvl) {
+                if ((config.getBoolean("MUSHROOM_COW.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("MUSHROOM_COW.Chance") + lootLvl) {
                     MushroomCow mushroomCow = (MushroomCow) event.getEntity();
 
                     if (mushroomCow.getVariant().equals(MushroomCow.Variant.RED)) {
@@ -552,7 +552,7 @@ public class EntityDeath implements Listener {
         }
         try {
             entityActions.put(EntityType.OCELOT, event -> {
-                if ((config.getBoolean("OCELOT.Drop")) && ThreadLocalRandom.current().nextFloat() * (100.0F - 0.01F) + 0.01F <= config.getFloat("OCELOT.Chance") + lootLvl) {
+                if ((config.getBoolean("OCELOT.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("OCELOT.Chance") + lootLvl) {
 
                     item[0] = EntityHead.OCELOT.getSkull();
                     itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
@@ -571,7 +571,7 @@ public class EntityDeath implements Listener {
         }
         try {
             entityActions.put(EntityType.PIG, event -> {
-                if ((config.getBoolean("PIG.Drop")) && ThreadLocalRandom.current().nextFloat() * (100.0F - 0.01F) + 0.01F <= config.getFloat("PIG.Chance") + lootLvl) {
+                if ((config.getBoolean("PIG.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("PIG.Chance") + lootLvl) {
                     item[0] = EntityHead.PIG.getSkull();
                     itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
                     event.getDrops().add(item[0]);
@@ -588,7 +588,7 @@ public class EntityDeath implements Listener {
         }
         try {
             entityActions.put(EntityType.SHEEP, event -> {
-                if ((config.getBoolean("SHEEP.Drop")) && ThreadLocalRandom.current().nextFloat() * (100.0F - 0.01F) + 0.01F <= config.getFloat("SHEEP.Chance") + lootLvl) {
+                if ((config.getBoolean("SHEEP.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("SHEEP.Chance") + lootLvl) {
                     Sheep sheep = (Sheep) event.getEntity();
 
                     item[0] = switch (sheep.getColor()) {
@@ -625,7 +625,7 @@ public class EntityDeath implements Listener {
         }
         try {
             entityActions.put(EntityType.SILVERFISH, event -> {
-                if ((config.getBoolean("SILVERFISH.Drop")) && ThreadLocalRandom.current().nextFloat() * (100.0F - 0.01F) + 0.01F <= config.getFloat("SILVERFISH.Chance") + lootLvl) {
+                if ((config.getBoolean("SILVERFISH.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("SILVERFISH.Chance") + lootLvl) {
 
                     item[0] = EntityHead.SILVERFISH.getSkull();
                     itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
@@ -643,7 +643,7 @@ public class EntityDeath implements Listener {
         }
         try {
             entityActions.put(EntityType.SLIME, event -> {
-                if ((config.getBoolean("SLIME.Drop")) && ThreadLocalRandom.current().nextFloat() * (100.0F - 0.01F) + 0.01F <= config.getFloat("SLIME.Chance") + lootLvl) {
+                if ((config.getBoolean("SLIME.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("SLIME.Chance") + lootLvl) {
 
                     item[0] = EntityHead.SLIME.getSkull();
                     itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
@@ -661,7 +661,7 @@ public class EntityDeath implements Listener {
         }
         try {
             entityActions.put(EntityType.SNOW_GOLEM, event -> {
-                if ((config.getBoolean("SNOW_GOLEM.Drop")) && ThreadLocalRandom.current().nextFloat() * (100.0F - 0.01F) + 0.01F <= config.getFloat("SNOW_GOLEM.Chance") + lootLvl) {
+                if ((config.getBoolean("SNOW_GOLEM.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("SNOW_GOLEM.Chance") + lootLvl) {
 
                     item[0] = EntityHead.SNOWMAN.getSkull();
                     itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
@@ -680,7 +680,7 @@ public class EntityDeath implements Listener {
         }
         try {
             entityActions.put(EntityType.valueOf("SNOWMAN"), event -> {
-                if ((config.getBoolean("SNOW_GOLEM.Drop")) && ThreadLocalRandom.current().nextFloat() * (100.0F - 0.01F) + 0.01F <= config.getFloat("SNOW_GOLEM.Chance") + lootLvl) {
+                if ((config.getBoolean("SNOW_GOLEM.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("SNOW_GOLEM.Chance") + lootLvl) {
 
                     item[0] = EntityHead.SNOWMAN.getSkull();
                     itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
@@ -699,7 +699,7 @@ public class EntityDeath implements Listener {
         }
         try {
             entityActions.put(EntityType.SQUID, event -> {
-                if ((config.getBoolean("SQUID.Drop")) && ThreadLocalRandom.current().nextFloat() * (100.0F - 0.01F) + 0.01F <= config.getFloat("SQUID.Chance") + lootLvl) {
+                if ((config.getBoolean("SQUID.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("SQUID.Chance") + lootLvl) {
 
                     item[0] = EntityHead.SQUID.getSkull();
                     itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
@@ -717,7 +717,7 @@ public class EntityDeath implements Listener {
         }
         try {
             entityActions.put(EntityType.WITCH, event -> {
-                if ((config.getBoolean("WITCH.Drop")) && ThreadLocalRandom.current().nextFloat() * (100.0F - 0.01F) + 0.01F <= config.getFloat("WITCH.Chance") + lootLvl) {
+                if ((config.getBoolean("WITCH.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("WITCH.Chance") + lootLvl) {
 
                     item[0] = EntityHead.WITCH.getSkull();
                     itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
@@ -736,7 +736,7 @@ public class EntityDeath implements Listener {
         }
         try {
             entityActions.put(EntityType.WITHER, event -> {
-                if ((config.getBoolean("WITHER.Drop")) && ThreadLocalRandom.current().nextFloat() * (100.0F - 0.01F) + 0.01F <= config.getFloat("WITHER.Chance") + lootLvl) {
+                if ((config.getBoolean("WITHER.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("WITHER.Chance") + lootLvl) {
 
                     item[0] = EntityHead.WITHER.getSkull();
                     itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
@@ -754,7 +754,7 @@ public class EntityDeath implements Listener {
         }
         try {
             entityActions.put(EntityType.ZOMBIFIED_PIGLIN, event -> {
-                if ((config.getBoolean("ZOMBIFIED_PIGLIN.Drop")) && ThreadLocalRandom.current().nextFloat() * (100.0F - 0.01F) + 0.01F <= config.getFloat("ZOMBIFIED_PIGLIN.Chance") + lootLvl) {
+                if ((config.getBoolean("ZOMBIFIED_PIGLIN.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("ZOMBIFIED_PIGLIN.Chance") + lootLvl) {
 
                     item[0] = EntityHead.ZOMBIFIED_PIGLIN.getSkull();
                     itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
@@ -773,7 +773,7 @@ public class EntityDeath implements Listener {
         }
         try {
             entityActions.put(EntityType.GHAST, event -> {
-                if ((config.getBoolean("GHAST.Drop")) && ThreadLocalRandom.current().nextFloat() * (100.0F - 0.01F) + 0.01F <= config.getFloat("GHAST.Chance") + lootLvl) {
+                if ((config.getBoolean("GHAST.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("GHAST.Chance") + lootLvl) {
 
                     item[0] = EntityHead.GHAST.getSkull();
                     itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
@@ -792,7 +792,7 @@ public class EntityDeath implements Listener {
         }
         try {
             entityActions.put(EntityType.WOLF, event -> {
-                if ((config.getBoolean("WOLF.Drop")) && ThreadLocalRandom.current().nextFloat() * (100.0F - 0.01F) + 0.01F <= config.getFloat("WOLF.Chance") + lootLvl) {
+                if ((config.getBoolean("WOLF.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("WOLF.Chance") + lootLvl) {
                     Wolf wolf = (Wolf) event.getEntity();
                     String variant = wolf.getVariant().toString().toUpperCase().replace("MINECRAFT:","");
 
@@ -825,7 +825,7 @@ public class EntityDeath implements Listener {
         }
         try {
             entityActions.put(EntityType.VILLAGER, event -> {
-                if ((config.getBoolean("VILLAGER.Drop")) && ThreadLocalRandom.current().nextFloat() * (100.0F - 0.01F) + 0.01F <= config.getFloat("VILLAGER.Chance") + lootLvl) {
+                if ((config.getBoolean("VILLAGER.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("VILLAGER.Chance") + lootLvl) {
                     Villager villager = (Villager) event.getEntity();
 
                     item[0] = switch (villager.getProfession().toString()) {
@@ -863,7 +863,7 @@ public class EntityDeath implements Listener {
         }
         try {
             entityActions.put(EntityType.RABBIT, event -> {
-                if ((config.getBoolean("RABBIT.Drop")) && ThreadLocalRandom.current().nextFloat() * (100.0F - 0.01F) + 0.01F <= config.getFloat("RABBIT.Chance") + lootLvl) {
+                if ((config.getBoolean("RABBIT.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("RABBIT.Chance") + lootLvl) {
                     Rabbit rabbit = (Rabbit) event.getEntity();
 
                     item[0] = switch (rabbit.getRabbitType()) {
@@ -890,7 +890,7 @@ public class EntityDeath implements Listener {
         }
         try {
             entityActions.put(EntityType.ENDERMITE, event -> {
-                if ((config.getBoolean("ENDERMITE.Drop")) && ThreadLocalRandom.current().nextFloat() * (100.0F - 0.01F) + 0.01F <= config.getFloat("ENDERMITE.Chance") + lootLvl) {
+                if ((config.getBoolean("ENDERMITE.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("ENDERMITE.Chance") + lootLvl) {
 
                     item[0] = EntityHead.ENDERMITE.getSkull();
                     itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
@@ -910,7 +910,7 @@ public class EntityDeath implements Listener {
         }
         try {
             entityActions.put(EntityType.GUARDIAN, event -> {
-                if ((config.getBoolean("GUARDIAN.Drop")) && ThreadLocalRandom.current().nextFloat() * (100.0F - 0.01F) + 0.01F <= config.getFloat("GUARDIAN.Chance") + lootLvl) {
+                if ((config.getBoolean("GUARDIAN.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("GUARDIAN.Chance") + lootLvl) {
 
                     item[0] = EntityHead.GUARDIAN.getSkull();
                     itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
@@ -930,7 +930,7 @@ public class EntityDeath implements Listener {
         }
         try {
             entityActions.put(EntityType.SHULKER, event -> {
-                if ((config.getBoolean("SHULKER.Drop")) && ThreadLocalRandom.current().nextFloat() * (100.0F - 0.01F) + 0.01F <= config.getFloat("SHULKER.Chance") + lootLvl) {
+                if ((config.getBoolean("SHULKER.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("SHULKER.Chance") + lootLvl) {
 
                     item[0] = EntityHead.SHULKER.getSkull();
                     itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
@@ -950,7 +950,7 @@ public class EntityDeath implements Listener {
         }
         try {
             entityActions.put(EntityType.POLAR_BEAR, event -> {
-                if ((config.getBoolean("POLAR_BEAR.Drop")) && ThreadLocalRandom.current().nextFloat() * (100.0F - 0.01F) + 0.01F <= config.getFloat("POLAR_BEAR.Chance") + lootLvl) {
+                if ((config.getBoolean("POLAR_BEAR.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("POLAR_BEAR.Chance") + lootLvl) {
 
                     item[0] = EntityHead.POLAR_BEAR.getSkull();
                     itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
@@ -971,7 +971,7 @@ public class EntityDeath implements Listener {
         }
         try {
             entityActions.put(EntityType.ZOMBIE_VILLAGER, event -> {
-                if ((config.getBoolean("ZOMBIE_VILLAGER.Drop")) && ThreadLocalRandom.current().nextFloat() * (100.0F - 0.01F) + 0.01F <= config.getFloat("ZOMBIE_VILLAGER.Chance") + lootLvl) {
+                if ((config.getBoolean("ZOMBIE_VILLAGER.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("ZOMBIE_VILLAGER.Chance") + lootLvl) {
                     ZombieVillager zombieVillager = (ZombieVillager) event.getEntity();
 
                     item[0] = switch (zombieVillager.getVillagerProfession().toString()) {
@@ -1003,7 +1003,7 @@ public class EntityDeath implements Listener {
         }
         try {
             entityActions.put(EntityType.VINDICATOR, event -> {
-                if ((config.getBoolean("VINDICATOR.Drop")) && ThreadLocalRandom.current().nextFloat() * (100.0F - 0.01F) + 0.01F <= config.getFloat("VINDICATOR.Chance") + lootLvl) {
+                if ((config.getBoolean("VINDICATOR.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("VINDICATOR.Chance") + lootLvl) {
 
                     item[0] = EntityHead.VINDICATOR.getSkull();
                     itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
@@ -1023,7 +1023,7 @@ public class EntityDeath implements Listener {
         }
         try {
             entityActions.put(EntityType.VEX, event -> {
-                if ((config.getBoolean("VEX.Drop")) && ThreadLocalRandom.current().nextFloat() * (100.0F - 0.01F) + 0.01F <= config.getFloat("VEX.Chance") + lootLvl) {
+                if ((config.getBoolean("VEX.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("VEX.Chance") + lootLvl) {
 
                     Vex vex = (Vex) event.getEntity();
 
@@ -1050,7 +1050,7 @@ public class EntityDeath implements Listener {
         }
         try {
             entityActions.put(EntityType.EVOKER, event -> {
-                if ((config.getBoolean("EVOKER.Drop")) && ThreadLocalRandom.current().nextFloat() * (100.0F - 0.01F) + 0.01F <= config.getFloat("EVOKER.Chance") + lootLvl) {
+                if ((config.getBoolean("EVOKER.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("EVOKER.Chance") + lootLvl) {
 
                     item[0] = EntityHead.EVOKER.getSkull();
                     itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
@@ -1070,7 +1070,7 @@ public class EntityDeath implements Listener {
         }
         try {
             entityActions.put(EntityType.HUSK, event -> {
-                if ((config.getBoolean("HUSK.Drop")) && ThreadLocalRandom.current().nextFloat() * (100.0F - 0.01F) + 0.01F <= config.getFloat("HUSK.Chance") + lootLvl) {
+                if ((config.getBoolean("HUSK.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("HUSK.Chance") + lootLvl) {
 
                     item[0] = EntityHead.HUSK.getSkull();
                     itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
@@ -1090,7 +1090,7 @@ public class EntityDeath implements Listener {
         }
         try {
             entityActions.put(EntityType.STRAY, event -> {
-                if ((config.getBoolean("STRAY.Drop")) && ThreadLocalRandom.current().nextFloat() * (100.0F - 0.01F) + 0.01F <= config.getFloat("STRAY.Chance") + lootLvl) {
+                if ((config.getBoolean("STRAY.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("STRAY.Chance") + lootLvl) {
 
                     item[0] = EntityHead.STRAY.getSkull();
                     itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
@@ -1110,7 +1110,7 @@ public class EntityDeath implements Listener {
         }
         try {
             entityActions.put(EntityType.ELDER_GUARDIAN, event -> {
-                if ((config.getBoolean("ELDER_GUARDIAN.Drop")) && ThreadLocalRandom.current().nextFloat() * (100.0F - 0.01F) + 0.01F <= config.getFloat("ELDER_GUARDIAN.Chance") + lootLvl) {
+                if ((config.getBoolean("ELDER_GUARDIAN.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("ELDER_GUARDIAN.Chance") + lootLvl) {
 
                     item[0] = EntityHead.ELDER_GUARDIAN.getSkull();
                     itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
@@ -1129,7 +1129,7 @@ public class EntityDeath implements Listener {
         }
         try {
             entityActions.put(EntityType.DONKEY, event -> {
-                if ((config.getBoolean("DONKEY.Drop")) && ThreadLocalRandom.current().nextFloat() * (100.0F - 0.01F) + 0.01F <= config.getFloat("DONKEY.Chance") + lootLvl) {
+                if ((config.getBoolean("DONKEY.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("DONKEY.Chance") + lootLvl) {
 
                     item[0] = EntityHead.DONKEY.getSkull();
                     itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
@@ -1148,7 +1148,7 @@ public class EntityDeath implements Listener {
         }
         try {
             entityActions.put(EntityType.ZOMBIE_HORSE, event -> {
-                if ((config.getBoolean("ZOMBIE_HORSE.Drop")) && ThreadLocalRandom.current().nextFloat() * (100.0F - 0.01F) + 0.01F <= config.getFloat("ZOMBIE_HORSE.Chance") + lootLvl) {
+                if ((config.getBoolean("ZOMBIE_HORSE.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("ZOMBIE_HORSE.Chance") + lootLvl) {
 
                     item[0] = EntityHead.ZOMBIE_HORSE.getSkull();
                     itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
@@ -1166,7 +1166,7 @@ public class EntityDeath implements Listener {
         }
         try {
             entityActions.put(EntityType.SKELETON_HORSE, event -> {
-                if ((config.getBoolean("SKELETON_HORSE.Drop")) && ThreadLocalRandom.current().nextFloat() * (100.0F - 0.01F) + 0.01F <= config.getFloat("SKELETON_HORSE.Chance") + lootLvl) {
+                if ((config.getBoolean("SKELETON_HORSE.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("SKELETON_HORSE.Chance") + lootLvl) {
 
                     item[0] = EntityHead.SKELETON_HORSE.getSkull();
                     itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
@@ -1185,7 +1185,7 @@ public class EntityDeath implements Listener {
         }
         try {
             entityActions.put(EntityType.MULE, event -> {
-                if ((config.getBoolean("MULE.Drop")) && ThreadLocalRandom.current().nextFloat() * (100.0F - 0.01F) + 0.01F <= config.getFloat("MULE.Chance") + lootLvl) {
+                if ((config.getBoolean("MULE.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("MULE.Chance") + lootLvl) {
 
                     item[0] = EntityHead.MULE.getSkull();
                     itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
@@ -1205,7 +1205,7 @@ public class EntityDeath implements Listener {
         }
         try {
             entityActions.put(EntityType.PARROT, event -> {
-                if ((config.getBoolean("PARROT.Drop")) && ThreadLocalRandom.current().nextFloat() * (100.0F - 0.01F) + 0.01F <= config.getFloat("PARROT.Chance") + lootLvl) {
+                if ((config.getBoolean("PARROT.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("PARROT.Chance") + lootLvl) {
                     Parrot parrot = (Parrot) event.getEntity();
 
                     item[0] = switch (parrot.getVariant()) {
@@ -1233,7 +1233,7 @@ public class EntityDeath implements Listener {
         }
         try {
             entityActions.put(EntityType.TROPICAL_FISH, event -> {
-                if ((config.getBoolean("TROPICAL_FISH.Drop")) && ThreadLocalRandom.current().nextFloat() * (100.0F - 0.01F) + 0.01F <= config.getFloat("TROPICAL_FISH.Chance") + lootLvl) {
+                if ((config.getBoolean("TROPICAL_FISH.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("TROPICAL_FISH.Chance") + lootLvl) {
 
                     TropicalFish tropicalFish = (TropicalFish) event.getEntity();
 
@@ -1272,7 +1272,7 @@ public class EntityDeath implements Listener {
         }
         try {
             entityActions.put(EntityType.PUFFERFISH, event -> {
-                if ((config.getBoolean("PUFFERFISH.Drop")) && ThreadLocalRandom.current().nextFloat() * (100.0F - 0.01F) + 0.01F <= config.getFloat("PUFFERFISH.Chance") + lootLvl) {
+                if ((config.getBoolean("PUFFERFISH.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("PUFFERFISH.Chance") + lootLvl) {
 
                     item[0] = EntityHead.PUFFERFISH.getSkull();
                     itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
@@ -1291,7 +1291,7 @@ public class EntityDeath implements Listener {
         }
         try {
             entityActions.put(EntityType.SALMON, event -> {
-                if ((config.getBoolean("SALMON.Drop")) && ThreadLocalRandom.current().nextFloat() * (100.0F - 0.01F) + 0.01F <= config.getFloat("SALMON.Chance") + lootLvl) {
+                if ((config.getBoolean("SALMON.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("SALMON.Chance") + lootLvl) {
 
                     item[0] = EntityHead.SALMON.getSkull();
                     itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
@@ -1309,7 +1309,7 @@ public class EntityDeath implements Listener {
         }
         try {
             entityActions.put(EntityType.COD, event -> {
-                if ((config.getBoolean("COD.Drop")) && ThreadLocalRandom.current().nextFloat() * (100.0F - 0.01F) + 0.01F <= config.getFloat("COD.Chance") + lootLvl) {
+                if ((config.getBoolean("COD.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("COD.Chance") + lootLvl) {
 
                     item[0] = EntityHead.COD.getSkull();
                     itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
@@ -1327,7 +1327,7 @@ public class EntityDeath implements Listener {
         }
         try {
             entityActions.put(EntityType.TURTLE, event -> {
-                if ((config.getBoolean("TURTLE.Drop")) && ThreadLocalRandom.current().nextFloat() * (100.0F - 0.01F) + 0.01F <= config.getFloat("TURTLE.Chance") + lootLvl) {
+                if ((config.getBoolean("TURTLE.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("TURTLE.Chance") + lootLvl) {
 
                     item[0] = EntityHead.TURTLE.getSkull();
                     itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
@@ -1346,7 +1346,7 @@ public class EntityDeath implements Listener {
         }
         try {
             entityActions.put(EntityType.DOLPHIN, event -> {
-                if ((config.getBoolean("DOLPHIN.Drop")) && ThreadLocalRandom.current().nextFloat() * (100.0F - 0.01F) + 0.01F <= config.getFloat("DOLPHIN.Chance") + lootLvl) {
+                if ((config.getBoolean("DOLPHIN.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("DOLPHIN.Chance") + lootLvl) {
 
                     item[0] = EntityHead.DOLPHIN.getSkull();
                     itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
@@ -1366,7 +1366,7 @@ public class EntityDeath implements Listener {
         }
         try {
             entityActions.put(EntityType.PHANTOM, event -> {
-                if ((config.getBoolean("PHANTOM.Drop")) && ThreadLocalRandom.current().nextFloat() * (100.0F - 0.01F) + 0.01F <= config.getFloat("PHANTOM.Chance") + lootLvl) {
+                if ((config.getBoolean("PHANTOM.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("PHANTOM.Chance") + lootLvl) {
 
                     item[0] = EntityHead.PHANTOM.getSkull();
                     itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
@@ -1384,7 +1384,7 @@ public class EntityDeath implements Listener {
         }
         try {
             entityActions.put(EntityType.DROWNED, event -> {
-                if ((config.getBoolean("DROWNED.Drop")) && ThreadLocalRandom.current().nextFloat() * (100.0F - 0.01F) + 0.01F <= config.getFloat("DROWNED.Chance") + lootLvl) {
+                if ((config.getBoolean("DROWNED.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("DROWNED.Chance") + lootLvl) {
 
                     item[0] = EntityHead.DROWNED.getSkull();
                     itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
@@ -1405,7 +1405,7 @@ public class EntityDeath implements Listener {
         }
         try {
             entityActions.put(EntityType.WANDERING_TRADER, event -> {
-                if ((config.getBoolean("WANDERING_TRADER.Drop")) && ThreadLocalRandom.current().nextFloat() * (100.0F - 0.01F) + 0.01F <= config.getFloat("WANDERING_TRADER.Chance") + lootLvl) {
+                if ((config.getBoolean("WANDERING_TRADER.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("WANDERING_TRADER.Chance") + lootLvl) {
 
                     item[0] = EntityHead.WANDERING_TRADER.getSkull();
                     itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
@@ -1423,7 +1423,7 @@ public class EntityDeath implements Listener {
         }
         try {
             entityActions.put(EntityType.TRADER_LLAMA, event -> {
-                if ((config.getBoolean("TRADER_LLAMA.Drop")) && ThreadLocalRandom.current().nextFloat() * (100.0F - 0.01F) + 0.01F <= config.getFloat("TRADER_LLAMA.Chance")) {
+                if ((config.getBoolean("TRADER_LLAMA.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("TRADER_LLAMA.Chance")) {
                     TraderLlama traderLlama = (TraderLlama) event.getEntity();
 
                     item[0] = switch (traderLlama.getColor()) {
@@ -1447,7 +1447,7 @@ public class EntityDeath implements Listener {
         }
         try {
             entityActions.put(EntityType.LLAMA, event -> {
-                if ((config.getBoolean("LLAMA.Drop")) && ThreadLocalRandom.current().nextFloat() * (100.0F - 0.01F) + 0.01F <= config.getFloat("LLAMA.Chance") + lootLvl) {
+                if ((config.getBoolean("LLAMA.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("LLAMA.Chance") + lootLvl) {
                     Llama llama = (Llama) event.getEntity();
 
                     item[0] = switch (llama.getColor()) {
@@ -1471,7 +1471,7 @@ public class EntityDeath implements Listener {
         }
         try {
             entityActions.put(EntityType.RAVAGER, event -> {
-                if ((config.getBoolean("RAVAGER.Drop")) && ThreadLocalRandom.current().nextFloat() * (100.0F - 0.01F) + 0.01F <= config.getFloat("RAVAGER.Chance") + lootLvl) {
+                if ((config.getBoolean("RAVAGER.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("RAVAGER.Chance") + lootLvl) {
 
                     item[0] = EntityHead.RAVAGER.getSkull();
                     itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
@@ -1489,7 +1489,7 @@ public class EntityDeath implements Listener {
         }
         try {
             entityActions.put(EntityType.PILLAGER, event -> {
-                if ((config.getBoolean("PILLAGER.Drop")) && ThreadLocalRandom.current().nextFloat() * (100.0F - 0.01F) + 0.01F <= config.getFloat("PILLAGER.Chance") + lootLvl) {
+                if ((config.getBoolean("PILLAGER.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("PILLAGER.Chance") + lootLvl) {
 
                     item[0] = EntityHead.PILLAGER.getSkull();
                     itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
@@ -1507,7 +1507,7 @@ public class EntityDeath implements Listener {
         }
         try {
             entityActions.put(EntityType.PANDA, event -> {
-                if ((config.getBoolean("PANDA.Drop")) && ThreadLocalRandom.current().nextFloat() * (100.0F - 0.01F) + 0.01F <= config.getFloat("PANDA.Chance") + lootLvl) {
+                if ((config.getBoolean("PANDA.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("PANDA.Chance") + lootLvl) {
                     Panda panda = (Panda) event.getEntity();
 
                     if (panda.getMainGene() == Panda.Gene.BROWN) {
@@ -1531,7 +1531,7 @@ public class EntityDeath implements Listener {
         }
         try {
             entityActions.put(EntityType.FOX, event -> {
-                if ((config.getBoolean("FOX.Drop")) && ThreadLocalRandom.current().nextFloat() * (100.0F - 0.01F) + 0.01F <= config.getFloat("FOX.Chance") + lootLvl) {
+                if ((config.getBoolean("FOX.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("FOX.Chance") + lootLvl) {
                     Fox fox = (Fox) event.getEntity();
 
                     item[0] = switch (fox.getFoxType()) {
@@ -1553,7 +1553,7 @@ public class EntityDeath implements Listener {
         }
         try {
             entityActions.put(EntityType.CAT, event -> {
-                if ((config.getBoolean("CAT.Drop")) && ThreadLocalRandom.current().nextFloat() * (100.0F - 0.01F) + 0.01F <= config.getFloat("CAT.Chance") + lootLvl) {
+                if ((config.getBoolean("CAT.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("CAT.Chance") + lootLvl) {
                     Cat cat = (Cat) event.getEntity();
 
                     item[0] = switch (cat.getCatType().toString()) {
@@ -1587,7 +1587,7 @@ public class EntityDeath implements Listener {
         }
         try {
             entityActions.put(EntityType.BEE, event -> {
-                if ((config.getBoolean("BEE.Drop")) && ThreadLocalRandom.current().nextFloat() * (100.0F - 0.01F) + 0.01F <= config.getFloat("BEE.Chance") + lootLvl) {
+                if ((config.getBoolean("BEE.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("BEE.Chance") + lootLvl) {
                     Bee bee = (Bee) event.getEntity();
 
                     if (bee.getAnger() > 0) {
@@ -1611,7 +1611,7 @@ public class EntityDeath implements Listener {
         }
         try {
             entityActions.put(EntityType.ZOGLIN, event -> {
-                if ((config.getBoolean("ZOGLIN.Drop")) && ThreadLocalRandom.current().nextFloat() * (100.0F - 0.01F) + 0.01F <= config.getFloat("ZOGLIN.Chance") + lootLvl) {
+                if ((config.getBoolean("ZOGLIN.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("ZOGLIN.Chance") + lootLvl) {
 
                     item[0] = EntityHead.ZOGLIN.getSkull();
                     itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
@@ -1629,7 +1629,7 @@ public class EntityDeath implements Listener {
         }
         try {
             entityActions.put(EntityType.STRIDER, event -> {
-                if ((config.getBoolean("STRIDER.Drop")) && ThreadLocalRandom.current().nextFloat() * (100.0F - 0.01F) + 0.01F <= config.getFloat("STRIDER.Chance") + lootLvl) {
+                if ((config.getBoolean("STRIDER.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("STRIDER.Chance") + lootLvl) {
 
                     item[0] = EntityHead.STRIDER.getSkull();
                     itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
@@ -1647,7 +1647,7 @@ public class EntityDeath implements Listener {
         }
         try {
             entityActions.put(EntityType.PIGLIN, event -> {
-                if ((config.getBoolean("PIGLIN.Drop")) && ThreadLocalRandom.current().nextFloat() * (100.0F - 0.01F) + 0.01F <= config.getFloat("PIGLIN.Chance") + lootLvl) {
+                if ((config.getBoolean("PIGLIN.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("PIGLIN.Chance") + lootLvl) {
 
                     item[0] = EntityHead.PIGLIN.getSkull();
                     itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
@@ -1665,7 +1665,7 @@ public class EntityDeath implements Listener {
         }
         try {
             entityActions.put(EntityType.HOGLIN, event -> {
-                if ((config.getBoolean("HOGLIN.Drop")) && ThreadLocalRandom.current().nextFloat() * (100.0F - 0.01F) + 0.01F <= config.getFloat("HOGLIN.Chance") + lootLvl) {
+                if ((config.getBoolean("HOGLIN.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("HOGLIN.Chance") + lootLvl) {
 
                     item[0] = EntityHead.HOGLIN.getSkull();
                     itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
@@ -1683,7 +1683,7 @@ public class EntityDeath implements Listener {
         }
         try {
             entityActions.put(EntityType.PIGLIN_BRUTE, event -> {
-                if ((config.getBoolean("PIGLIN_BRUTE.Drop")) && ThreadLocalRandom.current().nextFloat() * (100.0F - 0.01F) + 0.01F <= config.getFloat("PIGLIN_BRUTE.Chance") + lootLvl) {
+                if ((config.getBoolean("PIGLIN_BRUTE.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("PIGLIN_BRUTE.Chance") + lootLvl) {
 
                     item[0] = EntityHead.PIGLIN_BRUTE.getSkull();
                     itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
@@ -1703,7 +1703,7 @@ public class EntityDeath implements Listener {
         }
         try {
             entityActions.put(EntityType.GLOW_SQUID, event -> {
-                if ((config.getBoolean("GLOW_SQUID.Drop")) && ThreadLocalRandom.current().nextFloat() * (100.0F - 0.01F) + 0.01F <= config.getFloat("GLOW_SQUID.Chance") + lootLvl) {
+                if ((config.getBoolean("GLOW_SQUID.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("GLOW_SQUID.Chance") + lootLvl) {
 
                     item[0] = EntityHead.GLOW_SQUID.getSkull();
                     itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
@@ -1721,7 +1721,7 @@ public class EntityDeath implements Listener {
         }
         try {
             entityActions.put(EntityType.GOAT, event -> {
-                if ((config.getBoolean("GOAT.Drop")) && ThreadLocalRandom.current().nextFloat() * (100.0F - 0.01F) + 0.01F <= config.getFloat("GOAT.Chance") + lootLvl) {
+                if ((config.getBoolean("GOAT.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("GOAT.Chance") + lootLvl) {
 
                     item[0] = EntityHead.GOAT.getSkull();
                     itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
@@ -1739,7 +1739,7 @@ public class EntityDeath implements Listener {
         }
         try {
             entityActions.put(EntityType.AXOLOTL, event -> {
-                if ((config.getBoolean("AXOLOTL.Drop")) && ThreadLocalRandom.current().nextFloat() * (100.0F - 0.01F) + 0.01F <= config.getFloat("AXOLOTL.Chance") + lootLvl) {
+                if ((config.getBoolean("AXOLOTL.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("AXOLOTL.Chance") + lootLvl) {
                     Axolotl axolotl = (Axolotl) event.getEntity();
 
                     item[0] = switch (axolotl.getVariant()) {
@@ -1766,7 +1766,7 @@ public class EntityDeath implements Listener {
         }
         try {
             entityActions.put(EntityType.ALLAY, event -> {
-                if ((config.getBoolean("ALLAY.Drop")) && ThreadLocalRandom.current().nextFloat() * (100.0F - 0.01F) + 0.01F <= config.getFloat("ALLAY.Chance") + lootLvl) {
+                if ((config.getBoolean("ALLAY.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("ALLAY.Chance") + lootLvl) {
 
                     item[0] = EntityHead.ALLAY.getSkull();
                     itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
@@ -1784,7 +1784,7 @@ public class EntityDeath implements Listener {
         }
         try {
             entityActions.put(EntityType.FROG, event -> {
-                if ((config.getBoolean("FROG.Drop")) && ThreadLocalRandom.current().nextFloat() * (100.0F - 0.01F) + 0.01F <= config.getFloat("FROG.Chance") + lootLvl) {
+                if ((config.getBoolean("FROG.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("FROG.Chance") + lootLvl) {
                     Frog frog = (Frog) event.getEntity();
 
                     item[0] = switch (frog.getVariant().toString()) {
@@ -1807,7 +1807,7 @@ public class EntityDeath implements Listener {
         }
         try {
             entityActions.put(EntityType.TADPOLE, event -> {
-                if ((config.getBoolean("TADPOLE.Drop")) && ThreadLocalRandom.current().nextFloat() * (100.0F - 0.01F) + 0.01F <= config.getFloat("TADPOLE.Chance") + lootLvl) {
+                if ((config.getBoolean("TADPOLE.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("TADPOLE.Chance") + lootLvl) {
 
                     item[0] = EntityHead.TADPOLE.getSkull();
                     itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
@@ -1825,7 +1825,7 @@ public class EntityDeath implements Listener {
         }
         try {
             entityActions.put(EntityType.WARDEN, event -> {
-                if ((config.getBoolean("WARDEN.Drop")) && ThreadLocalRandom.current().nextFloat() * (100.0F - 0.01F) + 0.01F <= config.getFloat("WARDEN.Chance") + lootLvl) {
+                if ((config.getBoolean("WARDEN.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("WARDEN.Chance") + lootLvl) {
 
                     item[0] = EntityHead.WARDEN.getSkull();
                     itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
@@ -1846,7 +1846,7 @@ public class EntityDeath implements Listener {
         }
         try {
             entityActions.put(EntityType.CAMEL, event -> {
-                if ((config.getBoolean("CAMEL.Drop")) && ThreadLocalRandom.current().nextFloat() * (100.0F - 0.01F) + 0.01F <= config.getFloat("CAMEL.Chance") + lootLvl) {
+                if ((config.getBoolean("CAMEL.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("CAMEL.Chance") + lootLvl) {
 
                     item[0] = EntityHead.CAMEL.getSkull();
                     itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
@@ -1864,7 +1864,7 @@ public class EntityDeath implements Listener {
         }
         try {
             entityActions.put(EntityType.SNIFFER, event -> {
-                if ((config.getBoolean("SNIFFER.Drop")) && ThreadLocalRandom.current().nextFloat() * (100.0F - 0.01F) + 0.01F <= config.getFloat("SNIFFER.Chance") + lootLvl) {
+                if ((config.getBoolean("SNIFFER.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("SNIFFER.Chance") + lootLvl) {
 
                     item[0] = EntityHead.SNIFFER.getSkull();
                     itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
@@ -1884,7 +1884,7 @@ public class EntityDeath implements Listener {
         //1.21 mob
         try {
             entityActions.put(EntityType.ARMADILLO, event -> {
-                if ((config.getBoolean("ARMADILLO.Drop")) && ThreadLocalRandom.current().nextFloat() * (100.0F - 0.01F) + 0.01F <= config.getFloat("ARMADILLO.Chance") + lootLvl) {
+                if ((config.getBoolean("ARMADILLO.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("ARMADILLO.Chance") + lootLvl) {
 
                     item[0] = EntityHead.ARMADILLO.getSkull();
                     itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
@@ -1902,7 +1902,7 @@ public class EntityDeath implements Listener {
         }
         try {
             entityActions.put(EntityType.BREEZE, event -> {
-                if ((config.getBoolean("BREEZE.Drop")) && ThreadLocalRandom.current().nextFloat() * (100.0F - 0.01F) + 0.01F <= config.getFloat("BREEZE.Chance") + lootLvl) {
+                if ((config.getBoolean("BREEZE.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("BREEZE.Chance") + lootLvl) {
 
                     item[0] = EntityHead.BREEZE.getSkull();
                     itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
@@ -1920,7 +1920,7 @@ public class EntityDeath implements Listener {
         }
         try {
             entityActions.put(EntityType.BOGGED, event -> {
-                if ((config.getBoolean("BOGGED.Drop")) && ThreadLocalRandom.current().nextFloat() * (100.0F - 0.01F) + 0.01F <= config.getFloat("BOGGED.Chance") + lootLvl) {
+                if ((config.getBoolean("BOGGED.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("BOGGED.Chance") + lootLvl) {
 
                     item[0] = EntityHead.BOGGED.getSkull();
                     itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());

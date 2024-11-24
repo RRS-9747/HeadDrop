@@ -9,6 +9,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.inventory.meta.SkullMeta;
 
+import java.util.UUID;
+
 public enum EntityHead {
       SNIFFER("SNIFFER", "entity.sniffer.happy", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNDNmM2JlMDlhNzM1M2VlYWU5NGQ4ODMyMGNiNWIyNDJkZTJmNzE5YzBlNWMxNmE0ODYzMjdjNjA1ZGIxZDQ2MyJ9fX0="),
       CAMEL("CAMEL", "entity.camel.ambient", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOTJiMzEyMzk1MjA1MTFjYTdiNjcxMmVmMGVjZmI1NWI2YzU2YjkzNDcyNDBmNGNiZjk5MjVjZTBiZjBmYTQ0NSJ9fX0="),
@@ -192,6 +194,7 @@ public enum EntityHead {
       private final String name;
       private final String sound;
       private final String headHash;
+      private final UUID headUUID;
 
       final HeadDrop instance = HeadDrop.getInstance();
 
@@ -199,9 +202,10 @@ public enum EntityHead {
             this.name = name;
             this.sound = sound;
             this.headHash = headHash;
+            this.headUUID = UUID.nameUUIDFromBytes(headHash.getBytes());
       }
-     public ItemStack getSkull() {
-            ItemStack skull = SkullCreator.createSkullWithBase64(headHash);
+      public ItemStack getSkull() {
+            ItemStack skull = SkullCreator.createSkullWithBase64(headHash, headUUID);
             if (skull.getType().equals(Material.PLAYER_HEAD)) {
                   SkullMeta meta = (SkullMeta) skull.getItemMeta();
                   try {
@@ -211,16 +215,16 @@ public enum EntityHead {
                   }catch (NoSuchMethodError ignored){}
                   skull.setItemMeta(meta);
             }
-           if (!HeadDrop.getInstance().getConfiguration().getBoolean(name + ".Drop")){
-                 return null;
-           }
+            if (!HeadDrop.getInstance().getConfiguration().getBoolean(name + ".Drop")){
+                  return null;
+            }
 
-           ItemMeta meta = skull.getItemMeta();
-           meta.setDisplayName((ChatColor.YELLOW + name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase() + "'s Head").replaceAll("_", " "));
+            ItemMeta meta = skull.getItemMeta();
+            meta.setDisplayName((ChatColor.YELLOW + name.substring(0, 1).toUpperCase() + name.substring(1).toLowerCase() + "'s Head").replaceAll("_", " "));
 
-           skull.setItemMeta(meta);
-           return skull;
-     }
+            skull.setItemMeta(meta);
+            return skull;
+      }
 
       public String getName() {
             return name;

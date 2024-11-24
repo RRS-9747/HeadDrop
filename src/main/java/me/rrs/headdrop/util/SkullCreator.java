@@ -26,9 +26,9 @@ public class SkullCreator {
 		return itemWithName(skull, name);
 	}
 
-	public static ItemStack createSkullWithBase64(String base64) {
+	public static ItemStack createSkullWithBase64(String base64, UUID uuid) {
 		ItemStack skull = createSkull();
-		return itemWithBase64(skull, base64);
+		return itemWithBase64(skull, base64, uuid);
 	}
 
 	public static ItemStack itemWithName(ItemStack item, String name) {
@@ -42,7 +42,7 @@ public class SkullCreator {
 		return item;
 	}
 
-	private static ItemStack itemWithBase64(ItemStack item, String base64) {
+	private static ItemStack itemWithBase64(ItemStack item, String base64, UUID uuid) {
 		notNull(item, "item");
 		notNull(base64, "base64");
 
@@ -58,7 +58,7 @@ public class SkullCreator {
 					.getAsJsonObject("SKIN")
 					.get("url").getAsString();
 
-			PlayerProfile profile = Bukkit.createPlayerProfile(UUID.randomUUID());
+			PlayerProfile profile = Bukkit.createPlayerProfile(uuid);
 			PlayerTextures textures = profile.getTextures();
 			textures.setSkin(new URL(textureUrl));
 			profile.setTextures(textures);
