@@ -32,6 +32,7 @@ public class HeadDrop extends JavaPlugin {
     private static HeadDrop instance;
     private YamlDocument lang;
     private YamlDocument config;
+    private YamlDocument custom;
     private Database database;
 
     public YamlDocument getConfiguration() {
@@ -105,6 +106,8 @@ public class HeadDrop extends JavaPlugin {
         // Set commands
         getCommand("head").setExecutor(new Head());
         getCommand("headdrop").setExecutor(new MainCommand());
+
+
 
         // Check for Geyser-Spigot plugin
         if (Bukkit.getPluginManager().isPluginEnabled("Geyser-Spigot")){

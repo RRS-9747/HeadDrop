@@ -13,9 +13,8 @@ import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import java.util.ArrayList;
-
 public class GUI implements Listener, InventoryHolder {
+
 
     private final int itemsPerPage = 45;
     private int currentPage = 0;
@@ -56,14 +55,13 @@ public class GUI implements Listener, InventoryHolder {
 
     @EventHandler
     public void onInventoryClick(InventoryClickEvent event) {
-        if (event.getInventory().getHolder() instanceof GUI) {
-            GUI gui = (GUI) event.getInventory().getHolder();
+        if (event.getInventory().getHolder() instanceof GUI gui) {
             Player player = (Player) event.getWhoClicked();
 
             event.setCancelled(true); // Cancel the event to prevent item dragging
 
             ItemStack clickedItem = event.getCurrentItem();
-            
+
             if (clickedItem != null && clickedItem.getType() != Material.ARROW && event.getRawSlot() < event.getView().getTopInventory().getSize()) {
                 if (player.hasPermission("headdrop.gui.move")){
                     player.getInventory().addItem(clickedItem.clone());

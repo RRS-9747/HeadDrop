@@ -10,6 +10,7 @@ Config:
   Require-Axe: false
   Baby-HeadDrop: false
   Enable-Perm-Chance: false
+  Nerf-Spawner: false
   Disable-Worlds:
     - demoWorld
     - demoWorld2
@@ -40,420 +41,420 @@ Lores:
 
 PLAYER:
   Drop: true
-  Chance: 100
+  Chance: 100.00
   Require-Permission: false
 
 ZOMBIE:
   Drop: true
-  Chance: 100
+  Chance: 100.00
   Sound: "default"
 
 WITHER_SKELETON:
   Drop: true
-  Chance: 100
+  Chance: 100.00
   Sound: "default"
 
 CREEPER:
   Drop: true
-  Chance: 100
+  Chance: 100.00
   Sound: "default"
 
 SKELETON:
   Drop: true
-  Chance: 100
+  Chance: 100.00
   Sound: "default"
 
 AXOLOTL:
   Drop: true
-  Chance: 100
+  Chance: 100.00
   Sound: "default"
 
 BAT:
   Drop: true
-  Chance: 100
+  Chance: 100.00
   Sound: "default"
 
 BEE:
   Drop: true
-  Chance: 100
+  Chance: 100.00
   Sound: "default"
 
 BLAZE:
   Drop: true
-  Chance: 100
+  Chance: 100.00
   Sound: "default"
 
 CAT:
   Drop: true
-  Chance: 100
+  Chance: 100.00
   Sound: "default"
 
 DOLPHIN:
   Drop: true
-  Chance: 100
+  Chance: 100.00
   Sound: "default"
 
 DROWNED:
   Drop: true
-  Chance: 100
+  Chance: 100.00
   Sound: "default"
 
 SPIDER:
   Drop: true
-  Chance: 100
+  Chance: 100.00
   Sound: "default"
 
 CAVE_SPIDER:
   Drop: true
-  Chance: 100
+  Chance: 100.00
   Sound: "default"
 
 CHICKEN:
   Drop: true
-  Chance: 100
+  Chance: 100.00
   Sound: "default"
 
 ENDERMAN:
   Drop: true
-  Chance: 100
+  Chance: 100.00
   Sound: "default"
 
 COW:
   Drop: true
-  Chance: 100
+  Chance: 100.00
   Sound: "default"
 
 ENDERMITE:
   Drop: true
-  Chance: 100
+  Chance: 100.00
   Sound: "default"
 
 EVOKER:
   Drop: true
-  Chance: 100
+  Chance: 100.00
   Sound: "default"
 
 DONKEY:
   Drop: true
-  Chance: 100
+  Chance: 100.00
   Sound: "default"
 
 FOX:
   Drop: true
-  Chance: 100
+  Chance: 100.00
   Sound: "default"
 
 SHEEP:
   Drop: true
-  Chance: 100
+  Chance: 100.00
   Sound: "default"
 
 GIANT:
   Drop: true
-  Chance: 100
+  Chance: 100.00
   Sound: "default"
 
 HOGLIN:
   Drop: true
-  Chance: 100
+  Chance: 100.00
   Sound: "default"
 
 HUSK:
   Drop: true
-  Chance: 100
+  Chance: 100.00
   Sound: "default"
 
 GOAT:
   Drop: true
-  Chance: 100
+  Chance: 100.00
   Sound: "default"
 
 IRON_GOLEM:
   Drop: true
-  Chance: 100
+  Chance: 100.00
   Sound: "default"
 
 ILLUSIONER:
   Drop: true
-  Chance: 100
+  Chance: 100.00
   Sound: "default"
 
 HORSE:
   Drop: true
-  Chance: 100
+  Chance: 100.00
   Sound: "default"
 
 GUARDIAN:
   Drop: true
-  Chance: 100
+  Chance: 100.00
   Sound: "default"
 
 MUSHROOM_COW:
   Drop: true
-  Chance: 100
+  Chance: 100.00
   Sound: "default"
 
 OCELOT:
   Drop: true
-  Chance: 100
+  Chance: 100.00
   Sound: "default"
 
 PHANTOM:
   Drop: true
-  Chance: 100
+  Chance: 100.00
   Sound: "default"
 
 GLOW_SQUID:
   Drop: true
-  Chance: 100
+  Chance: 100.00
   Sound: "default"
 
 PIG:
   Drop: true
-  Chance: 100
+  Chance: 100.00
   Sound: "default"
 
 LLAMA:
   Drop: true
-  Chance: 100
+  Chance: 100.00
   Sound: "default"
 
 MULE:
   Drop: true
-  Chance: 100
+  Chance: 100.00
   Sound: "default"
 
 PIGLIN:
   Drop: true
-  Chance: 100
+  Chance: 100.00
   Sound: "default"
 
 PIGLIN_BRUTE:
   Drop: true
-  Chance: 100
+  Chance: 100.00
   Sound: "default"
 
 ELDER_GUARDIAN:
   Drop: true
-  Chance: 100
+  Chance: 100.00
   Sound: "default"
 
 PUFFERFISH:
   Drop: true
-  Chance: 100
+  Chance: 100.00
   Sound: "default"
 
 SILVERFISH:
   Drop: true
-  Chance: 100
+  Chance: 100.00
   Sound: "default"
 
 POLAR_BEAR:
   Drop: true
-  Chance: 100
+  Chance: 100.00
   Sound: "default"
 
 SALMON:
   Drop: true
-  Chance: 100
+  Chance: 100.00
   Sound: "default"
 
 SHULKER:
   Drop: true
-  Chance: 100
+  Chance: 100.00
   Sound: "default"
 
 STRAY:
   Drop: true
-  Chance: 100
+  Chance: 100.00
   Sound: "default"
 
 STRIDER:
   Drop: true
-  Chance: 100
+  Chance: 100.00
   Sound: "default"
 
 SKELETON_HORSE:
   Drop: true
-  Chance: 100
+  Chance: 100.00
   Sound: "default"
 
 PILLAGER:
   Drop: true
-  Chance: 100
+  Chance: 100.00
   Sound: "default"
 
 SQUID:
   Drop: true
-  Chance: 100
+  Chance: 100.00
   Sound: "default"
 
 WANDERING_TRADER:
   Drop: true
-  Chance: 100
+  Chance: 100.00
   Sound: "default"
 
 TURTLE:
   Drop: true
-  Chance: 100
+  Chance: 100.00
   Sound: "default"
 
 SLIME:
   Drop: true
-  Chance: 100
+  Chance: 100.00
   Sound: "default"
 
 COD:
   Drop: true
-  Chance: 100
+  Chance: 100.00
   Sound: "default"
 
 RAVAGER:
   Drop: true
-  Chance: 100
+  Chance: 100.00
   Sound: "default"
 
 WITCH:
   Drop: true
-  Chance: 100
+  Chance: 100.00
   Sound: "default"
 
 GHAST:
   Drop: true
-  Chance: 100
+  Chance: 100.00
   Sound: "default"
 
 ZOMBIE_HORSE:
   Drop: true
-  Chance: 100
+  Chance: 100.00
   Sound: "default"
 
 WOLF:
   Drop: true
-  Chance: 100
+  Chance: 100.00
   Sound: "default"
 
 VINDICATOR:
   Drop: true
-  Chance: 100
+  Chance: 100.00
   Sound: "default"
 
 ZOGLIN:
   Drop: true
-  Chance: 100
+  Chance: 100.00
   Sound: "default"
 
 TRADER_LLAMA:
   Drop: true
-  Chance: 100
+  Chance: 100.00
   Sound: "default"
 
 ZOMBIE_VILLAGER:
   Drop: true
-  Chance: 100
+  Chance: 100.00
   Sound: "default"
 
 ENDER_DRAGON:
   Drop: true
-  Chance: 100
+  Chance: 100.00
   Sound: "default"
 
 WITHER:
   Drop: true
-  Chance: 100
+  Chance: 100.00
   Sound: "default"
 
 VILLAGER:
   Drop: true
-  Chance: 100
+  Chance: 100.00
   Sound: "default"
 
 PARROT:
   Drop: true
-  Chance: 100
+  Chance: 100.00
   Sound: "default"
 
 TROPICAL_FISH:
   Drop: true
-  Chance: 100
+  Chance: 100.00
   Sound: "default"
 
 VEX:
   Drop: true
-  Chance: 100
+  Chance: 100.00
   Sound: "default"
 
 ZOMBIFIED_PIGLIN:
   Drop: true
-  Chance: 100
+  Chance: 100.00
   Sound: "default"
 
 MAGMA_CUBE:
   Drop: true
-  Chance: 100
+  Chance: 100.00
   Sound: "default"
 
 PANDA:
   Drop: true
-  Chance: 100
+  Chance: 100.00
   Sound: "default"
 
 SNOW_GOLEM:
   Drop: true
-  Chance: 100
+  Chance: 100.00
   Sound: "default"
 
 RABBIT:
   Drop: true
-  Chance: 100
+  Chance: 100.00
   Sound: "default"
 
 ALLAY:
   Drop: true
-  Chance: 100
+  Chance: 100.00
   Sound: "default"
 
 TADPOLE:
   Drop: true
-  Chance: 100
+  Chance: 100.00
   Sound: "default"
 
 FROG:
   Drop: true
-  Chance: 100
+  Chance: 100.00
   Sound: "default"
 
 WARDEN:
   Drop: true
-  Chance: 100
+  Chance: 100.00
   Sound: "default"
 
 CAMEL:
   Drop: true
-  Chance: 100
+  Chance: 100.00
   Sound: "default"
 
 SNIFFER:
   Drop: true
-  Chance: 100
+  Chance: 100.00
   Sound: "default"
 
 BREEZE:
   Drop: true
-  Chance: 100
+  Chance: 100.00
   Sound: "default"
 
 BOGGED:
   Drop: true
-  Chance: 100
+  Chance: 100.00
   Sound: "default"
 
 ARMADILLO:
   Drop: true
-  Chance: 100
+  Chance: 100.00
   Sound: "default"
 
 CREAKING:
   Drop: true
-  Chance: 100
+  Chance: 100.00
   Sound: "default"

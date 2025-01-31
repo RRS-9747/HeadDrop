@@ -15,12 +15,14 @@ import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Consumer;
 import java.util.stream.IntStream;
@@ -32,6 +34,7 @@ public class EntityDeath implements Listener {
     private final Map<EntityType, Consumer<EntityDeathEvent>> entityActions;
     private final ItemUtils itemUtils;
     private final List<String> loreList;
+    private final Map<UUID, Boolean> spawnerSpawnedMobs = new HashMap<>();
 
     public EntityDeath() {
         this.entityActions = new HashMap<>();
@@ -77,6 +80,15 @@ public class EntityDeath implements Listener {
         }
     }
 
+    @EventHandler
+    public void onEntitySpawn(CreatureSpawnEvent event) {
+        if (config.getBoolean("Config.Nerf-Spawner")){
+            if (event.getSpawnReason() == CreatureSpawnEvent.SpawnReason.SPAWNER) {
+                spawnerSpawnedMobs.put(event.getEntity().getUniqueId(), true);
+            }
+        }
+    }
+
 
     @EventHandler(priority = EventPriority.HIGH)
     public void entityDropHeadEvent(final EntityDeathEvent event) {
@@ -107,6 +119,13 @@ public class EntityDeath implements Listener {
         }
 
         if (config.getStringList("Config.Disable-Worlds").contains(entity.getWorld().getName())) return;
+
+
+        if (spawnerSpawnedMobs.getOrDefault(entity.getUniqueId(), false)) {
+            return;
+        }else {
+            spawnerSpawnedMobs.remove(entity.getUniqueId());
+        }
 
 
         if (config.getBoolean("Bot.Enable") & killer != null) {
