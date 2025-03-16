@@ -14,17 +14,19 @@ HeadDrop will work fine on the default config. but if you want to customize the 
 
 * **Require-Killer-Player**: If set to "true", the plugin will verify that a mob was killed by a player before dropping its head.
 
-- **Require-Charged-Creeper** -> If the value is "true", the plugin will check if the mob is killed by a charged creeper or not before dropping head
+- **Killer-Require-Permission** -> If the value is "true", the plugin will check if the mob killer is a player and that killer player has "headdrop.killer" permission
 
-* **Killer-Require-Permission** -> If the value is "true", the plugin will check if the mob killer is a player and that killer player has "headdrop.killer" permission
+* **Enable-Looting** -> If the value is "true", plugin will add extra drop chance on mob killed by a player
 
-- **Enable-Looting** -> If the value is "true", plugin will add extra drop chance on mob killed by a player
+- **Baby-HeadDrop** -> If the value is "true", baby mob will drop heads too
 
-* **Baby-HeadDrop** -> If the value is "true", baby mob will drop heads too
+* **Enable-Perm-Chance** ->  If the value is "true", it will check if killer player have "headdrop.chance.{NUMBER}" permission and add that number of chance with default drop chance. make sure the number is an integer number and its from 1-100
 
-- **Enable-Perm-Chance** ->  If the value is "true", it will check if killer player have "headdrop.chance.{NUMBER}" permission and add that number of chance with default drop chance. make sure the number is an integer number and its from 1-100
+- **Nerf-Spawner** -> Block spawnner mobs from dropping heads
 
-* **Disable-Worlds** -> Mobs wouldn't drop head on listed worlds
+* **Bounties** -> Enable Bounties&#x20;
+
+- **Disable-Worlds** -> Mobs wouldn't drop head on listed worlds
 
 </details>
 
@@ -36,8 +38,7 @@ HeadDrop will work fine on the default config. but if you want to customize the 
 
 - **URL** -> 3 types of Database is supported\
   SQLite -> jdbc:sqlite:{FILENAME}\
-  MySQL -> jdbc:mysql://{HOST}:{PORT}/{DATABASE}?autoReconnect=true\&useSSL=false\
-  PostgreSQL -> jdbc:postgresql://{HOST}:{PORT}/{DATABASE}
+  MySQL -> jdbc:mysql://{HOST}:{PORT}/{DATABASE}?autoReconnect=true\&useSSL=false
 
 * **User** -> Username of the database. if you are using SQLite, you can set this to null
 

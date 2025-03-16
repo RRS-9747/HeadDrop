@@ -7,3 +7,5 @@
 * [Permissions](permissions.md)
 * [Support](support.md)
 * [Report a bug](report-a-bug.md)
+* [HeadDropAPI](headdropapi/README.md)
+  * [HeadDropEvent - Custom Event for Head Drop Plugin](headdropapi/headdropevent-custom-event-for-head-drop-plugin.md)
