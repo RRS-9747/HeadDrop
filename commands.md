@@ -1,18 +1,15 @@
 # Commands
 
-
+## Commands
 
 <details>
 
 <summary>/head</summary>
 
-Aliases -> /skull
-
-description -> get any players head
-
-Permission -> headdrop.head
-
-Usage -> /head {NAME}
+**Aliases:** /skull\
+**Description:** Get any player's head\
+**Permission:** headdrop.head\
+**Usage:** /head {NAME}
 
 </details>
 
@@ -20,13 +17,10 @@ Usage -> /head {NAME}
 
 <summary>/headdrop help</summary>
 
-Aliases -> /hd help
-
-description -> show help info about hte plugin
-
-Permission -> none
-
-Usage -> /hd help
+**Aliases:** /hd help\
+**Description:** Show help info about the plugin\
+**Permission:** none\
+**Usage:** /hd help
 
 </details>
 
@@ -34,11 +28,9 @@ Usage -> /hd help
 
 <summary>/headdrop reload</summary>
 
-Aliases -> /hd reload
-
-Permission -> headdrop.reload
-
-Usage -> /hd reload
+**Aliases:** /hd reload\
+**Permission:** headdrop.reload\
+**Usage:** /hd reload
 
 </details>
 
@@ -46,13 +38,10 @@ Usage -> /hd reload
 
 <summary>/headdrop leaderboard</summary>
 
-Aliases -> /hd leaderboard
-
-description -> show top 10 head hunter
-
-Permission -> none
-
-Usage -> /hd leaderboard
+**Aliases:** /hd leaderboard\
+**Description:** Show top 10 head hunters\
+**Permission:** none\
+**Usage:** /hd leaderboard
 
 </details>
 
@@ -60,13 +49,10 @@ Usage -> /hd leaderboard
 
 <summary>headdrop debug (Console command)</summary>
 
-Aliases -> /hd debug
-
-description -> create a "debug.txt" in \Plugins\HeadDrop\ dir with some info
-
-Permission -> none
-
-Usage -> hd debug
+**Aliases:** /hd debug\
+**Description:** Create a "debug.txt" in the \Plugins\HeadDrop\ directory with some info\
+**Permission:** none\
+**Usage:** hd debug
 
 </details>
 
@@ -74,12 +60,9 @@ Usage -> hd debug
 
 <summary>/headdrop gui</summary>
 
-Aliases -> /hd gui
-
-description -> open a GUI with all mobs head
-
-Permission -> none
-
-Usage -> hd gui
+**Aliases:** /hd gui\
+**Description:** Open a GUI with all mob heads\
+**Permission:** none\
+**Usage:** hd gui
 
 </details>
