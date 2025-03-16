@@ -32,6 +32,8 @@ public HeadDropEvent(Player player, LivingEntity entity, ItemStack headItem)
 
 ***
 
+***
+
 #### **Get Methods (Access Data)**
 
 **Get the player who triggered the event**
@@ -42,7 +44,7 @@ public Player getPlayer()
 
 * Returns the player who killed the entity and triggered the head drop.
 
-***
+
 
 **Get the entity that dropped the head**
 
@@ -52,7 +54,7 @@ public LivingEntity getEntity()
 
 * Returns the entity that was killed.
 
-***
+
 
 **Get the item (head) that is being dropped**
 
@@ -63,6 +65,8 @@ public ItemStack getHeadItem()
 * Returns the head item that is about to drop.
 
 ***
+
+
 
 **Set Methods (Modify the Drop)**
 
@@ -75,7 +79,7 @@ public void setHeadItem(ItemStack headItem)
 * Allows changing the dropped head item.
 * **Example:** Change a zombie head to a custom skull.
 
-***
+
 
 **Cancel the Event (Prevent Drop)**
 
@@ -87,7 +91,7 @@ public boolean isCancelled()
 
 * Returns `true` if the event is cancelled (i.e., the head drop will not occur).
 
-***
+
 
 **Set the event to cancelled**
 
@@ -108,6 +112,8 @@ javaCopyEditpublic HandlerList getHandlers()
 ```
 
 * Required for Bukkit's event system.
+
+
 
 **Get static event handler list**
 
