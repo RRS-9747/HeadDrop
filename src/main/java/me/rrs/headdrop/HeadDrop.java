@@ -11,6 +11,7 @@ import me.rrs.headdrop.commands.Head;
 import me.rrs.headdrop.commands.MainCommand;
 import me.rrs.headdrop.database.Database;
 import me.rrs.headdrop.hook.GeyserMC;
+import me.rrs.headdrop.hook.HeadDropExpansion;
 import me.rrs.headdrop.hook.WorldGuardSupport;
 import me.rrs.headdrop.listener.*;
 import me.rrs.headdrop.util.UpdateAPI;
@@ -32,7 +33,6 @@ public class HeadDrop extends JavaPlugin {
     private static HeadDrop instance;
     private YamlDocument lang;
     private YamlDocument config;
-    private YamlDocument custom;
     private Database database;
 
     public YamlDocument getConfiguration() {
@@ -73,7 +73,7 @@ public class HeadDrop extends JavaPlugin {
             e.printStackTrace();
         }
 
-        database = new Database();
+        database = new Database(config);
         database.setupDataSource();
         database.createTable();
 
@@ -96,12 +96,16 @@ public class HeadDrop extends JavaPlugin {
         metrics.addCustomChart(new SimplePie("discord_bot", () -> String.valueOf(getConfig().getBoolean("Bot.Enable"))));
         metrics.addCustomChart(new SimplePie("web", () -> String.valueOf(getConfig().getBoolean("Web.Enable"))));
 
-        
+        database.cleanupOldData(config.getInt("Database.Cleanup"));
 
         // Register events
         PluginManager pluginManager = getServer().getPluginManager();
         pluginManager.registerEvents(new EntityDeath(), this);
         pluginManager.registerEvents(new GUI(), this);
+
+        if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+            new HeadDropExpansion().register();
+        }
 
         // Set commands
         getCommand("head").setExecutor(new Head());
@@ -151,8 +155,6 @@ public class HeadDrop extends JavaPlugin {
             WebsiteController handler = new WebsiteController();
             handler.stop();
         }
-        Database db = new Database();
-        db.close();
 
         Bukkit.getLogger().info("HeadDrop Disabled.");
     }

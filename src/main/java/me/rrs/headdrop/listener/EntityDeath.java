@@ -3,6 +3,8 @@ package me.rrs.headdrop.listener;
 import dev.dejvokep.boostedyaml.YamlDocument;
 import me.clip.placeholderapi.PlaceholderAPI;
 import me.rrs.headdrop.HeadDrop;
+import me.rrs.headdrop.api.HeadDropAPI;
+import me.rrs.headdrop.api.HeadDropEvent;
 import me.rrs.headdrop.database.EntityHead;
 import me.rrs.headdrop.hook.WorldGuardSupport;
 import me.rrs.headdrop.util.Embed;
@@ -19,1942 +21,665 @@ import org.bukkit.event.entity.CreatureSpawnEvent;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 import java.util.stream.IntStream;
 
 
 public class EntityDeath implements Listener {
 
     private final YamlDocument config = HeadDrop.getInstance().getConfiguration();
-    private final Map<EntityType, Consumer<EntityDeathEvent>> entityActions;
-    private final ItemUtils itemUtils;
+    private final Map<EntityType, Consumer<EntityDeathEvent>> entityActions = new EnumMap<>(EntityType.class);
+    private final ItemUtils itemUtils = new ItemUtils();
     private final List<String> loreList;
-    private final Map<UUID, Boolean> spawnerSpawnedMobs = new HashMap<>();
+    private final Set<UUID> spawnerSpawnedMobs = new HashSet<>();
+    private final boolean worldGuardEnabled;
+
+    private static final Enchantment LOOTING_ENCHANTMENT =
+            Enchantment.LOOTING != null ? Enchantment.LOOTING :
+                    Enchantment.getByName("LOOT_BONUS_MOBS"); // Legacy support
 
     public EntityDeath() {
-        this.entityActions = new HashMap<>();
-        this.itemUtils = new ItemUtils();
         this.loreList = config.getStringList("Lores");
-        populateEntityActions(this.config);
+        populateEntityActions(config);
+        this.worldGuardEnabled = Bukkit.getPluginManager().isPluginEnabled("WorldGuard");
+        HeadDropAPI.integrateWithEntityDeath(this);
     }
 
-
-    float lootLvl;
-    Embed embed;
-    String title = null;
-    String description = null;
-    String footer = null;
-
-    final ItemStack[] item = new ItemStack[1];
-
-    private void updateDatabase(Player player) {
-        if (!HeadDrop.getInstance().isFolia()) {
-            Bukkit.getScheduler().runTaskAsynchronously(HeadDrop.getInstance(), () -> {
-                if (config.getBoolean("Database.Enable")) {
-                    String uuid = player.getUniqueId().toString();
-                    if (config.getBoolean("Database.Online")) {
-                        int count = HeadDrop.getInstance().getDatabase().getDataByUuid(uuid);
-                        HeadDrop.getInstance().getDatabase().updateDataByUuid(uuid, player.getName(), count + 1);
-                    } else {
-                        int count = HeadDrop.getInstance().getDatabase().getDataByName(player.getName());
-                        HeadDrop.getInstance().getDatabase().updateDataByName(player.getName(), count + 1);
-                    }
-                }
-            });
-        } else {
-            if (config.getBoolean("Database.Enable")) {
-                String uuid = player.getUniqueId().toString();
-                if (config.getBoolean("Database.Online")) {
-                    int count = HeadDrop.getInstance().getDatabase().getDataByUuid(uuid);
-                    HeadDrop.getInstance().getDatabase().updateDataByUuid(uuid, player.getName(), count + 1);
-                } else {
-                    int count = HeadDrop.getInstance().getDatabase().getDataByName(player.getName());
-                    HeadDrop.getInstance().getDatabase().updateDataByName(player.getName(), count + 1);
-                }
-            }
+    private void updateDatabase(Player player, int point) {
+        if (!config.getBoolean("Database.Enable")) {
+            return;
         }
+
+        final String uuid = player.getUniqueId().toString();
+        final boolean useUuid = config.getBoolean("Database.Online");
+        final int currentCount = useUuid
+                ? HeadDrop.getInstance().getDatabase().getDataByUuid(uuid)
+                : HeadDrop.getInstance().getDatabase().getDataByName(player.getName());
+
+        Bukkit.getScheduler().runTaskAsynchronously(HeadDrop.getInstance(), () -> {
+            if (useUuid) {
+                HeadDrop.getInstance().getDatabase().updateDataByUuid(uuid, player.getName(), currentCount + point);
+            } else {
+                HeadDrop.getInstance().getDatabase().updateDataByName(player.getName(), currentCount + point);
+            }
+        });
+    }
+
+    private double getLootingLevel(ItemStack item) {
+        return item.getEnchantmentLevel(LOOTING_ENCHANTMENT);
+    }
+
+    private void sendEmbedMessage(Player killer, LivingEntity entity) {
+        if (!config.getBoolean("Bot.Enable") || killer == null) {
+            return;
+        }
+
+        String killerName = killer.getName();
+        String mobName = entity.getName();
+
+        String title = config.getString("Bot.Title", "")
+                .replace("{KILLER}", killerName)
+                .replace("{MOB}", mobName);
+        String description = config.getString("Bot.Description", "")
+                .replace("{KILLER}", killerName)
+                .replace("{MOB}", mobName);
+        String footer = config.getString("Bot.Footer", "")
+                .replace("{KILLER}", killerName)
+                .replace("{MOB}", mobName);
+
+        if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
+            title = PlaceholderAPI.setPlaceholders(killer, title);
+            description = PlaceholderAPI.setPlaceholders(killer, description);
+            footer = PlaceholderAPI.setPlaceholders(killer, footer);
+        }
+
+        final String finalTitle = title;
+        final String finalDescription = description;
+        final String finalFooter = footer;
+
+        Bukkit.getScheduler().runTaskAsynchronously(HeadDrop.getInstance(), () -> {
+            new Embed().msg(finalTitle, finalDescription, finalFooter);
+        });
     }
 
     @EventHandler
     public void onEntitySpawn(CreatureSpawnEvent event) {
-        if (config.getBoolean("Config.Nerf-Spawner")){
-            if (event.getSpawnReason() == CreatureSpawnEvent.SpawnReason.SPAWNER) {
-                spawnerSpawnedMobs.put(event.getEntity().getUniqueId(), true);
-            }
+        if (config.getBoolean("Config.Nerf-Spawner")
+                && event.getSpawnReason() == CreatureSpawnEvent.SpawnReason.SPAWNER) {
+            spawnerSpawnedMobs.add(event.getEntity().getUniqueId());
         }
     }
 
-
     @EventHandler(priority = EventPriority.HIGH)
-    public void entityDropHeadEvent(final EntityDeathEvent event) {
+    public void entityDropHeadEvent(EntityDeathEvent event) {
         LivingEntity entity = event.getEntity();
-        Player killer = entity.getKiller() != null ? entity.getKiller() : null;
+        Player killer = entity.getKiller();
 
-        if (Bukkit.getPluginManager().isPluginEnabled("WorldGuard")) {
-            if (!WorldGuardSupport.canDrop(entity.getLocation())) return;
-        }
-
-        if (!config.getBoolean("Config.Baby-HeadDrop") && entity instanceof Ageable && !((Ageable) entity).isAdult()) {
+        if (!config.getBoolean(event.getEntityType() + ".Drop")) {
             return;
         }
 
-        if (config.getBoolean("Config.Require-Axe") && (killer == null || !killer.getInventory().getItemInMainHand().getType().toString().contains("_AXE"))) {
+        if (spawnerSpawnedMobs.remove(entity.getUniqueId())) {
             return;
         }
 
-        if (!Bukkit.getPluginManager().isPluginEnabled("LevelledMobs")) {
-            if (!entity.getPersistentDataContainer().getKeys().isEmpty() && entity.getType() != EntityType.PLAYER)
-                return;
-        }
-
-        if (config.getBoolean("Config.Require-Killer-Player") && killer == null) return;
-
-        if (config.getBoolean("Config.Killer-Require-Permission") && (killer == null || !killer.hasPermission("headdrop.killer"))) {
+        if (!isDropAllowed(entity, killer)) {
             return;
         }
 
-        if (config.getStringList("Config.Disable-Worlds").contains(entity.getWorld().getName())) return;
-
-
-        if (spawnerSpawnedMobs.getOrDefault(entity.getUniqueId(), false)) {
+        if (worldGuardEnabled && !WorldGuardSupport.canDrop(entity.getLocation())) {
             return;
-        }else {
-            spawnerSpawnedMobs.remove(entity.getUniqueId());
         }
 
+        double lootBonus = 0;
+        boolean enableLooting = config.getBoolean("Config.Enable-Looting");
+        boolean enablePermChance = config.getBoolean("Config.Enable-Perm-Chance");
 
-        if (config.getBoolean("Bot.Enable") & killer != null) {
-            String killerName = killer.getName();
-            String mobName = entity.getName();
-
-            title = config.getString("Bot.Title").replace("{KILLER}", killerName).replace("{MOB}", mobName);
-            description = config.getString("Bot.Description").replace("{KILLER}", killerName).replace("{MOB}", mobName);
-            footer = config.getString("Bot.Footer").replace("{KILLER}", killerName).replace("{MOB}", mobName);
-
-            boolean placeholdersEnabled = Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI");
-
-            title = placeholdersEnabled ? PlaceholderAPI.setPlaceholders(killer, title) : title;
-            description = placeholdersEnabled ? PlaceholderAPI.setPlaceholders(killer, description) : description;
-            footer = placeholdersEnabled ? PlaceholderAPI.setPlaceholders(killer, footer) : footer;
-        }
-
-        if (HeadDrop.getInstance().getConfiguration().getBoolean("Config.Enable-Looting")) {
-            try {
-                lootLvl += entity.getKiller().getInventory().getItemInMainHand().containsEnchantment(Enchantment.LOOTING) ?
-                        entity.getKiller().getInventory().getItemInMainHand().getEnchantmentLevel(Enchantment.LOOTING) : 0.00F;
-            } catch (NoSuchFieldError error) {
-                lootLvl += entity.getKiller().getInventory().getItemInMainHand().containsEnchantment(Enchantment.getByName("LOOT_BONUS_MOBS")) ?
-                        entity.getKiller().getInventory().getItemInMainHand().getEnchantmentLevel(Enchantment.getByName("LOOT_BONUS_MOBS")) : 0.00F;
+        if (killer != null) {
+            if (enableLooting) {
+                lootBonus += getLootingLevel(killer.getInventory().getItemInMainHand());
+            }
+            if (enablePermChance) {
+                int permBonus = IntStream.rangeClosed(1, 100)
+                        .filter(i -> killer.hasPermission("headdrop.chance" + i))
+                        .max()
+                        .orElse(0);
+                lootBonus += permBonus;
             }
         }
 
+        Consumer<EntityDeathEvent> action = entityActions.get(entity.getType());
+        if (action != null) {
+            ActionContext.setLootBonus(lootBonus);
+            action.accept(event);
+            ActionContext.clearLootBonus();
+        }
+    }
 
-        if (config.getBoolean("Config.Enable-Perm-Chance")) {
-            lootLvl += IntStream.rangeClosed(1, 100)
-                    .map(i -> 101 - i) //
-                    .filter(i -> killer.hasPermission("headdrop.chance" + i))
-                    .findFirst()
-                    .orElse(0);
+    private boolean isDropAllowed(LivingEntity entity, Player killer) {
+        if (!config.getBoolean("Config.Baby-HeadDrop")
+                && entity instanceof Ageable ageable
+                && !ageable.isAdult()) {
+            return false;
         }
 
-        embed = new Embed();
+        if (config.getBoolean("Require-Weapon.Enable")) {
+            List<String> requiredWeapons = config.getStringList("Weapons");
+            if (!requiredWeapons.isEmpty()) {
+                if (killer == null) {
+                    return false;
+                }
 
-        Consumer<EntityDeathEvent> action = entityActions.get(event.getEntityType());
-        if (action != null) {
-            action.accept(event);
+                ItemStack weapon = killer.getInventory().getItemInMainHand();
+                String weaponName = weapon.getType().toString();
+
+                boolean matches = requiredWeapons.stream()
+                        .anyMatch(weaponName::equalsIgnoreCase);
+                if (!matches) {
+                    return false;
+                }
+            }
+        }
+
+        if (config.getBoolean("Config.Require-Killer-Player") && killer == null) {
+            return false;
+        }
+
+        if (config.getBoolean("Config.Killer-Require-Permission")
+                && (killer == null || !killer.hasPermission("headdrop.killer"))) {
+            return false;
+        }
+
+        return !config.getStringList("Config.Disable-Worlds")
+                .contains(entity.getWorld().getName());
+    }
+
+    private void handleEntityDrop(EntityDeathEvent event, String entityType, Supplier<ItemStack> itemSupplier) {
+        float baseChance = config.getFloat(entityType + ".Chance");
+        float lootBonus = (float) ActionContext.getLootBonus();
+
+        float totalChance = Math.min(baseChance + lootBonus, 100.0F);
+        float randomValue = ThreadLocalRandom.current().nextFloat() * 100.0F;
+
+        if (randomValue > totalChance) {
+            return;
+        }
+
+        Player killer = event.getEntity().getKiller();
+        ItemStack headItem = itemSupplier.get();
+
+
+        HeadDropEvent headDropEvent = new HeadDropEvent(killer, event.getEntity(), headItem);
+        Bukkit.getPluginManager().callEvent(headDropEvent);
+        if (headDropEvent.isCancelled()) {
+            return;
+        }
+
+        itemUtils.addLore(headItem, loreList, event.getEntity().getKiller());
+        event.getDrops().add(headItem);
+
+
+        if (killer != null) {
+            if (config.getBoolean("Bot.Enable")) {
+                sendEmbedMessage(killer, event.getEntity());
+            }
+            updateDatabase(killer, config.getInt(entityType + ".Point"));
+        }
+    }
+
+    public static class ActionContext {
+        private static final ThreadLocal<Double> lootBonus = new ThreadLocal<>();
+
+        public static void setLootBonus(double bonus) {
+            lootBonus.set(bonus);
+        }
+
+        public static double getLootBonus() {
+            Double bonus = lootBonus.get();
+            return bonus != null ? bonus : 0;
+        }
+
+        public static void clearLootBonus() {
+            lootBonus.remove();
         }
     }
 
     private void populateEntityActions(YamlDocument config) {
-        entityActions.put(EntityType.PLAYER, event -> {
-            if ((config.getBoolean("PLAYER.Require-Permission")) && !event.getEntity().hasPermission("headdrop.player")) {
-                return;
-            }
-            if ((config.getBoolean("PLAYER.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("PLAYER.Chance") + lootLvl) {
-
-                ItemStack skull = SkullCreator.createSkullWithName(event.getEntity().getName());
-                itemUtils.addLore(skull, loreList, event.getEntity().getKiller());
-                event.getDrops().add(skull);
-
-                if (event.getEntity().getKiller() != null) {
-                    if ((config.getBoolean("Bot.Enable"))) {
-                        embed.msg(title, description, footer);
-                    }
-                    updateDatabase(event.getEntity().getKiller());
-                }
-
-            }
-        });
         try {
-            entityActions.put(EntityType.BAT, event -> {
-                if ((config.getBoolean("BAT.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("BAT.Chance") + lootLvl) {
-
-                    item[0] = EntityHead.BAT.getSkull();
-                    itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
-                    event.getDrops().add(item[0]);
-
-                    if (event.getEntity().getKiller() != null) {
-                        if ((config.getBoolean("Bot.Enable"))) {
-                            embed.msg(title, description, footer);
-                        }
-                        updateDatabase(event.getEntity().getKiller());
-                    }
+            entityActions.put(EntityType.PLAYER, event -> {
+                if ((config.getBoolean("PLAYER.Require-Permission")) && !event.getEntity().hasPermission("headdrop.player")) {
+                    return;
                 }
+                handleEntityDrop(event, "PLAYER", () -> SkullCreator.createSkullWithName(event.getEntity().getName()));
             });
-        } catch (NoSuchFieldError ignored) {
-        }
-        try {
-            entityActions.put(EntityType.ENDER_DRAGON, event -> {
-                if ((config.getBoolean("ENDER_DRAGON.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("ENDER_DRAGON.Chance") + lootLvl) {
-
-                    item[0] = new ItemStack(Material.DRAGON_HEAD);
-                    itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
-                    event.getDrops().add(item[0]);
-
-                    if (event.getEntity().getKiller() != null) {
-                        if ((config.getBoolean("Bot.Enable"))) {
-                            embed.msg(title, description, footer);
-                        }
-                        updateDatabase(event.getEntity().getKiller());
-                    }
-                }
-            });
-        } catch (NoSuchFieldError ignored) {
-        }
-        try {
-            entityActions.put(EntityType.ZOMBIE, event -> {
-                if ((config.getBoolean("ZOMBIE.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("ZOMBIE.Chance") + lootLvl) {
-                    event.getDrops().removeIf(head -> head.getType() == Material.ZOMBIE_HEAD);
-
-                    item[0] = new ItemStack(Material.ZOMBIE_HEAD);
-                    itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
-                    event.getDrops().add(item[0]);
-
-                    if (event.getEntity().getKiller() != null) {
-                        if ((config.getBoolean("Bot.Enable"))) {
-                            embed.msg(title, description, footer);
-                        }
-                        updateDatabase(event.getEntity().getKiller());
-                    }
-
-                }
-            });
-        } catch (NoSuchFieldError ignored) {
-        }
-        try {
-            entityActions.put(EntityType.WITHER_SKELETON, event -> {
-                if ((config.getBoolean("WITHER_SKELETON.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("WITHER_SKELETON.Chance") + lootLvl) {
-                    event.getDrops().removeIf(head -> head.getType() == Material.WITHER_SKELETON_SKULL);
-
-                    item[0] = new ItemStack(Material.WITHER_SKELETON_SKULL);
-                    itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
-                    event.getDrops().add(item[0]);
-
-                    if (event.getEntity().getKiller() != null) {
-                        if ((config.getBoolean("Bot.Enable"))) {
-                            embed.msg(title, description, footer);
-                        }
-                        updateDatabase(event.getEntity().getKiller());
-                    }
-
-                }
-            });
-        } catch (NoSuchFieldError ignored) {
-        }
+        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
         try {
             entityActions.put(EntityType.CREEPER, event -> {
-                if ((config.getBoolean("CREEPER.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("CREEPER.Chance") + lootLvl) {
-                    event.getDrops().removeIf(head -> head.getType() == Material.CREEPER_HEAD);
-
-                    item[0] = new ItemStack(Material.CREEPER_HEAD);
-                    itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
-                    event.getDrops().add(item[0]);
-
-                    if (event.getEntity().getKiller() != null) {
-                        if ((config.getBoolean("Bot.Enable"))) {
-                            embed.msg(title, description, footer);
-                        }
-                        updateDatabase(event.getEntity().getKiller());
-                    }
-                }
+                event.getDrops().removeIf(head -> head.getType() == Material.CREEPER_HEAD);
+                handleEntityDrop(event, "CREEPER", () -> new ItemStack(Material.CREEPER_HEAD));
             });
-        } catch (NoSuchFieldError ignored) {
-        }
+        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
         try {
             entityActions.put(EntityType.SKELETON, event -> {
-                if ((config.getBoolean("SKELETON.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("SKELETON.Chance") + lootLvl) {
-                    event.getDrops().removeIf(head -> head.getType() == Material.SKELETON_SKULL);
-
-                    item[0] = new ItemStack(Material.SKELETON_SKULL);
-                    itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
-                    event.getDrops().add(item[0]);
-
-                    if (event.getEntity().getKiller() != null) {
-                        if ((config.getBoolean("Bot.Enable"))) {
-                            embed.msg(title, description, footer);
-                        }
-                        updateDatabase(event.getEntity().getKiller());
-                    }
-
-                }
-            });
-        } catch (NoSuchFieldError ignored) {
-        }
-        try {
-            entityActions.put(EntityType.BLAZE, event -> {
-                if ((config.getBoolean("BLAZE.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("BLAZE.Chance") + lootLvl) {
-
-                    item[0] = EntityHead.BLAZE.getSkull();
-                    itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
-                    event.getDrops().add(item[0]);
-
-                    if (event.getEntity().getKiller() != null) {
-                        if ((config.getBoolean("Bot.Enable"))) {
-                            embed.msg(title, description, footer);
-                        }
-                        updateDatabase(event.getEntity().getKiller());
-                    }
-
-                }
-
-            });
-        } catch (NoSuchFieldError ignored) {
-        }
-        try {
-            entityActions.put(EntityType.SPIDER, event -> {
-                if ((config.getBoolean("SPIDER.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("SPIDER.Chance") + lootLvl) {
-
-                    item[0] = EntityHead.SPIDER.getSkull();
-                    itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
-                    event.getDrops().add(item[0]);
-
-                    if (event.getEntity().getKiller() != null) {
-                        if ((config.getBoolean("Bot.Enable"))) {
-                            embed.msg(title, description, footer);
-                        }
-                        updateDatabase(event.getEntity().getKiller());
-                    }
-
-                }
-
-            });
-        } catch (NoSuchFieldError ignored) {
-        }
-        try {
-            entityActions.put(EntityType.CAVE_SPIDER, event -> {
-                if ((config.getBoolean("CAVE_SPIDER.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("CAVE_SPIDER.Chance") + lootLvl) {
-
-                    item[0] = EntityHead.CAVE_SPIDER.getSkull();
-                    itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
-                    event.getDrops().add(item[0]);
-
-                    if (event.getEntity().getKiller() != null) {
-                        if ((config.getBoolean("Bot.Enable"))) {
-                            embed.msg(title, description, footer);
-                        }
-                        updateDatabase(event.getEntity().getKiller());
-                    }
-                }
-            });
-        } catch (NoSuchFieldError ignored) {
-        }
-        try {
-            entityActions.put(EntityType.CHICKEN, event -> {
-                if ((config.getBoolean("CHICKEN.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("CHICKEN.Chance") + lootLvl) {
-
-                    item[0] = EntityHead.CHICKEN.getSkull();
-                    itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
-                    event.getDrops().add(item[0]);
-
-                    if (event.getEntity().getKiller() != null) {
-                        if ((config.getBoolean("Bot.Enable"))) {
-                            embed.msg(title, description, footer);
-                        }
-                        updateDatabase(event.getEntity().getKiller());
-                    }
-                }
-            });
-        } catch (NoSuchFieldError ignored) {
-        }
-        try {
-            entityActions.put(EntityType.COW, event -> {
-                if ((config.getBoolean("COW.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("COW.Chance") + lootLvl) {
-
-                    item[0] = EntityHead.COW.getSkull();
-                    itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
-                    event.getDrops().add(item[0]);
-
-                    if (event.getEntity().getKiller() != null) {
-                        if ((config.getBoolean("Bot.Enable"))) {
-                            embed.msg(title, description, footer);
-                        }
-                        updateDatabase(event.getEntity().getKiller());
-                    }
-
-                }
-
-            });
-        } catch (NoSuchFieldError ignored) {
-        }
-        try {
-            entityActions.put(EntityType.ENDERMAN, event -> {
-                if ((config.getBoolean("ENDERMAN.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("ENDERMAN.Chance") + lootLvl) {
-
-                    item[0] = EntityHead.ENDERMAN.getSkull();
-                    itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
-                    event.getDrops().add(item[0]);
-
-                    if (event.getEntity().getKiller() != null) {
-                        if ((config.getBoolean("Bot.Enable"))) {
-                            embed.msg(title, description, footer);
-                        }
-                        updateDatabase(event.getEntity().getKiller());
-                    }
-                }
-            });
-        } catch (NoSuchFieldError ignored) {
-        }
-        try {
-            entityActions.put(EntityType.GIANT, event -> {
-                if ((config.getBoolean("GIANT.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("GIANT.Chance") + lootLvl) {
-
-                    item[0] = EntityHead.GIANT.getSkull();
-                    itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
-                    event.getDrops().add(item[0]);
-
-                    if (event.getEntity().getKiller() != null) {
-                        if ((config.getBoolean("Bot.Enable"))) {
-                            embed.msg(title, description, footer);
-                        }
-                        updateDatabase(event.getEntity().getKiller());
-                    }
-
-                }
-
-            });
-        } catch (NoSuchFieldError ignored) {
-        }
-        try {
-            entityActions.put(EntityType.HORSE, event -> {
-                if ((config.getBoolean("HORSE.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("HORSE.Chance") + lootLvl) {
-                    Horse horse = (Horse) event.getEntity();
-                    item[0] = switch (horse.getColor()) {
-                        case WHITE -> EntityHead.HORSE_WHITE.getSkull();
-                        case CREAMY -> EntityHead.HORSE_CREAMY.getSkull();
-                        case CHESTNUT -> EntityHead.HORSE_CHESTNUT.getSkull();
-                        case BROWN -> EntityHead.HORSE_BROWN.getSkull();
-                        case BLACK -> EntityHead.HORSE_BLACK.getSkull();
-                        case GRAY -> EntityHead.HORSE_GRAY.getSkull();
-                        case DARK_BROWN -> EntityHead.HORSE_DARK_BROWN.getSkull();
-                    };
-                    itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
-                    event.getDrops().add(item[0]);
-
-                    if (event.getEntity().getKiller() != null) {
-                        if ((config.getBoolean("Bot.Enable"))) {
-                            embed.msg(title, description, footer);
-                        }
-                        updateDatabase(event.getEntity().getKiller());
-                    }
-                }
-            });
-        } catch (NoSuchFieldError ignored) {
-        }
-        try {
-            entityActions.put(EntityType.ILLUSIONER, event -> {
-                if ((config.getBoolean("ILLUSIONER.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("ILLUSIONER.Chance") + lootLvl) {
-
-                    item[0] = EntityHead.ILLUSIONER.getSkull();
-                    itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
-                    event.getDrops().add(item[0]);
-
-                    if (event.getEntity().getKiller() != null) {
-                        if ((config.getBoolean("Bot.Enable"))) {
-                            embed.msg(title, description, footer);
-                        }
-                        updateDatabase(event.getEntity().getKiller());
-                    }
-
-                }
-            });
-        } catch (NoSuchFieldError ignored) {
-        }
-        try {
-            entityActions.put(EntityType.IRON_GOLEM, event -> {
-                if ((config.getBoolean("IRON_GOLEM.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("IRON_GOLEM.Chance") + lootLvl) {
-
-                    item[0] = EntityHead.IRON_GOLEM.getSkull();
-                    itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
-                    event.getDrops().add(item[0]);
-
-                    if (event.getEntity().getKiller() != null) {
-                        if ((config.getBoolean("Bot.Enable"))) {
-                            embed.msg(title, description, footer);
-                        }
-                        updateDatabase(event.getEntity().getKiller());
-                    }
-
-                }
-            });
-        } catch (NoSuchFieldError ignored) {
-        }
-        try {
-            entityActions.put(EntityType.MAGMA_CUBE, event -> {
-                if ((config.getBoolean("MAGMA_CUBE.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("MAGMA_CUBE.Chance") + lootLvl) {
-
-                    item[0] = EntityHead.MAGMA_CUBE.getSkull();
-                    itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
-                    event.getDrops().add(item[0]);
-
-                    if (event.getEntity().getKiller() != null) {
-                        if ((config.getBoolean("Bot.Enable"))) {
-                            embed.msg(title, description, footer);
-                        }
-                        updateDatabase(event.getEntity().getKiller());
-                    }
-                }
-            });
-        } catch (NoSuchFieldError ignored) {
-        }
-        try {
-            entityActions.put(EntityType.MOOSHROOM, event -> {
-                if ((config.getBoolean("MUSHROOM_COW.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("MUSHROOM_COW.Chance") + lootLvl) {
-                    MushroomCow mushroomCow = (MushroomCow) event.getEntity();
-
-                    if (mushroomCow.getVariant().equals(MushroomCow.Variant.RED)) {
-                        item[0] = EntityHead.MUSHROOM_COW_RED.getSkull();
-                    } else if (mushroomCow.getVariant().equals(MushroomCow.Variant.BROWN)) {
-                        item[0] = EntityHead.MUSHROOM_COW_BROWN.getSkull();
-                    } else item[0] = null;
-
-                    itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
-                    event.getDrops().add(item[0]);
-
-                    if (event.getEntity().getKiller() != null) {
-                        if ((config.getBoolean("Bot.Enable"))) {
-                            embed.msg(title, description, footer);
-                        }
-                        updateDatabase(event.getEntity().getKiller());
-                    }
-                }
-            });
-        } catch (NoSuchFieldError ignored) {
-        }
-        try {
-            entityActions.put(EntityType.valueOf("MUSHROOM_COW"), event -> {
-                if ((config.getBoolean("MUSHROOM_COW.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("MUSHROOM_COW.Chance") + lootLvl) {
-                    MushroomCow mushroomCow = (MushroomCow) event.getEntity();
-
-                    if (mushroomCow.getVariant().equals(MushroomCow.Variant.RED)) {
-                        item[0] = EntityHead.MUSHROOM_COW_RED.getSkull();
-                    } else if (mushroomCow.getVariant().equals(MushroomCow.Variant.BROWN)) {
-                        item[0] = EntityHead.MUSHROOM_COW_BROWN.getSkull();
-                    } else item[0] = null;
-
-                    itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
-                    event.getDrops().add(item[0]);
-
-                    if (event.getEntity().getKiller() != null) {
-                        if ((config.getBoolean("Bot.Enable"))) {
-                            embed.msg(title, description, footer);
-                        }
-                        updateDatabase(event.getEntity().getKiller());
-                    }
-                }
-            });
-        } catch (NoSuchFieldError ignored) {
-        }
-        try {
-            entityActions.put(EntityType.OCELOT, event -> {
-                if ((config.getBoolean("OCELOT.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("OCELOT.Chance") + lootLvl) {
-
-                    item[0] = EntityHead.OCELOT.getSkull();
-                    itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
-                    event.getDrops().add(item[0]);
-
-                    if (event.getEntity().getKiller() != null) {
-                        if ((config.getBoolean("Bot.Enable"))) {
-                            embed.msg(title, description, footer);
-                        }
-                        updateDatabase(event.getEntity().getKiller());
-                    }
-                }
-
-            });
-        } catch (NoSuchFieldError ignored) {
-        }
-        try {
-            entityActions.put(EntityType.PIG, event -> {
-                if ((config.getBoolean("PIG.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("PIG.Chance") + lootLvl) {
-                    item[0] = EntityHead.PIG.getSkull();
-                    itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
-                    event.getDrops().add(item[0]);
-
-                    if (event.getEntity().getKiller() != null) {
-                        if ((config.getBoolean("Bot.Enable"))) {
-                            embed.msg(title, description, footer);
-                        }
-                        updateDatabase(event.getEntity().getKiller());
-                    }
-                }
-            });
-        } catch (NoSuchFieldError ignored) {
-        }
-        try {
-            entityActions.put(EntityType.SHEEP, event -> {
-                if ((config.getBoolean("SHEEP.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("SHEEP.Chance") + lootLvl) {
-                    Sheep sheep = (Sheep) event.getEntity();
-
-                    item[0] = switch (sheep.getColor()) {
-                        case WHITE -> EntityHead.SHEEP_WHITE.getSkull();
-                        case ORANGE -> EntityHead.SHEEP_ORANGE.getSkull();
-                        case MAGENTA -> EntityHead.SHEEP_MAGENTA.getSkull();
-                        case LIGHT_BLUE -> EntityHead.SHEEP_LIGHT_BLUE.getSkull();
-                        case YELLOW -> EntityHead.SHEEP_YELLOW.getSkull();
-                        case LIME -> EntityHead.SHEEP_LIME.getSkull();
-                        case PINK -> EntityHead.SHEEP_PINK.getSkull();
-                        case GRAY -> EntityHead.SHEEP_GRAY.getSkull();
-                        case LIGHT_GRAY -> EntityHead.SHEEP_LIGHT_GRAY.getSkull();
-                        case CYAN -> EntityHead.SHEEP_CYAN.getSkull();
-                        case PURPLE -> EntityHead.SHEEP_PURPLE.getSkull();
-                        case BLUE -> EntityHead.SHEEP_BLUE.getSkull();
-                        case BROWN -> EntityHead.SHEEP_BROWN.getSkull();
-                        case GREEN -> EntityHead.SHEEP_GREEN.getSkull();
-                        case RED -> EntityHead.SHEEP_RED.getSkull();
-                        case BLACK -> EntityHead.SHEEP_BLACK.getSkull();
-                    };
-
-                    itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
-                    event.getDrops().add(item[0]);
-
-                    if (event.getEntity().getKiller() != null) {
-                        if ((config.getBoolean("Bot.Enable"))) {
-                            embed.msg(title, description, footer);
-                        }
-                        updateDatabase(event.getEntity().getKiller());
-                    }
-                }
-            });
-        } catch (NoSuchFieldError ignored) {
-        }
-        try {
-            entityActions.put(EntityType.SILVERFISH, event -> {
-                if ((config.getBoolean("SILVERFISH.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("SILVERFISH.Chance") + lootLvl) {
-
-                    item[0] = EntityHead.SILVERFISH.getSkull();
-                    itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
-                    event.getDrops().add(item[0]);
-
-                    if (event.getEntity().getKiller() != null) {
-                        if ((config.getBoolean("Bot.Enable"))) {
-                            embed.msg(title, description, footer);
-                        }
-                        updateDatabase(event.getEntity().getKiller());
-                    }
-                }
-            });
-        } catch (NoSuchFieldError ignored) {
-        }
-        try {
-            entityActions.put(EntityType.SLIME, event -> {
-                if ((config.getBoolean("SLIME.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("SLIME.Chance") + lootLvl) {
-
-                    item[0] = EntityHead.SLIME.getSkull();
-                    itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
-                    event.getDrops().add(item[0]);
-
-                    if (event.getEntity().getKiller() != null) {
-                        if ((config.getBoolean("Bot.Enable"))) {
-                            embed.msg(title, description, footer);
-                        }
-                        updateDatabase(event.getEntity().getKiller());
-                    }
-                }
-            });
-        } catch (NoSuchFieldError ignored) {
-        }
-        try {
-            entityActions.put(EntityType.SNOW_GOLEM, event -> {
-                if ((config.getBoolean("SNOW_GOLEM.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("SNOW_GOLEM.Chance") + lootLvl) {
-
-                    item[0] = EntityHead.SNOWMAN.getSkull();
-                    itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
-                    event.getDrops().add(item[0]);
-
-                    if (event.getEntity().getKiller() != null) {
-                        if ((config.getBoolean("Bot.Enable"))) {
-                            embed.msg(title, description, footer);
-                        }
-                        updateDatabase(event.getEntity().getKiller());
-                    }
-
-                }
-            });
-        } catch (NoSuchFieldError ignored) {
-        }
-        try {
-            entityActions.put(EntityType.valueOf("SNOWMAN"), event -> {
-                if ((config.getBoolean("SNOW_GOLEM.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("SNOW_GOLEM.Chance") + lootLvl) {
-
-                    item[0] = EntityHead.SNOWMAN.getSkull();
-                    itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
-                    event.getDrops().add(item[0]);
-
-                    if (event.getEntity().getKiller() != null) {
-                        if ((config.getBoolean("Bot.Enable"))) {
-                            embed.msg(title, description, footer);
-                        }
-                        updateDatabase(event.getEntity().getKiller());
-                    }
-
-                }
-            });
-        } catch (NoSuchFieldError ignored) {
-        }
-        try {
-            entityActions.put(EntityType.SQUID, event -> {
-                if ((config.getBoolean("SQUID.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("SQUID.Chance") + lootLvl) {
-
-                    item[0] = EntityHead.SQUID.getSkull();
-                    itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
-                    event.getDrops().add(item[0]);
-
-                    if (event.getEntity().getKiller() != null) {
-                        if ((config.getBoolean("Bot.Enable"))) {
-                            embed.msg(title, description, footer);
-                        }
-                        updateDatabase(event.getEntity().getKiller());
-                    }
-                }
-            });
-        } catch (NoSuchFieldError ignored) {
-        }
-        try {
-            entityActions.put(EntityType.WITCH, event -> {
-                if ((config.getBoolean("WITCH.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("WITCH.Chance") + lootLvl) {
-
-                    item[0] = EntityHead.WITCH.getSkull();
-                    itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
-                    event.getDrops().add(item[0]);
-
-                    if (event.getEntity().getKiller() != null) {
-                        if ((config.getBoolean("Bot.Enable"))) {
-                            embed.msg(title, description, footer);
-                        }
-                        updateDatabase(event.getEntity().getKiller());
-                    }
-
-                }
-            });
-        } catch (NoSuchFieldError ignored) {
-        }
-        try {
-            entityActions.put(EntityType.WITHER, event -> {
-                if ((config.getBoolean("WITHER.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("WITHER.Chance") + lootLvl) {
-
-                    item[0] = EntityHead.WITHER.getSkull();
-                    itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
-                    event.getDrops().add(item[0]);
-
-                    if (event.getEntity().getKiller() != null) {
-                        if ((config.getBoolean("Bot.Enable"))) {
-                            embed.msg(title, description, footer);
-                        }
-                        updateDatabase(event.getEntity().getKiller());
-                    }
-                }
-            });
-        } catch (NoSuchFieldError ignored) {
-        }
-        try {
-            entityActions.put(EntityType.ZOMBIFIED_PIGLIN, event -> {
-                if ((config.getBoolean("ZOMBIFIED_PIGLIN.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("ZOMBIFIED_PIGLIN.Chance") + lootLvl) {
-
-                    item[0] = EntityHead.ZOMBIFIED_PIGLIN.getSkull();
-                    itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
-                    event.getDrops().add(item[0]);
-
-                    if (event.getEntity().getKiller() != null) {
-                        if ((config.getBoolean("Bot.Enable"))) {
-                            embed.msg(title, description, footer);
-                        }
-                        updateDatabase(event.getEntity().getKiller());
-                    }
-
-                }
-            });
-        } catch (NoSuchFieldError ignored) {
-        }
-        try {
-            entityActions.put(EntityType.GHAST, event -> {
-                if ((config.getBoolean("GHAST.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("GHAST.Chance") + lootLvl) {
-
-                    item[0] = EntityHead.GHAST.getSkull();
-                    itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
-                    event.getDrops().add(item[0]);
-
-                    if (event.getEntity().getKiller() != null) {
-                        if ((config.getBoolean("Bot.Enable"))) {
-                            embed.msg(title, description, footer);
-                        }
-                        updateDatabase(event.getEntity().getKiller());
-                    }
-
-                }
-            });
-        } catch (NoSuchFieldError ignored) {
-        }
-        try {
-            entityActions.put(EntityType.WOLF, event -> {
-                if ((config.getBoolean("WOLF.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("WOLF.Chance") + lootLvl) {
-                    Wolf wolf = (Wolf) event.getEntity();
-                    String variant = wolf.getVariant().toString().toUpperCase().replace("MINECRAFT:","");
-
-                    item[0] = switch (variant) {
-                        case "ASHEN" -> EntityHead.WOLF_ASHEN.getSkull();
-                        case "BLACK" -> EntityHead.WOLF_BLACK.getSkull();
-                        case "CHESTNUT" -> EntityHead.WOLF_CHESTNUT.getSkull();
-                        case "RUSTY" -> EntityHead.WOLF_RUSTY.getSkull();
-                        case "SNOWY" -> EntityHead.WOLF_SNOWY.getSkull();
-                        case "SPOTTED" -> EntityHead.WOLF_SPOTTED.getSkull();
-                        case "STRIPED" -> EntityHead.WOLF_STRIPED.getSkull();
-                        case "WOODS" -> EntityHead.WOLF_WOODS.getSkull();
-                        default -> EntityHead.WOLF_PALE.getSkull();
-                    };
-                    itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
-                    event.getDrops().add(item[0]);
-
-                    if (event.getEntity().getKiller() != null) {
-                        if ((config.getBoolean("Bot.Enable"))) {
-                            embed.msg(title, description, footer);
-                        }
-                        updateDatabase(event.getEntity().getKiller());
-                    }
-
-                }
-
-                //1.20.5 Mob Variants
-            });
-        } catch (NoSuchFieldError ignored) {
-        }
-        try {
-            entityActions.put(EntityType.VILLAGER, event -> {
-                if ((config.getBoolean("VILLAGER.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("VILLAGER.Chance") + lootLvl) {
-                    Villager villager = (Villager) event.getEntity();
-
-                    item[0] = switch (villager.getProfession().toString()) {
-                        case "WEAPONSMITH" -> EntityHead.VILLAGER_WEAPONSMITH.getSkull();
-                        case "SHEPHERD" -> EntityHead.VILLAGER_SHEPHERD.getSkull();
-                        case "LIBRARIAN" -> EntityHead.VILLAGER_LIBRARIAN.getSkull();
-                        case "FLETCHER" -> EntityHead.VILLAGER_FLETCHER.getSkull();
-                        case "FISHERMAN" -> EntityHead.VILLAGER_FISHERMAN.getSkull();
-                        case "FARMER" -> EntityHead.VILLAGER_FARMER.getSkull();
-                        case "CLERIC" -> EntityHead.VILLAGER_CLERIC.getSkull();
-                        case "CARTOGRAPHER" -> EntityHead.VILLAGER_CARTOGRAPHER.getSkull();
-                        case "BUTCHER" -> EntityHead.VILLAGER_BUTCHER.getSkull();
-                        case "ARMORER" -> EntityHead.VILLAGER_ARMORER.getSkull();
-                        case "LEATHERWORKER" -> EntityHead.VILLAGER_LEATHERWORKER.getSkull();
-                        case "MASON" -> EntityHead.VILLAGER_MASON.getSkull();
-                        case "TOOLSMITH" -> EntityHead.VILLAGER_TOOLSMITH.getSkull();
-                        default -> EntityHead.VILLAGER_NULL.getSkull();
-                    };
-
-                    itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
-                    event.getDrops().add(item[0]);
-
-                    if (event.getEntity().getKiller() != null) {
-                        if (config.getBoolean("Bot.Enable")) {
-                            embed.msg(title, description, footer);
-                        }
-                        updateDatabase(event.getEntity().getKiller());
-                    }
-                }
-
-                //1.8 Mob
-            });
-
-        } catch (NoSuchFieldError ignored) {
-        }
-        try {
-            entityActions.put(EntityType.RABBIT, event -> {
-                if ((config.getBoolean("RABBIT.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("RABBIT.Chance") + lootLvl) {
-                    Rabbit rabbit = (Rabbit) event.getEntity();
-
-                    item[0] = switch (rabbit.getRabbitType()) {
-                        case BROWN -> EntityHead.RABBIT_BROWN.getSkull();
-                        case WHITE -> EntityHead.RABBIT_WHITE.getSkull();
-                        case BLACK -> EntityHead.RABBIT_BLACK.getSkull();
-                        case BLACK_AND_WHITE -> EntityHead.RABBIT_BLACK_AND_WHITE.getSkull();
-                        case GOLD -> EntityHead.RABBIT_GOLD.getSkull();
-                        case SALT_AND_PEPPER -> EntityHead.RABBIT_SALT_AND_PEPPER.getSkull();
-                        case THE_KILLER_BUNNY -> EntityHead.RABBIT_THE_KILLER_BUNNY.getSkull();
-                    };
-                    itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
-                    event.getDrops().add(item[0]);
-
-                    if (event.getEntity().getKiller() != null) {
-                        if ((config.getBoolean("Bot.Enable"))) {
-                            embed.msg(title, description, footer);
-                        }
-                        updateDatabase(event.getEntity().getKiller());
-                    }
-                }
-            });
-        } catch (NoSuchFieldError ignored) {
-        }
-        try {
-            entityActions.put(EntityType.ENDERMITE, event -> {
-                if ((config.getBoolean("ENDERMITE.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("ENDERMITE.Chance") + lootLvl) {
-
-                    item[0] = EntityHead.ENDERMITE.getSkull();
-                    itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
-                    event.getDrops().add(item[0]);
-
-                    if (event.getEntity().getKiller() != null) {
-                        if ((config.getBoolean("Bot.Enable"))) {
-                            embed.msg(title, description, footer);
-                        }
-                        updateDatabase(event.getEntity().getKiller());
-                    }
-
-                }
-
-            });
-        } catch (NoSuchFieldError ignored) {
-        }
-        try {
-            entityActions.put(EntityType.GUARDIAN, event -> {
-                if ((config.getBoolean("GUARDIAN.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("GUARDIAN.Chance") + lootLvl) {
-
-                    item[0] = EntityHead.GUARDIAN.getSkull();
-                    itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
-                    event.getDrops().add(item[0]);
-
-                    if (event.getEntity().getKiller() != null) {
-                        if ((config.getBoolean("Bot.Enable"))) {
-                            embed.msg(title, description, footer);
-                        }
-                        updateDatabase(event.getEntity().getKiller());
-                    }
-                }
-
-                //1.9 Mob
-            });
-        } catch (NoSuchFieldError ignored) {
-        }
-        try {
-            entityActions.put(EntityType.SHULKER, event -> {
-                if ((config.getBoolean("SHULKER.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("SHULKER.Chance") + lootLvl) {
-
-                    item[0] = EntityHead.SHULKER.getSkull();
-                    itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
-                    event.getDrops().add(item[0]);
-
-                    if (event.getEntity().getKiller() != null) {
-                        if ((config.getBoolean("Bot.Enable"))) {
-                            embed.msg(title, description, footer);
-                        }
-                        updateDatabase(event.getEntity().getKiller());
-                    }
-
-                }
-                //1.10 Mob
-            });
-        } catch (NoSuchFieldError ignored) {
-        }
-        try {
-            entityActions.put(EntityType.POLAR_BEAR, event -> {
-                if ((config.getBoolean("POLAR_BEAR.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("POLAR_BEAR.Chance") + lootLvl) {
-
-                    item[0] = EntityHead.POLAR_BEAR.getSkull();
-                    itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
-                    event.getDrops().add(item[0]);
-
-                    if (event.getEntity().getKiller() != null) {
-                        if ((config.getBoolean("Bot.Enable"))) {
-                            embed.msg(title, description, footer);
-                        }
-                        updateDatabase(event.getEntity().getKiller());
-                    }
-
-                }
-
-                //1.11 Mob
-            });
-        } catch (NoSuchFieldError ignored) {
-        }
-        try {
-            entityActions.put(EntityType.ZOMBIE_VILLAGER, event -> {
-                if ((config.getBoolean("ZOMBIE_VILLAGER.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("ZOMBIE_VILLAGER.Chance") + lootLvl) {
-                    ZombieVillager zombieVillager = (ZombieVillager) event.getEntity();
-
-                    item[0] = switch (zombieVillager.getVillagerProfession().toString()) {
-                        case "ARMORER" -> EntityHead.ZOMBIE_VILLAGER_ARMORER.getSkull();
-                        case "BUTCHER" -> EntityHead.ZOMBIE_VILLAGER_BUTCHER.getSkull();
-                        case "CARTOGRAPHER" -> EntityHead.ZOMBIE_VILLAGER_CARTOGRAPHER.getSkull();
-                        case "CLERIC" -> EntityHead.ZOMBIE_VILLAGER_CLERIC.getSkull();
-                        case "FARMER" -> EntityHead.ZOMBIE_VILLAGER_FARMER.getSkull();
-                        case "FISHERMAN" -> EntityHead.ZOMBIE_VILLAGER_FISHERMAN.getSkull();
-                        case "FLETCHER" -> EntityHead.ZOMBIE_VILLAGER_FLETCHER.getSkull();
-                        case "LIBRARIAN" -> EntityHead.ZOMBIE_VILLAGER_LIBRARIAN.getSkull();
-                        case "SHEPHERD" -> EntityHead.ZOMBIE_VILLAGER_SHEPHERD.getSkull();
-                        case "WEAPONSMITH" -> EntityHead.ZOMBIE_VILLAGER_WEAPONSMITH.getSkull();
-                        default -> EntityHead.ZOMBIE_VILLAGER_NULL.getSkull();
-                    };
-                    itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
-                    event.getDrops().add(item[0]);
-
-                    if (event.getEntity().getKiller() != null) {
-                        if ((config.getBoolean("Bot.Enable"))) {
-                            embed.msg(title, description, footer);
-                        }
-                        updateDatabase(event.getEntity().getKiller());
-                    }
-
-                }
-            });
-        } catch (NoSuchFieldError ignored) {
-        }
-        try {
-            entityActions.put(EntityType.VINDICATOR, event -> {
-                if ((config.getBoolean("VINDICATOR.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("VINDICATOR.Chance") + lootLvl) {
-
-                    item[0] = EntityHead.VINDICATOR.getSkull();
-                    itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
-                    event.getDrops().add(item[0]);
-
-                    if (event.getEntity().getKiller() != null) {
-                        if ((config.getBoolean("Bot.Enable"))) {
-                            embed.msg(title, description, footer);
-                        }
-                        updateDatabase(event.getEntity().getKiller());
-                    }
-
-                }
-
-            });
-        } catch (NoSuchFieldError ignored) {
-        }
-        try {
-            entityActions.put(EntityType.VEX, event -> {
-                if ((config.getBoolean("VEX.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("VEX.Chance") + lootLvl) {
-
-                    Vex vex = (Vex) event.getEntity();
-
-                    if (vex.isCharging()) {
-                        item[0] = EntityHead.VEX_CHARGE.getSkull();
-                    } else {
-                        item[0] = EntityHead.VEX.getSkull();
-                    }
-
-                    itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
-                    event.getDrops().add(item[0]);
-
-                    if (event.getEntity().getKiller() != null) {
-                        if ((config.getBoolean("Bot.Enable"))) {
-                            embed.msg(title, description, footer);
-                        }
-                        updateDatabase(event.getEntity().getKiller());
-                    }
-
-                }
-
-            });
-        } catch (NoSuchFieldError ignored) {
-        }
-        try {
-            entityActions.put(EntityType.EVOKER, event -> {
-                if ((config.getBoolean("EVOKER.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("EVOKER.Chance") + lootLvl) {
-
-                    item[0] = EntityHead.EVOKER.getSkull();
-                    itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
-                    event.getDrops().add(item[0]);
-
-                    if (event.getEntity().getKiller() != null) {
-                        if ((config.getBoolean("Bot.Enable"))) {
-                            embed.msg(title, description, footer);
-                        }
-                        updateDatabase(event.getEntity().getKiller());
-                    }
-
-                }
-
-            });
-        } catch (NoSuchFieldError ignored) {
-        }
-        try {
-            entityActions.put(EntityType.HUSK, event -> {
-                if ((config.getBoolean("HUSK.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("HUSK.Chance") + lootLvl) {
-
-                    item[0] = EntityHead.HUSK.getSkull();
-                    itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
-                    event.getDrops().add(item[0]);
-
-                    if (event.getEntity().getKiller() != null) {
-                        if ((config.getBoolean("Bot.Enable"))) {
-                            embed.msg(title, description, footer);
-                        }
-                        updateDatabase(event.getEntity().getKiller());
-                    }
-
-                }
-
-            });
-        } catch (NoSuchFieldError ignored) {
-        }
-        try {
-            entityActions.put(EntityType.STRAY, event -> {
-                if ((config.getBoolean("STRAY.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("STRAY.Chance") + lootLvl) {
-
-                    item[0] = EntityHead.STRAY.getSkull();
-                    itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
-                    event.getDrops().add(item[0]);
-
-                    if (event.getEntity().getKiller() != null) {
-                        if ((config.getBoolean("Bot.Enable"))) {
-                            embed.msg(title, description, footer);
-                        }
-                        updateDatabase(event.getEntity().getKiller());
-                    }
-
-                }
-
-            });
-        } catch (NoSuchFieldError ignored) {
-        }
-        try {
-            entityActions.put(EntityType.ELDER_GUARDIAN, event -> {
-                if ((config.getBoolean("ELDER_GUARDIAN.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("ELDER_GUARDIAN.Chance") + lootLvl) {
-
-                    item[0] = EntityHead.ELDER_GUARDIAN.getSkull();
-                    itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
-                    event.getDrops().add(item[0]);
-
-                    if (event.getEntity().getKiller() != null) {
-                        if ((config.getBoolean("Bot.Enable"))) {
-                            embed.msg(title, description, footer);
-                        }
-                        updateDatabase(event.getEntity().getKiller());
-                    }
-                }
-
-            });
-        } catch (NoSuchFieldError ignored) {
-        }
-        try {
-            entityActions.put(EntityType.DONKEY, event -> {
-                if ((config.getBoolean("DONKEY.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("DONKEY.Chance") + lootLvl) {
-
-                    item[0] = EntityHead.DONKEY.getSkull();
-                    itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
-                    event.getDrops().add(item[0]);
-
-                    if (event.getEntity().getKiller() != null) {
-                        if ((config.getBoolean("Bot.Enable"))) {
-                            embed.msg(title, description, footer);
-                        }
-                        updateDatabase(event.getEntity().getKiller());
-                    }
-                }
-
-            });
-        } catch (NoSuchFieldError ignored) {
-        }
-        try {
-            entityActions.put(EntityType.ZOMBIE_HORSE, event -> {
-                if ((config.getBoolean("ZOMBIE_HORSE.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("ZOMBIE_HORSE.Chance") + lootLvl) {
-
-                    item[0] = EntityHead.ZOMBIE_HORSE.getSkull();
-                    itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
-                    event.getDrops().add(item[0]);
-
-                    if (event.getEntity().getKiller() != null) {
-                        if ((config.getBoolean("Bot.Enable"))) {
-                            embed.msg(title, description, footer);
-                        }
-                        updateDatabase(event.getEntity().getKiller());
-                    }
-                }
-            });
-        } catch (NoSuchFieldError ignored) {
-        }
-        try {
-            entityActions.put(EntityType.SKELETON_HORSE, event -> {
-                if ((config.getBoolean("SKELETON_HORSE.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("SKELETON_HORSE.Chance") + lootLvl) {
-
-                    item[0] = EntityHead.SKELETON_HORSE.getSkull();
-                    itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
-                    event.getDrops().add(item[0]);
-
-                    if (event.getEntity().getKiller() != null) {
-                        if ((config.getBoolean("Bot.Enable"))) {
-                            embed.msg(title, description, footer);
-                        }
-                        updateDatabase(event.getEntity().getKiller());
-                    }
-
-                }
-            });
-        } catch (NoSuchFieldError ignored) {
-        }
-        try {
-            entityActions.put(EntityType.MULE, event -> {
-                if ((config.getBoolean("MULE.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("MULE.Chance") + lootLvl) {
-
-                    item[0] = EntityHead.MULE.getSkull();
-                    itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
-                    event.getDrops().add(item[0]);
-
-                    if (event.getEntity().getKiller() != null) {
-                        if ((config.getBoolean("Bot.Enable"))) {
-                            embed.msg(title, description, footer);
-                        }
-                        updateDatabase(event.getEntity().getKiller());
-                    }
-
-                }
-                //1.12 Mob
-            });
-        } catch (NoSuchFieldError ignored) {
-        }
-        try {
-            entityActions.put(EntityType.PARROT, event -> {
-                if ((config.getBoolean("PARROT.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("PARROT.Chance") + lootLvl) {
-                    Parrot parrot = (Parrot) event.getEntity();
-
-                    item[0] = switch (parrot.getVariant()) {
-                        case BLUE -> EntityHead.PARROT_BLUE.getSkull();
-                        case CYAN -> EntityHead.PARROT_CYAN.getSkull();
-                        case GRAY -> EntityHead.PARROT_GRAY.getSkull();
-                        case RED -> EntityHead.PARROT_RED.getSkull();
-                        case GREEN -> EntityHead.PARROT_GREEN.getSkull();
-                    };
-                    itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
-                    event.getDrops().add(item[0]);
-
-                    if (event.getEntity().getKiller() != null) {
-                        if ((config.getBoolean("Bot.Enable"))) {
-                            embed.msg(title, description, footer);
-                        }
-                        updateDatabase(event.getEntity().getKiller());
-                    }
-
-                }
-
-                //1.13 Mob
-            });
-        } catch (NoSuchFieldError ignored) {
-        }
-        try {
-            entityActions.put(EntityType.TROPICAL_FISH, event -> {
-                if ((config.getBoolean("TROPICAL_FISH.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("TROPICAL_FISH.Chance") + lootLvl) {
-
-                    TropicalFish tropicalFish = (TropicalFish) event.getEntity();
-
-                    item[0] = switch (tropicalFish.getBodyColor()) {
-                        case MAGENTA -> EntityHead.TROPICAL_FISH_MAGENTA.getSkull();
-                        case LIGHT_BLUE -> EntityHead.TROPICAL_FISH_LIGHT_BLUE.getSkull();
-                        case YELLOW -> EntityHead.TROPICAL_FISH_YELLOW.getSkull();
-                        case PINK -> EntityHead.TROPICAL_FISH_PINK.getSkull();
-                        case GRAY -> EntityHead.TROPICAL_FISH_GRAY.getSkull();
-                        case LIGHT_GRAY -> EntityHead.TROPICAL_FISH_LIGHT_GRAY.getSkull();
-                        case CYAN -> EntityHead.TROPICAL_FISH_CYAN.getSkull();
-                        case BLUE -> EntityHead.TROPICAL_FISH_BLUE.getSkull();
-                        case GREEN -> EntityHead.TROPICAL_FISH_GREEN.getSkull();
-                        case RED -> EntityHead.TROPICAL_FISH_RED.getSkull();
-                        case BLACK -> EntityHead.TROPICAL_FISH_BLACK.getSkull();
-                        case ORANGE -> EntityHead.TROPICAL_FISH_ORANGE.getSkull();
-                        default -> {
-                            Bukkit.getLogger().severe("If you notice this error, pls report it to plugin author");
-                            throw new IllegalStateException("Unexpected value: " + tropicalFish.getBodyColor());
-                        }
-                    };
-
-                    itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
-                    event.getDrops().add(item[0]);
-
-                    if (event.getEntity().getKiller() != null) {
-                        if ((config.getBoolean("Bot.Enable"))) {
-                            embed.msg(title, description, footer);
-                        }
-                        updateDatabase(event.getEntity().getKiller());
-                    }
-
-                }
-            });
-        } catch (NoSuchFieldError ignored) {
-        }
-        try {
-            entityActions.put(EntityType.PUFFERFISH, event -> {
-                if ((config.getBoolean("PUFFERFISH.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("PUFFERFISH.Chance") + lootLvl) {
-
-                    item[0] = EntityHead.PUFFERFISH.getSkull();
-                    itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
-                    event.getDrops().add(item[0]);
-
-                    if (event.getEntity().getKiller() != null) {
-                        if ((config.getBoolean("Bot.Enable"))) {
-                            embed.msg(title, description, footer);
-                        }
-                        updateDatabase(event.getEntity().getKiller());
-                    }
-                }
-
-            });
-        } catch (NoSuchFieldError ignored) {
-        }
-        try {
-            entityActions.put(EntityType.SALMON, event -> {
-                if ((config.getBoolean("SALMON.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("SALMON.Chance") + lootLvl) {
-
-                    item[0] = EntityHead.SALMON.getSkull();
-                    itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
-                    event.getDrops().add(item[0]);
-
-                    if (event.getEntity().getKiller() != null) {
-                        if ((config.getBoolean("Bot.Enable"))) {
-                            embed.msg(title, description, footer);
-                        }
-                        updateDatabase(event.getEntity().getKiller());
-                    }
-                }
-            });
-        } catch (NoSuchFieldError ignored) {
-        }
-        try {
-            entityActions.put(EntityType.COD, event -> {
-                if ((config.getBoolean("COD.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("COD.Chance") + lootLvl) {
-
-                    item[0] = EntityHead.COD.getSkull();
-                    itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
-                    event.getDrops().add(item[0]);
-
-                    if (event.getEntity().getKiller() != null) {
-                        if ((config.getBoolean("Bot.Enable"))) {
-                            embed.msg(title, description, footer);
-                        }
-                        updateDatabase(event.getEntity().getKiller());
-                    }
-                }
-            });
-        } catch (NoSuchFieldError ignored) {
-        }
-        try {
-            entityActions.put(EntityType.TURTLE, event -> {
-                if ((config.getBoolean("TURTLE.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("TURTLE.Chance") + lootLvl) {
-
-                    item[0] = EntityHead.TURTLE.getSkull();
-                    itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
-                    event.getDrops().add(item[0]);
-
-                    if (event.getEntity().getKiller() != null) {
-                        if ((config.getBoolean("Bot.Enable"))) {
-                            embed.msg(title, description, footer);
-                        }
-                        updateDatabase(event.getEntity().getKiller());
-                    }
-
-                }
-            });
-        } catch (NoSuchFieldError ignored) {
-        }
-        try {
-            entityActions.put(EntityType.DOLPHIN, event -> {
-                if ((config.getBoolean("DOLPHIN.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("DOLPHIN.Chance") + lootLvl) {
-
-                    item[0] = EntityHead.DOLPHIN.getSkull();
-                    itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
-                    event.getDrops().add(item[0]);
-
-                    if (event.getEntity().getKiller() != null) {
-                        if ((config.getBoolean("Bot.Enable"))) {
-                            embed.msg(title, description, footer);
-                        }
-                        updateDatabase(event.getEntity().getKiller());
-                    }
-
-                }
-
-            });
-        } catch (NoSuchFieldError ignored) {
-        }
-        try {
-            entityActions.put(EntityType.PHANTOM, event -> {
-                if ((config.getBoolean("PHANTOM.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("PHANTOM.Chance") + lootLvl) {
-
-                    item[0] = EntityHead.PHANTOM.getSkull();
-                    itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
-                    event.getDrops().add(item[0]);
-
-                    if (event.getEntity().getKiller() != null) {
-                        if ((config.getBoolean("Bot.Enable"))) {
-                            embed.msg(title, description, footer);
-                        }
-                        updateDatabase(event.getEntity().getKiller());
-                    }
-                }
-            });
-        } catch (NoSuchFieldError ignored) {
-        }
-        try {
-            entityActions.put(EntityType.DROWNED, event -> {
-                if ((config.getBoolean("DROWNED.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("DROWNED.Chance") + lootLvl) {
-
-                    item[0] = EntityHead.DROWNED.getSkull();
-                    itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
-                    event.getDrops().add(item[0]);
-
-                    if (event.getEntity().getKiller() != null) {
-                        if ((config.getBoolean("Bot.Enable"))) {
-                            embed.msg(title, description, footer);
-                        }
-                        updateDatabase(event.getEntity().getKiller());
-                    }
-                }
-
-
-                //1.14 Mob
-            });
-        } catch (NoSuchFieldError ignored) {
-        }
-        try {
-            entityActions.put(EntityType.WANDERING_TRADER, event -> {
-                if ((config.getBoolean("WANDERING_TRADER.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("WANDERING_TRADER.Chance") + lootLvl) {
-
-                    item[0] = EntityHead.WANDERING_TRADER.getSkull();
-                    itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
-                    event.getDrops().add(item[0]);
-
-                    if (event.getEntity().getKiller() != null) {
-                        if ((config.getBoolean("Bot.Enable"))) {
-                            embed.msg(title, description, footer);
-                        }
-                        updateDatabase(event.getEntity().getKiller());
-                    }
-                }
-            });
-        } catch (NoSuchFieldError ignored) {
-        }
-        try {
-            entityActions.put(EntityType.TRADER_LLAMA, event -> {
-                if ((config.getBoolean("TRADER_LLAMA.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("TRADER_LLAMA.Chance")) {
-                    TraderLlama traderLlama = (TraderLlama) event.getEntity();
-
-                    item[0] = switch (traderLlama.getColor()) {
-                        case BROWN -> EntityHead.TRADER_LLAMA_BROWN.getSkull();
-                        case WHITE -> EntityHead.TRADER_LLAMA_WHITE.getSkull();
-                        case GRAY -> EntityHead.TRADER_LLAMA_GRAY.getSkull();
-                        case CREAMY -> EntityHead.TRADER_LLAMA_CREAMY.getSkull();
-                    };
-                    itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
-                    event.getDrops().add(item[0]);
-
-                    if (event.getEntity().getKiller() != null) {
-                        if ((config.getBoolean("Bot.Enable"))) {
-                            embed.msg(title, description, footer);
-                        }
-                        updateDatabase(event.getEntity().getKiller());
-                    }
-                }
-            });
-        } catch (NoSuchFieldError ignored) {
-        }
-        try {
-            entityActions.put(EntityType.LLAMA, event -> {
-                if ((config.getBoolean("LLAMA.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("LLAMA.Chance") + lootLvl) {
-                    Llama llama = (Llama) event.getEntity();
-
-                    item[0] = switch (llama.getColor()) {
-                        case BROWN -> EntityHead.LLAMA_BROWN.getSkull();
-                        case GRAY -> EntityHead.LLAMA_GRAY.getSkull();
-                        case CREAMY -> EntityHead.LLAMA_CREAMY.getSkull();
-                        case WHITE -> EntityHead.LLAMA_WHITE.getSkull();
-                    };
-                    itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
-                    event.getDrops().add(item[0]);
-
-                    if (event.getEntity().getKiller() != null) {
-                        if ((config.getBoolean("Bot.Enable"))) {
-                            embed.msg(title, description, footer);
-                        }
-                        updateDatabase(event.getEntity().getKiller());
-                    }
-                }
-            });
-        } catch (NoSuchFieldError ignored) {
-        }
-        try {
-            entityActions.put(EntityType.RAVAGER, event -> {
-                if ((config.getBoolean("RAVAGER.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("RAVAGER.Chance") + lootLvl) {
-
-                    item[0] = EntityHead.RAVAGER.getSkull();
-                    itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
-                    event.getDrops().add(item[0]);
-
-                    if (event.getEntity().getKiller() != null) {
-                        if ((config.getBoolean("Bot.Enable"))) {
-                            embed.msg(title, description, footer);
-                        }
-                        updateDatabase(event.getEntity().getKiller());
-                    }
-                }
-            });
-        } catch (NoSuchFieldError ignored) {
-        }
-        try {
-            entityActions.put(EntityType.PILLAGER, event -> {
-                if ((config.getBoolean("PILLAGER.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("PILLAGER.Chance") + lootLvl) {
-
-                    item[0] = EntityHead.PILLAGER.getSkull();
-                    itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
-                    event.getDrops().add(item[0]);
-
-                    if (event.getEntity().getKiller() != null) {
-                        if ((config.getBoolean("Bot.Enable"))) {
-                            embed.msg(title, description, footer);
-                        }
-                        updateDatabase(event.getEntity().getKiller());
-                    }
-                }
-            });
-        } catch (NoSuchFieldError ignored) {
-        }
-        try {
-            entityActions.put(EntityType.PANDA, event -> {
-                if ((config.getBoolean("PANDA.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("PANDA.Chance") + lootLvl) {
-                    Panda panda = (Panda) event.getEntity();
-
-                    if (panda.getMainGene() == Panda.Gene.BROWN) {
-                        item[0] = EntityHead.PANDA_BROWN.getSkull();
-                    } else {
-                        item[0] = EntityHead.PANDA.getSkull();
-                    }
-
-                    itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
-                    event.getDrops().add(item[0]);
-
-                    if (event.getEntity().getKiller() != null) {
-                        if ((config.getBoolean("Bot.Enable"))) {
-                            embed.msg(title, description, footer);
-                        }
-                        updateDatabase(event.getEntity().getKiller());
-                    }
-                }
-            });
-        } catch (NoSuchFieldError ignored) {
-        }
-        try {
-            entityActions.put(EntityType.FOX, event -> {
-                if ((config.getBoolean("FOX.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("FOX.Chance") + lootLvl) {
-                    Fox fox = (Fox) event.getEntity();
-
-                    item[0] = switch (fox.getFoxType()) {
-                        case RED -> EntityHead.FOX.getSkull();
-                        case SNOW -> EntityHead.FOX_WHITE.getSkull();
-                    };
-                    itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
-                    event.getDrops().add(item[0]);
-
-                    if (event.getEntity().getKiller() != null) {
-                        if ((config.getBoolean("Bot.Enable"))) {
-                            embed.msg(title, description, footer);
-                        }
-                        updateDatabase(event.getEntity().getKiller());
-                    }
-                }
-            });
-        } catch (NoSuchFieldError ignored) {
-        }
-        try {
-            entityActions.put(EntityType.CAT, event -> {
-                if ((config.getBoolean("CAT.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("CAT.Chance") + lootLvl) {
-                    Cat cat = (Cat) event.getEntity();
-
-                    item[0] = switch (cat.getCatType().toString()) {
-                        case "BLACK" -> EntityHead.CAT_BLACK.getSkull();
-                        case "BRITISH_SHORTHAIR" -> EntityHead.CAT_BRITISH.getSkull();
-                        case "CALICO" -> EntityHead.CAT_CALICO.getSkull();
-                        case "JELLIE" -> EntityHead.CAT_JELLIE.getSkull();
-                        case "PERSIAN" -> EntityHead.CAT_PERSIAN.getSkull();
-                        case "RAGDOLL" -> EntityHead.CAT_RAGDOLL.getSkull();
-                        case "RED" -> EntityHead.CAT_RED.getSkull();
-                        case "SIAMESE" -> EntityHead.CAT_SIAMESE.getSkull();
-                        case "TABBY" -> EntityHead.CAT_TABBY.getSkull();
-                        case "ALL_BLACK" -> EntityHead.CAT_ALL_BLACK.getSkull();
-                        case "WHITE" -> EntityHead.CAT_WHITE.getSkull();
-                        default -> throw new IllegalStateException("Unexpected value: " + cat.getCatType());
-                    };
-                    itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
-                    event.getDrops().add(item[0]);
-                    
-                    if (event.getEntity().getKiller() != null) {
-                        if ((config.getBoolean("Bot.Enable"))) {
-                            embed.msg(title, description, footer);
-                        }
-                        updateDatabase(event.getEntity().getKiller());
-                    }
-                }
-
-                //1.15 Mob
-            });
-        } catch (NoSuchFieldError ignored) {
-        }
-        try {
-            entityActions.put(EntityType.BEE, event -> {
-                if ((config.getBoolean("BEE.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("BEE.Chance") + lootLvl) {
-                    Bee bee = (Bee) event.getEntity();
-
-                    if (bee.getAnger() > 0) {
-                        item[0] = EntityHead.BEE_AWARE.getSkull();
-                    } else {
-                        item[0] = EntityHead.BEE.getSkull();
-                    }
-                    itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
-                    event.getDrops().add(item[0]);
-
-                    if (event.getEntity().getKiller() != null) {
-                        if ((config.getBoolean("Bot.Enable"))) {
-                            embed.msg(title, description, footer);
-                        }
-                        updateDatabase(event.getEntity().getKiller());
-                    }
-                }
-                //1.16 Mob
-            });
-        } catch (NoSuchFieldError ignored) {
-        }
-        try {
-            entityActions.put(EntityType.ZOGLIN, event -> {
-                if ((config.getBoolean("ZOGLIN.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("ZOGLIN.Chance") + lootLvl) {
-
-                    item[0] = EntityHead.ZOGLIN.getSkull();
-                    itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
-                    event.getDrops().add(item[0]);
-
-                    if (event.getEntity().getKiller() != null) {
-                        if ((config.getBoolean("Bot.Enable"))) {
-                            embed.msg(title, description, footer);
-                        }
-                        updateDatabase(event.getEntity().getKiller());
-                    }
-                }
-            });
-        } catch (NoSuchFieldError ignored) {
-        }
-        try {
-            entityActions.put(EntityType.STRIDER, event -> {
-                if ((config.getBoolean("STRIDER.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("STRIDER.Chance") + lootLvl) {
-
-                    item[0] = EntityHead.STRIDER.getSkull();
-                    itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
-                    event.getDrops().add(item[0]);
-
-                    if (event.getEntity().getKiller() != null) {
-                        if ((config.getBoolean("Bot.Enable"))) {
-                            embed.msg(title, description, footer);
-                        }
-                        updateDatabase(event.getEntity().getKiller());
-                    }
-                }
-            });
-        } catch (NoSuchFieldError ignored) {
-        }
-        try {
-            entityActions.put(EntityType.PIGLIN, event -> {
-                if ((config.getBoolean("PIGLIN.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("PIGLIN.Chance") + lootLvl) {
-
-                    item[0] = EntityHead.PIGLIN.getSkull();
-                    itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
-                    event.getDrops().add(item[0]);
-
-                    if (event.getEntity().getKiller() != null) {
-                        if ((config.getBoolean("Bot.Enable"))) {
-                            embed.msg(title, description, footer);
-                        }
-                        updateDatabase(event.getEntity().getKiller());
-                    }
-                }
-            });
-        } catch (NoSuchFieldError ignored) {
-        }
-        try {
-            entityActions.put(EntityType.HOGLIN, event -> {
-                if ((config.getBoolean("HOGLIN.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("HOGLIN.Chance") + lootLvl) {
-
-                    item[0] = EntityHead.HOGLIN.getSkull();
-                    itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
-                    event.getDrops().add(item[0]);
-
-                    if (event.getEntity().getKiller() != null) {
-                        if ((config.getBoolean("Bot.Enable"))) {
-                            embed.msg(title, description, footer);
-                        }
-                        updateDatabase(event.getEntity().getKiller());
-                    }
-                }
-            });
-        } catch (NoSuchFieldError ignored) {
-        }
-        try {
-            entityActions.put(EntityType.PIGLIN_BRUTE, event -> {
-                if ((config.getBoolean("PIGLIN_BRUTE.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("PIGLIN_BRUTE.Chance") + lootLvl) {
-
-                    item[0] = EntityHead.PIGLIN_BRUTE.getSkull();
-                    itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
-                    event.getDrops().add(item[0]);
-
-                    if (event.getEntity().getKiller() != null) {
-                        if ((config.getBoolean("Bot.Enable"))) {
-                            embed.msg(title, description, footer);
-                        }
-                        updateDatabase(event.getEntity().getKiller());
-                    }
-                }
-
-                // 1.17 Mob
-            });
-        } catch (NoSuchFieldError ignored) {
-        }
-        try {
-            entityActions.put(EntityType.GLOW_SQUID, event -> {
-                if ((config.getBoolean("GLOW_SQUID.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("GLOW_SQUID.Chance") + lootLvl) {
-
-                    item[0] = EntityHead.GLOW_SQUID.getSkull();
-                    itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
-                    event.getDrops().add(item[0]);
-
-                    if (event.getEntity().getKiller() != null) {
-                        if ((config.getBoolean("Bot.Enable"))) {
-                            embed.msg(title, description, footer);
-                        }
-                        updateDatabase(event.getEntity().getKiller());
-                    }
-                }
-            });
-        } catch (NoSuchFieldError ignored) {
-        }
-        try {
-            entityActions.put(EntityType.GOAT, event -> {
-                if ((config.getBoolean("GOAT.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("GOAT.Chance") + lootLvl) {
-
-                    item[0] = EntityHead.GOAT.getSkull();
-                    itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
-                    event.getDrops().add(item[0]);
-
-                    if (event.getEntity().getKiller() != null) {
-                        if ((config.getBoolean("Bot.Enable"))) {
-                            embed.msg(title, description, footer);
-                        }
-                        updateDatabase(event.getEntity().getKiller());
-                    }
-                }
-            });
-        } catch (NoSuchFieldError ignored) {
-        }
-        try {
-            entityActions.put(EntityType.AXOLOTL, event -> {
-                if ((config.getBoolean("AXOLOTL.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("AXOLOTL.Chance") + lootLvl) {
-                    Axolotl axolotl = (Axolotl) event.getEntity();
-
-                    item[0] = switch (axolotl.getVariant()) {
-                        case LUCY -> EntityHead.AXOLOTL_LUCY.getSkull();
-                        case BLUE -> EntityHead.AXOLOTL_BLUE.getSkull();
-                        case WILD -> EntityHead.AXOLOTL_WILD.getSkull();
-                        case CYAN -> EntityHead.AXOLOTL_CYAN.getSkull();
-                        case GOLD -> EntityHead.AXOLOTL_GOLD.getSkull();
-                    };
-                    itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
-                    event.getDrops().add(item[0]);
-
-                    if (event.getEntity().getKiller() != null) {
-                        if ((config.getBoolean("Bot.Enable"))) {
-                            embed.msg(title, description, footer);
-                        }
-                        updateDatabase(event.getEntity().getKiller());
-                    }
-                }
-
-                //1.19 Mob
-            });
-        } catch (NoSuchFieldError ignored) {
-        }
-        try {
-            entityActions.put(EntityType.ALLAY, event -> {
-                if ((config.getBoolean("ALLAY.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("ALLAY.Chance") + lootLvl) {
-
-                    item[0] = EntityHead.ALLAY.getSkull();
-                    itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
-                    event.getDrops().add(item[0]);
-
-                    if (event.getEntity().getKiller() != null) {
-                        if ((config.getBoolean("Bot.Enable"))) {
-                            embed.msg(title, description, footer);
-                        }
-                        updateDatabase(event.getEntity().getKiller());
-                    }
-                }
-            });
-        } catch (NoSuchFieldError ignored) {
-        }
-        try {
-            entityActions.put(EntityType.FROG, event -> {
-                if ((config.getBoolean("FROG.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("FROG.Chance") + lootLvl) {
-                    Frog frog = (Frog) event.getEntity();
-
-                    item[0] = switch (frog.getVariant().toString()) {
-                        case "TEMPERATE" -> EntityHead.FROG_TEMPERATE.getSkull();
-                        case "WARM" -> EntityHead.FROG_WARM.getSkull();
-                        case "COLD" -> EntityHead.FROG_COLD.getSkull();
-                        default -> throw new IllegalStateException("Unexpected value: " + frog.getVariant());
-                    };
-                    itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
-                    event.getDrops().add(item[0]);
-                    if (event.getEntity().getKiller() != null) {
-                        if ((config.getBoolean("Bot.Enable"))) {
-                            embed.msg(title, description, footer);
-                        }
-                        updateDatabase(event.getEntity().getKiller());
-                    }
-                }
-            });
-        } catch (NoSuchFieldError ignored) {
-        }
-        try {
-            entityActions.put(EntityType.TADPOLE, event -> {
-                if ((config.getBoolean("TADPOLE.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("TADPOLE.Chance") + lootLvl) {
-
-                    item[0] = EntityHead.TADPOLE.getSkull();
-                    itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
-                    event.getDrops().add(item[0]);
-
-                    if (event.getEntity().getKiller() != null) {
-                        if ((config.getBoolean("Bot.Enable"))) {
-                            embed.msg(title, description, footer);
-                        }
-                        updateDatabase(event.getEntity().getKiller());
-                    }
-                }
-            });
-        } catch (NoSuchFieldError ignored) {
-        }
-        try {
-            entityActions.put(EntityType.WARDEN, event -> {
-                if ((config.getBoolean("WARDEN.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("WARDEN.Chance") + lootLvl) {
-
-                    item[0] = EntityHead.WARDEN.getSkull();
-                    itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
-                    event.getDrops().add(item[0]);
-
-                    if (event.getEntity().getKiller() != null) {
-                        if ((config.getBoolean("Bot.Enable"))) {
-                            embed.msg(title, description, footer);
-                        }
-                        updateDatabase(event.getEntity().getKiller());
-                    }
-
-                }
-
-                //1.20 Mob
-            });
-        } catch (NoSuchFieldError ignored) {
-        }
-        try {
-            entityActions.put(EntityType.CAMEL, event -> {
-                if ((config.getBoolean("CAMEL.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("CAMEL.Chance") + lootLvl) {
-
-                    item[0] = EntityHead.CAMEL.getSkull();
-                    itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
-                    event.getDrops().add(item[0]);
-
-                    if (event.getEntity().getKiller() != null) {
-                        if ((config.getBoolean("Bot.Enable"))) {
-                            embed.msg(title, description, footer);
-                        }
-                        updateDatabase(event.getEntity().getKiller());
-                    }
-                }
-            });
-        } catch (NoSuchFieldError ignored) {
-        }
-        try {
-            entityActions.put(EntityType.SNIFFER, event -> {
-                if ((config.getBoolean("SNIFFER.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("SNIFFER.Chance") + lootLvl) {
-
-                    item[0] = EntityHead.SNIFFER.getSkull();
-                    itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
-                    event.getDrops().add(item[0]);
-
-                    if (event.getEntity().getKiller() != null) {
-                        if ((config.getBoolean("Bot.Enable"))) {
-                            embed.msg(title, description, footer);
-                        }
-                        updateDatabase(event.getEntity().getKiller());
-                    }
-
-                }
-            });
-        } catch (NoSuchFieldError ignored) {
-        }
-        //1.21 mob
-        try {
-            entityActions.put(EntityType.ARMADILLO, event -> {
-                if ((config.getBoolean("ARMADILLO.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("ARMADILLO.Chance") + lootLvl) {
-
-                    item[0] = EntityHead.ARMADILLO.getSkull();
-                    itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
-                    event.getDrops().add(item[0]);
-
-                    if (event.getEntity().getKiller() != null) {
-                        if ((config.getBoolean("Bot.Enable"))) {
-                            embed.msg(title, description, footer);
-                        }
-                        updateDatabase(event.getEntity().getKiller());
-                    }
-                }
-            });
-        } catch (NoSuchFieldError ignored) {
-        }
-        try {
-            entityActions.put(EntityType.BREEZE, event -> {
-                if ((config.getBoolean("BREEZE.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("BREEZE.Chance") + lootLvl) {
-
-                    item[0] = EntityHead.BREEZE.getSkull();
-                    itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
-                    event.getDrops().add(item[0]);
-
-                    if (event.getEntity().getKiller() != null) {
-                        if ((config.getBoolean("Bot.Enable"))) {
-                            embed.msg(title, description, footer);
-                        }
-                        updateDatabase(event.getEntity().getKiller());
-                    }
-                }
-            });
-        } catch (NoSuchFieldError ignored) {
-        }
-        try {
-            entityActions.put(EntityType.BOGGED, event -> {
-                if ((config.getBoolean("BOGGED.Drop")) && ThreadLocalRandom.current().nextFloat(100.0F) <= config.getFloat("BOGGED.Chance") + lootLvl) {
-
-                    item[0] = EntityHead.BOGGED.getSkull();
-                    itemUtils.addLore(item[0], loreList, event.getEntity().getKiller());
-                    event.getDrops().add(item[0]);
-
-                    if (event.getEntity().getKiller() != null) {
-                        if ((config.getBoolean("Bot.Enable"))) {
-                            embed.msg(title, description, footer);
-                        }
-                        updateDatabase(event.getEntity().getKiller());
-                    }
-
-                }
-            });
-        } catch (NoSuchFieldError ignored) {}
-
+                event.getDrops().removeIf(head -> head.getType() == Material.SKELETON_SKULL);
+                handleEntityDrop(event, "SKELETON", () -> new ItemStack(Material.SKELETON_SKULL));
+            });
+        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
+        try {
+            entityActions.put(EntityType.WITHER_SKELETON, event -> {
+                event.getDrops().removeIf(head -> head.getType() == Material.WITHER_SKELETON_SKULL);
+                handleEntityDrop(event, "WITHER_SKELETON", () -> new ItemStack(Material.WITHER_SKELETON_SKULL));
+            });
+        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
+        try {
+            entityActions.put(EntityType.ZOMBIE, event -> {
+                event.getDrops().removeIf(head -> head.getType() == Material.ZOMBIE_HEAD);
+                handleEntityDrop(event, "ZOMBIE", () -> new ItemStack(Material.ZOMBIE_HEAD));
+            });
+        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
+        try {
+            entityActions.put(EntityType.BEE, event -> handleEntityDrop(event, "BEE",
+                    () -> {
+                        Bee bee = (Bee) event.getEntity();
+                        return bee.getAnger() > 0 ? EntityHead.BEE_AWARE.getSkull() : EntityHead.BEE.getSkull();
+                    }));
+        } catch (NoSuchFieldError | IllegalArgumentException ignored) {}
+
+        try {
+            entityActions.put(EntityType.PANDA, event -> handleEntityDrop(event, "PANDA",
+                    () -> {
+                        Panda panda = (Panda) event.getEntity();
+                        return panda.getMainGene() == Panda.Gene.BROWN ? EntityHead.PANDA_BROWN.getSkull() : EntityHead.PANDA.getSkull();
+                    }));
+        } catch (NoSuchFieldError | IllegalArgumentException ignored) {}
+
+        try {
+            entityActions.put(EntityType.MOOSHROOM, event -> handleEntityDrop(event, "MOOSHROOM",
+                    () -> {
+                        MushroomCow mushroomCow = (MushroomCow) event.getEntity();
+                        return switch (mushroomCow.getVariant()) {
+                            case RED -> EntityHead.MOOSHROOM_RED.getSkull();
+                            case BROWN -> EntityHead.MOOSHROOM_BROWN.getSkull();
+                        };
+                    }));
+        } catch (NoSuchFieldError | IllegalArgumentException ignored) {}
+        try {
+            entityActions.put(EntityType.ZOMBIE_VILLAGER, event -> handleEntityDrop(event, "ZOMBIE_VILLAGER",
+                    () -> {
+                        ZombieVillager zombieVillager = (ZombieVillager) event.getEntity();
+                        return switch (zombieVillager.getVillagerProfession().toString()) {
+                            case "ARMORER" -> EntityHead.ZOMBIE_VILLAGER_ARMORER.getSkull();
+                            case "BUTCHER" -> EntityHead.ZOMBIE_VILLAGER_BUTCHER.getSkull();
+                            case "CARTOGRAPHER" -> EntityHead.ZOMBIE_VILLAGER_CARTOGRAPHER.getSkull();
+                            case "CLERIC" -> EntityHead.ZOMBIE_VILLAGER_CLERIC.getSkull();
+                            case "FARMER" -> EntityHead.ZOMBIE_VILLAGER_FARMER.getSkull();
+                            case "FISHERMAN" -> EntityHead.ZOMBIE_VILLAGER_FISHERMAN.getSkull();
+                            case "FLETCHER" -> EntityHead.ZOMBIE_VILLAGER_FLETCHER.getSkull();
+                            case "LIBRARIAN" -> EntityHead.ZOMBIE_VILLAGER_LIBRARIAN.getSkull();
+                            case "SHEPHERD" -> EntityHead.ZOMBIE_VILLAGER_SHEPHERD.getSkull();
+                            case "WEAPONSMITH" -> EntityHead.ZOMBIE_VILLAGER_WEAPONSMITH.getSkull();
+                            default -> EntityHead.ZOMBIE_VILLAGER_NULL.getSkull();
+                        };
+                    }));
+        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
+        try {
+            entityActions.put(EntityType.PARROT, event -> handleEntityDrop(event, "PARROT",
+                    () -> {
+                        Parrot parrot = (Parrot) event.getEntity();
+                        return switch (parrot.getVariant()) {
+                            case BLUE -> EntityHead.PARROT_BLUE.getSkull();
+                            case CYAN -> EntityHead.PARROT_CYAN.getSkull();
+                            case GRAY -> EntityHead.PARROT_GRAY.getSkull();
+                            case RED -> EntityHead.PARROT_RED.getSkull();
+                            case GREEN -> EntityHead.PARROT_GREEN.getSkull();
+                        };
+                    }));
+        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
+        try {
+            entityActions.put(EntityType.TROPICAL_FISH, event -> handleEntityDrop(event, "TROPICAL_FISH",
+                    () -> {
+                        TropicalFish tropicalFish = (TropicalFish) event.getEntity();
+                        return switch (tropicalFish.getBodyColor()) {
+                            case MAGENTA -> EntityHead.TROPICAL_FISH_MAGENTA.getSkull();
+                            case LIGHT_BLUE -> EntityHead.TROPICAL_FISH_LIGHT_BLUE.getSkull();
+                            case YELLOW -> EntityHead.TROPICAL_FISH_YELLOW.getSkull();
+                            case PINK -> EntityHead.TROPICAL_FISH_PINK.getSkull();
+                            case GRAY -> EntityHead.TROPICAL_FISH_GRAY.getSkull();
+                            case LIGHT_GRAY -> EntityHead.TROPICAL_FISH_LIGHT_GRAY.getSkull();
+                            case CYAN -> EntityHead.TROPICAL_FISH_CYAN.getSkull();
+                            case BLUE -> EntityHead.TROPICAL_FISH_BLUE.getSkull();
+                            case GREEN -> EntityHead.TROPICAL_FISH_GREEN.getSkull();
+                            case RED -> EntityHead.TROPICAL_FISH_RED.getSkull();
+                            case BLACK -> EntityHead.TROPICAL_FISH_BLACK.getSkull();
+                            case ORANGE -> EntityHead.TROPICAL_FISH_ORANGE.getSkull();
+                            default -> throw new IllegalStateException("Unexpected value: " + tropicalFish.getBodyColor());
+                        };
+                    }));
+        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
+        try {
+            entityActions.put(EntityType.TRADER_LLAMA, event -> handleEntityDrop(event, "TRADER_LLAMA",
+                    () -> {
+                        TraderLlama traderLlama = (TraderLlama) event.getEntity();
+                        return switch (traderLlama.getColor()) {
+                            case BROWN -> EntityHead.LLAMA_BROWN.getSkull();
+                            case GRAY -> EntityHead.LLAMA_GRAY.getSkull();
+                            case CREAMY -> EntityHead.LLAMA_CREAMY.getSkull();
+                            case WHITE -> EntityHead.LLAMA_WHITE.getSkull();
+                        };
+                    }));
+        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
+        try {
+            entityActions.put(EntityType.LLAMA, event -> handleEntityDrop(event, "LLAMA",
+                    () -> {
+                        Llama llama = (Llama) event.getEntity();
+                        return switch (llama.getColor()) {
+                            case BROWN -> EntityHead.LLAMA_BROWN.getSkull();
+                            case GRAY -> EntityHead.LLAMA_GRAY.getSkull();
+                            case CREAMY -> EntityHead.LLAMA_CREAMY.getSkull();
+                            case WHITE -> EntityHead.LLAMA_WHITE.getSkull();
+                        };
+                    }));
+        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
+        try {
+            entityActions.put(EntityType.FOX, event -> handleEntityDrop(event, "FOX",
+                    () -> {
+                        Fox fox = (Fox) event.getEntity();
+                        return switch (fox.getFoxType()) {
+                            case RED -> EntityHead.FOX.getSkull();
+                            case SNOW -> EntityHead.FOX_WHITE.getSkull();
+                        };
+                    }));
+        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
+        try {
+            entityActions.put(EntityType.CAT, event -> handleEntityDrop(event, "CAT",
+                    () -> {
+                        Cat cat = (Cat) event.getEntity();
+                        return switch (cat.getCatType().toString()) {
+                            case "BLACK" -> EntityHead.CAT_BLACK.getSkull();
+                            case "BRITISH_SHORTHAIR" -> EntityHead.CAT_BRITISH.getSkull();
+                            case "CALICO" -> EntityHead.CAT_CALICO.getSkull();
+                            case "JELLIE" -> EntityHead.CAT_JELLIE.getSkull();
+                            case "PERSIAN" -> EntityHead.CAT_PERSIAN.getSkull();
+                            case "RAGDOLL" -> EntityHead.CAT_RAGDOLL.getSkull();
+                            case "RED" -> EntityHead.CAT_RED.getSkull();
+                            case "SIAMESE" -> EntityHead.CAT_SIAMESE.getSkull();
+                            case "TABBY" -> EntityHead.CAT_TABBY.getSkull();
+                            case "ALL_BLACK" -> EntityHead.CAT_ALL_BLACK.getSkull();
+                            case "WHITE" -> EntityHead.CAT_WHITE.getSkull();
+                            default -> throw new IllegalStateException("Unexpected value: " + cat.getCatType());
+                        };
+                    }));
+        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
+        try {
+            entityActions.put(EntityType.AXOLOTL, event -> handleEntityDrop(event, "AXOLOTL",
+                    () -> {
+                        Axolotl axolotl = (Axolotl) event.getEntity();
+                        return switch (axolotl.getVariant()) {
+                            case LUCY -> EntityHead.AXOLOTL_LUCY.getSkull();
+                            case BLUE -> EntityHead.AXOLOTL_BLUE.getSkull();
+                            case WILD -> EntityHead.AXOLOTL_WILD.getSkull();
+                            case CYAN -> EntityHead.AXOLOTL_CYAN.getSkull();
+                            case GOLD -> EntityHead.AXOLOTL_GOLD.getSkull();
+                        };
+                    }));
+        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
+        try {
+            entityActions.put(EntityType.FROG, event -> handleEntityDrop(event, "FROG",
+                    () -> {
+                        Frog frog = (Frog) event.getEntity();
+                        return switch (frog.getVariant().toString()) {
+                            case "TEMPERATE" -> EntityHead.FROG_TEMPERATE.getSkull();
+                            case "WARM" -> EntityHead.FROG_WARM.getSkull();
+                            case "COLD" -> EntityHead.FROG_COLD.getSkull();
+                            default -> throw new IllegalStateException("Unexpected value: " + frog.getVariant());
+                        };
+                    }));
+        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
+        try {
+            entityActions.put(EntityType.HORSE, event -> handleEntityDrop(event, "HORSE",
+                    () -> {
+                        Horse horse = (Horse) event.getEntity();
+                        return switch (horse.getColor()) {
+                            case WHITE -> EntityHead.HORSE_WHITE.getSkull();
+                            case CREAMY -> EntityHead.HORSE_CREAMY.getSkull();
+                            case CHESTNUT -> EntityHead.HORSE_CHESTNUT.getSkull();
+                            case BROWN -> EntityHead.HORSE_BROWN.getSkull();
+                            case BLACK -> EntityHead.HORSE_BLACK.getSkull();
+                            case GRAY -> EntityHead.HORSE_GRAY.getSkull();
+                            case DARK_BROWN -> EntityHead.HORSE_DARK_BROWN.getSkull();
+                        };
+                    }));
+        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
+        try {
+            entityActions.put(EntityType.SHEEP, event -> handleEntityDrop(event, "SHEEP",
+                    () -> {
+                        Sheep sheep = (Sheep) event.getEntity();
+                        return switch (sheep.getColor()) {
+                            case WHITE -> EntityHead.SHEEP_WHITE.getSkull();
+                            case ORANGE -> EntityHead.SHEEP_ORANGE.getSkull();
+                            case MAGENTA -> EntityHead.SHEEP_MAGENTA.getSkull();
+                            case LIGHT_BLUE -> EntityHead.SHEEP_LIGHT_BLUE.getSkull();
+                            case YELLOW -> EntityHead.SHEEP_YELLOW.getSkull();
+                            case LIME -> EntityHead.SHEEP_LIME.getSkull();
+                            case PINK -> EntityHead.SHEEP_PINK.getSkull();
+                            case GRAY -> EntityHead.SHEEP_GRAY.getSkull();
+                            case LIGHT_GRAY -> EntityHead.SHEEP_LIGHT_GRAY.getSkull();
+                            case CYAN -> EntityHead.SHEEP_CYAN.getSkull();
+                            case PURPLE -> EntityHead.SHEEP_PURPLE.getSkull();
+                            case BLUE -> EntityHead.SHEEP_BLUE.getSkull();
+                            case BROWN -> EntityHead.SHEEP_BROWN.getSkull();
+                            case GREEN -> EntityHead.SHEEP_GREEN.getSkull();
+                            case RED -> EntityHead.SHEEP_RED.getSkull();
+                            case BLACK -> EntityHead.SHEEP_BLACK.getSkull();
+                        };
+                    }));
+        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
+        try {
+            entityActions.put(EntityType.WOLF, event -> handleEntityDrop(event, "WOLF",
+                    () -> {
+                        Wolf wolf = (Wolf) event.getEntity();
+                        String variant = wolf.getVariant().toString().toUpperCase().replace("MINECRAFT:", "");
+                        return switch (variant) {
+                            case "ASHEN" -> EntityHead.WOLF_ASHEN.getSkull();
+                            case "BLACK" -> EntityHead.WOLF_BLACK.getSkull();
+                            case "CHESTNUT" -> EntityHead.WOLF_CHESTNUT.getSkull();
+                            case "RUSTY" -> EntityHead.WOLF_RUSTY.getSkull();
+                            case "SNOWY" -> EntityHead.WOLF_SNOWY.getSkull();
+                            case "SPOTTED" -> EntityHead.WOLF_SPOTTED.getSkull();
+                            case "STRIPED" -> EntityHead.WOLF_STRIPED.getSkull();
+                            case "WOODS" -> EntityHead.WOLF_WOODS.getSkull();
+                            default -> EntityHead.WOLF_PALE.getSkull();
+                        };
+                    }));
+        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
+        try {
+            entityActions.put(EntityType.VILLAGER, event -> handleEntityDrop(event, "VILLAGER",
+                    () -> {
+                        Villager villager = (Villager) event.getEntity();
+                        return switch (villager.getProfession().toString()) {
+                            case "WEAPONSMITH" -> EntityHead.VILLAGER_WEAPONSMITH.getSkull();
+                            case "SHEPHERD" -> EntityHead.VILLAGER_SHEPHERD.getSkull();
+                            case "LIBRARIAN" -> EntityHead.VILLAGER_LIBRARIAN.getSkull();
+                            case "FLETCHER" -> EntityHead.VILLAGER_FLETCHER.getSkull();
+                            case "FISHERMAN" -> EntityHead.VILLAGER_FISHERMAN.getSkull();
+                            case "FARMER" -> EntityHead.VILLAGER_FARMER.getSkull();
+                            case "CLERIC" -> EntityHead.VILLAGER_CLERIC.getSkull();
+                            case "CARTOGRAPHER" -> EntityHead.VILLAGER_CARTOGRAPHER.getSkull();
+                            case "BUTCHER" -> EntityHead.VILLAGER_BUTCHER.getSkull();
+                            case "ARMORER" -> EntityHead.VILLAGER_ARMORER.getSkull();
+                            case "LEATHERWORKER" -> EntityHead.VILLAGER_LEATHERWORKER.getSkull();
+                            case "MASON" -> EntityHead.VILLAGER_MASON.getSkull();
+                            case "TOOLSMITH" -> EntityHead.VILLAGER_TOOLSMITH.getSkull();
+                            default -> EntityHead.VILLAGER_NULL.getSkull();
+                        };
+                    }));
+        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
+        try {
+            entityActions.put(EntityType.RABBIT, event -> handleEntityDrop(event, "RABBIT",
+                    () -> {
+                        Rabbit rabbit = (Rabbit) event.getEntity();
+                        return switch (rabbit.getRabbitType()) {
+                            case BROWN -> EntityHead.RABBIT_BROWN.getSkull();
+                            case WHITE -> EntityHead.RABBIT_WHITE.getSkull();
+                            case BLACK -> EntityHead.RABBIT_BLACK.getSkull();
+                            case BLACK_AND_WHITE -> EntityHead.RABBIT_BLACK_AND_WHITE.getSkull();
+                            case GOLD -> EntityHead.RABBIT_GOLD.getSkull();
+                            case SALT_AND_PEPPER -> EntityHead.RABBIT_SALT_AND_PEPPER.getSkull();
+                            case THE_KILLER_BUNNY -> EntityHead.RABBIT_THE_KILLER_BUNNY.getSkull();
+                        };
+                    }));
+        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
+        try {entityActions.put(EntityType.CREAKING, event -> handleEntityDrop(event, "CREAKING", EntityHead.CREAKING::getSkull));
+        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
+        try {entityActions.put(EntityType.ENDER_DRAGON, event -> handleEntityDrop(event, "ENDER_DRAGON", () -> new ItemStack(Material.DRAGON_HEAD)));
+        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
+        try {entityActions.put(EntityType.CAVE_SPIDER, event -> handleEntityDrop(event, "CAVE_SPIDER", EntityHead.CAVE_SPIDER::getSkull));
+        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
+        try {entityActions.put(EntityType.SPIDER, event -> handleEntityDrop(event, "SPIDER", EntityHead.SPIDER::getSkull));
+        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
+        try {entityActions.put(EntityType.BLAZE, event -> handleEntityDrop(event, "BLAZE", EntityHead.BLAZE::getSkull));
+        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
+        try {entityActions.put(EntityType.BAT, event -> handleEntityDrop(event, "BAT", EntityHead.BAT::getSkull));
+        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
+        try {entityActions.put(EntityType.CHICKEN, event -> handleEntityDrop(event, "CHICKEN", EntityHead.CHICKEN::getSkull));
+        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
+        try {entityActions.put(EntityType.COW, event -> handleEntityDrop(event, "COW", EntityHead.COW::getSkull));
+        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
+        try {entityActions.put(EntityType.ENDERMAN, event -> handleEntityDrop(event, "ENDERMAN", EntityHead.ENDERMAN::getSkull));
+        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
+        try {entityActions.put(EntityType.GIANT, event -> handleEntityDrop(event, "GIANT", EntityHead.GIANT::getSkull));
+        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
+        try {entityActions.put(EntityType.ILLUSIONER, event -> handleEntityDrop(event, "ILLUSIONER", EntityHead.ILLUSIONER::getSkull));
+        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
+        try {entityActions.put(EntityType.IRON_GOLEM, event -> handleEntityDrop(event, "IRON_GOLEM", EntityHead.IRON_GOLEM::getSkull));
+        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
+        try {entityActions.put(EntityType.MAGMA_CUBE, event -> handleEntityDrop(event, "MAGMA_CUBE", EntityHead.MAGMA_CUBE::getSkull));
+        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
+        try {entityActions.put(EntityType.OCELOT, event -> handleEntityDrop(event, "OCELOT", EntityHead.OCELOT::getSkull));
+        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
+        try {entityActions.put(EntityType.PIG, event -> handleEntityDrop(event, "PIG", EntityHead.PIG::getSkull));
+        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
+        try {entityActions.put(EntityType.SILVERFISH, event -> handleEntityDrop(event, "SILVERFISH", EntityHead.SILVERFISH::getSkull));
+        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
+        try {entityActions.put(EntityType.SNOW_GOLEM, event -> handleEntityDrop(event, "SNOW_GOLEM", EntityHead.SNOWMAN::getSkull));
+        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
+        try {entityActions.put(EntityType.SQUID, event -> handleEntityDrop(event, "SQUID", EntityHead.SQUID::getSkull));
+        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
+        try {entityActions.put(EntityType.WITCH, event -> handleEntityDrop(event, "WITCH", EntityHead.WITCH::getSkull));
+        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
+        try {entityActions.put(EntityType.WITHER, event -> handleEntityDrop(event, "WITHER", EntityHead.WITHER::getSkull));
+        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
+        try {entityActions.put(EntityType.ZOMBIFIED_PIGLIN, event -> handleEntityDrop(event, "ZOMBIFIED_PIGLIN", EntityHead.ZOMBIFIED_PIGLIN::getSkull));
+        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
+        try {entityActions.put(EntityType.GHAST, event -> handleEntityDrop(event, "GHAST", EntityHead.GHAST::getSkull));
+        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
+        try {entityActions.put(EntityType.ENDERMITE, event -> handleEntityDrop(event, "ENDERMITE", EntityHead.ENDERMITE::getSkull));
+        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
+        try {entityActions.put(EntityType.GUARDIAN, event -> handleEntityDrop(event, "GUARDIAN", EntityHead.GUARDIAN::getSkull));
+        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
+        try {entityActions.put(EntityType.SHULKER, event -> handleEntityDrop(event, "SHULKER", EntityHead.SHULKER::getSkull));
+        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
+        try {entityActions.put(EntityType.POLAR_BEAR, event -> handleEntityDrop(event, "POLAR_BEAR", EntityHead.POLAR_BEAR::getSkull));
+        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
+        try {entityActions.put(EntityType.VINDICATOR, event -> handleEntityDrop(event, "VINDICATOR", EntityHead.VINDICATOR::getSkull));
+        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
+        try {entityActions.put(EntityType.VEX, event -> handleEntityDrop(event, "VEX", EntityHead.VEX::getSkull));
+        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
+        try {entityActions.put(EntityType.EVOKER, event -> handleEntityDrop(event, "EVOKER", EntityHead.EVOKER::getSkull));
+        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
+        try {entityActions.put(EntityType.HUSK, event -> handleEntityDrop(event, "HUSK", EntityHead.HUSK::getSkull));
+        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
+        try {entityActions.put(EntityType.STRAY, event -> handleEntityDrop(event, "STRAY", EntityHead.STRAY::getSkull));
+        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
+        try {entityActions.put(EntityType.ELDER_GUARDIAN, event -> handleEntityDrop(event, "ELDER_GUARDIAN", EntityHead.ELDER_GUARDIAN::getSkull));
+        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
+        try {entityActions.put(EntityType.DONKEY, event -> handleEntityDrop(event, "DONKEY", EntityHead.DONKEY::getSkull));
+        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
+        try {entityActions.put(EntityType.ZOMBIE_HORSE, event -> handleEntityDrop(event, "ZOMBIE_HORSE", EntityHead.ZOMBIE_HORSE::getSkull));
+        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
+        try {entityActions.put(EntityType.SKELETON_HORSE, event -> handleEntityDrop(event, "SKELETON_HORSE", EntityHead.SKELETON_HORSE::getSkull));
+        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
+        try {entityActions.put(EntityType.MULE, event -> handleEntityDrop(event, "MULE", EntityHead.MULE::getSkull));
+        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
+        try {entityActions.put(EntityType.PUFFERFISH, event -> handleEntityDrop(event, "PUFFERFISH", EntityHead.PUFFERFISH::getSkull));
+        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
+        try {entityActions.put(EntityType.SALMON, event -> handleEntityDrop(event, "SALMON", EntityHead.SALMON::getSkull));
+        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
+        try {entityActions.put(EntityType.COD, event -> handleEntityDrop(event, "COD", EntityHead.COD::getSkull));
+        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
+        try {entityActions.put(EntityType.TURTLE, event -> handleEntityDrop(event, "TURTLE", EntityHead.TURTLE::getSkull));
+        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
+        try {entityActions.put(EntityType.DOLPHIN, event -> handleEntityDrop(event, "DOLPHIN", EntityHead.DOLPHIN::getSkull));
+        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
+        try {entityActions.put(EntityType.PHANTOM, event -> handleEntityDrop(event, "PHANTOM", EntityHead.PHANTOM::getSkull));
+        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
+        try {entityActions.put(EntityType.DROWNED, event -> handleEntityDrop(event, "DROWNED", EntityHead.DROWNED::getSkull));
+        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
+        try {entityActions.put(EntityType.WANDERING_TRADER, event -> handleEntityDrop(event, "WANDERING_TRADER", EntityHead.WANDERING_TRADER::getSkull));
+        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
+        try {entityActions.put(EntityType.RAVAGER, event -> handleEntityDrop(event, "RAVAGER", EntityHead.RAVAGER::getSkull));
+        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
+        try {entityActions.put(EntityType.PILLAGER, event -> handleEntityDrop(event, "PILLAGER", EntityHead.PILLAGER::getSkull));
+        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
+        try {entityActions.put(EntityType.ZOGLIN, event -> handleEntityDrop(event, "ZOGLIN", EntityHead.ZOGLIN::getSkull));
+        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
+        try {entityActions.put(EntityType.PIGLIN, event -> handleEntityDrop(event, "PIGLIN", EntityHead.PIGLIN::getSkull));
+        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
+        try {entityActions.put(EntityType.HOGLIN, event -> handleEntityDrop(event, "HOGLIN", EntityHead.HOGLIN::getSkull));
+        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
+        try {entityActions.put(EntityType.PIGLIN_BRUTE, event -> handleEntityDrop(event, "PIGLIN_BRUTE", EntityHead.PIGLIN_BRUTE::getSkull));
+        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
+        try {entityActions.put(EntityType.GLOW_SQUID, event -> handleEntityDrop(event, "GLOW_SQUID", EntityHead.GLOW_SQUID::getSkull));
+        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
+        try {entityActions.put(EntityType.GOAT, event -> handleEntityDrop(event, "GOAT", EntityHead.GOAT::getSkull));
+        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
+        try {entityActions.put(EntityType.ALLAY, event -> handleEntityDrop(event, "ALLAY", EntityHead.ALLAY::getSkull));
+        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
+        try {entityActions.put(EntityType.TADPOLE, event -> handleEntityDrop(event, "TADPOLE", EntityHead.TADPOLE::getSkull));
+        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
+        try {entityActions.put(EntityType.WARDEN, event -> handleEntityDrop(event, "WARDEN", EntityHead.WARDEN::getSkull));
+        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
+        try {entityActions.put(EntityType.CAMEL, event -> handleEntityDrop(event, "CAMEL", EntityHead.CAMEL::getSkull));
+        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
+        try {entityActions.put(EntityType.SNIFFER, event -> handleEntityDrop(event, "SNIFFER", EntityHead.SNIFFER::getSkull));
+        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
+        try {entityActions.put(EntityType.STRIDER, event -> handleEntityDrop(event, "STRIDER", EntityHead.STRIDER::getSkull));
+        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
+        try {entityActions.put(EntityType.ARMADILLO, event -> handleEntityDrop(event, "ARMADILLO", EntityHead.ARMADILLO::getSkull));
+        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
+        try {entityActions.put(EntityType.BREEZE, event -> handleEntityDrop(event, "BREEZE", EntityHead.BREEZE::getSkull));
+        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
+        try {entityActions.put(EntityType.BOGGED, event -> handleEntityDrop(event, "BOGGED", EntityHead.BOGGED::getSkull));
+        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
+        try {entityActions.put(EntityType.valueOf("SNOWMAN"), event -> handleEntityDrop(event, "SNOW_GOLEM", EntityHead.SNOWMAN::getSkull));
+        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
     }
+
+
+
+
+
+    public void registerCustomDropHandler(EntityType type, Consumer<EntityDeathEvent> handler) {
+        entityActions.put(type, handler);
+    }
+
+    public void removeCustomDropHandler(EntityType type) {
+        entityActions.remove(type);
+    }
+
+    public double getCurrentLootBonus() {
+        return ActionContext.getLootBonus();
+    }
+
+    public void awardPoints(Player player, int points) {
+        updateDatabase(player, points);
+    }
+
+
+
+
+
 }

@@ -7,13 +7,18 @@ Config:
   Require-Killer-Player: true
   Killer-Require-Permission: false
   Enable-Looting: false
-  Require-Axe: false
   Baby-HeadDrop: false
   Enable-Perm-Chance: false
   Nerf-Spawner: false
+
   Disable-Worlds:
     - demoWorld
     - demoWorld2
+
+Require-Weapon:
+  Enable: true
+  Weapons:
+    - Diamond_Axe
 
 Database:
   Enable: false
@@ -189,7 +194,7 @@ GUARDIAN:
   Chance: 100.00
   Sound: "default"
 
-MUSHROOM_COW:
+MOOSHROOM:
   Drop: true
   Chance: 100.00
   Sound: "default"
