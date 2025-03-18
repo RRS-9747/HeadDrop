@@ -26,6 +26,7 @@ Database:
   URL: "jdbc:sqlite:HeadDrop.sqlite"
   User:
   Password:
+  Cleanup: 30
 
 Web:
   Enable: false
@@ -48,418 +49,502 @@ PLAYER:
   Drop: true
   Chance: 100.00
   Require-Permission: false
+  Point: 1
 
 ZOMBIE:
   Drop: true
   Chance: 100.00
   Sound: "default"
+  Point: 1
 
 WITHER_SKELETON:
-  Drop: true
+  Drop: false
   Chance: 100.00
   Sound: "default"
+  Point: 1
 
 CREEPER:
   Drop: true
   Chance: 100.00
   Sound: "default"
+  Point: 1
 
 SKELETON:
   Drop: true
   Chance: 100.00
   Sound: "default"
+  Point: 1
 
 AXOLOTL:
   Drop: true
   Chance: 100.00
   Sound: "default"
+  Point: 1
 
 BAT:
   Drop: true
   Chance: 100.00
   Sound: "default"
+  Point: 1
 
 BEE:
   Drop: true
   Chance: 100.00
   Sound: "default"
+  Point: 1
 
 BLAZE:
   Drop: true
   Chance: 100.00
   Sound: "default"
+  Point: 1
 
 CAT:
   Drop: true
   Chance: 100.00
   Sound: "default"
+  Point: 1
 
 DOLPHIN:
   Drop: true
   Chance: 100.00
   Sound: "default"
+  Point: 1
 
 DROWNED:
   Drop: true
   Chance: 100.00
   Sound: "default"
+  Point: 1
 
 SPIDER:
   Drop: true
   Chance: 100.00
   Sound: "default"
+  Point: 1
 
 CAVE_SPIDER:
   Drop: true
   Chance: 100.00
   Sound: "default"
+  Point: 1
 
 CHICKEN:
   Drop: true
   Chance: 100.00
   Sound: "default"
+  Point: 1
 
 ENDERMAN:
   Drop: true
   Chance: 100.00
   Sound: "default"
+  Point: 1
 
 COW:
   Drop: true
   Chance: 100.00
   Sound: "default"
+  Point: 1
 
 ENDERMITE:
   Drop: true
   Chance: 100.00
   Sound: "default"
+  Point: 1
 
 EVOKER:
   Drop: true
   Chance: 100.00
   Sound: "default"
+  Point: 1
 
 DONKEY:
   Drop: true
   Chance: 100.00
   Sound: "default"
+  Point: 1
 
 FOX:
   Drop: true
   Chance: 100.00
   Sound: "default"
+  Point: 1
 
 SHEEP:
   Drop: true
   Chance: 100.00
   Sound: "default"
+  Point: 1
 
 GIANT:
   Drop: true
   Chance: 100.00
   Sound: "default"
+  Point: 1
 
 HOGLIN:
   Drop: true
   Chance: 100.00
   Sound: "default"
+  Point: 1
 
 HUSK:
   Drop: true
   Chance: 100.00
   Sound: "default"
+  Point: 1
 
 GOAT:
   Drop: true
   Chance: 100.00
   Sound: "default"
+  Point: 1
 
 IRON_GOLEM:
   Drop: true
   Chance: 100.00
   Sound: "default"
+  Point: 1
 
 ILLUSIONER:
   Drop: true
   Chance: 100.00
   Sound: "default"
+  Point: 1
 
 HORSE:
   Drop: true
   Chance: 100.00
   Sound: "default"
+  Point: 1
 
 GUARDIAN:
   Drop: true
   Chance: 100.00
   Sound: "default"
+  Point: 1
 
 MOOSHROOM:
   Drop: true
   Chance: 100.00
   Sound: "default"
+  Point: 1
 
 OCELOT:
   Drop: true
   Chance: 100.00
   Sound: "default"
+  Point: 1
 
 PHANTOM:
   Drop: true
   Chance: 100.00
   Sound: "default"
+  Point: 1
 
 GLOW_SQUID:
   Drop: true
   Chance: 100.00
   Sound: "default"
+  Point: 1
 
 PIG:
   Drop: true
   Chance: 100.00
   Sound: "default"
+  Point: 1
 
 LLAMA:
   Drop: true
   Chance: 100.00
   Sound: "default"
+  Point: 1
 
 MULE:
   Drop: true
   Chance: 100.00
   Sound: "default"
+  Point: 1
 
 PIGLIN:
   Drop: true
   Chance: 100.00
   Sound: "default"
+  Point: 1
 
 PIGLIN_BRUTE:
   Drop: true
   Chance: 100.00
   Sound: "default"
+  Point: 1
 
 ELDER_GUARDIAN:
   Drop: true
   Chance: 100.00
   Sound: "default"
+  Point: 1
 
 PUFFERFISH:
   Drop: true
   Chance: 100.00
   Sound: "default"
+  Point: 1
 
 SILVERFISH:
   Drop: true
   Chance: 100.00
   Sound: "default"
+  Point: 1
 
 POLAR_BEAR:
   Drop: true
   Chance: 100.00
   Sound: "default"
+  Point: 1
 
 SALMON:
   Drop: true
   Chance: 100.00
   Sound: "default"
+  Point: 1
 
 SHULKER:
   Drop: true
   Chance: 100.00
   Sound: "default"
+  Point: 1
 
 STRAY:
   Drop: true
   Chance: 100.00
   Sound: "default"
+  Point: 1
 
 STRIDER:
   Drop: true
   Chance: 100.00
   Sound: "default"
+  Point: 1
 
 SKELETON_HORSE:
   Drop: true
   Chance: 100.00
   Sound: "default"
+  Point: 1
 
 PILLAGER:
   Drop: true
   Chance: 100.00
   Sound: "default"
+  Point: 1
 
 SQUID:
   Drop: true
   Chance: 100.00
   Sound: "default"
+  Point: 1
 
 WANDERING_TRADER:
   Drop: true
   Chance: 100.00
   Sound: "default"
+  Point: 1
 
 TURTLE:
   Drop: true
   Chance: 100.00
   Sound: "default"
+  Point: 1
 
 SLIME:
   Drop: true
   Chance: 100.00
   Sound: "default"
+  Point: 1
 
 COD:
   Drop: true
   Chance: 100.00
   Sound: "default"
+  Point: 1
 
 RAVAGER:
   Drop: true
   Chance: 100.00
   Sound: "default"
+  Point: 1
 
 WITCH:
   Drop: true
   Chance: 100.00
   Sound: "default"
+  Point: 1
 
 GHAST:
   Drop: true
   Chance: 100.00
   Sound: "default"
+  Point: 1
 
 ZOMBIE_HORSE:
   Drop: true
   Chance: 100.00
   Sound: "default"
+  Point: 1
 
 WOLF:
   Drop: true
   Chance: 100.00
   Sound: "default"
+  Point: 1
 
 VINDICATOR:
   Drop: true
   Chance: 100.00
   Sound: "default"
+  Point: 1
 
 ZOGLIN:
   Drop: true
   Chance: 100.00
   Sound: "default"
+  Point: 1
 
 TRADER_LLAMA:
   Drop: true
   Chance: 100.00
   Sound: "default"
+  Point: 1
 
 ZOMBIE_VILLAGER:
   Drop: true
   Chance: 100.00
   Sound: "default"
+  Point: 1
 
 ENDER_DRAGON:
   Drop: true
   Chance: 100.00
   Sound: "default"
+  Point: 1
 
 WITHER:
   Drop: true
   Chance: 100.00
   Sound: "default"
+  Point: 1
 
 VILLAGER:
   Drop: true
   Chance: 100.00
   Sound: "default"
+  Point: 1
 
 PARROT:
   Drop: true
   Chance: 100.00
   Sound: "default"
+  Point: 1
 
 TROPICAL_FISH:
   Drop: true
   Chance: 100.00
   Sound: "default"
+  Point: 1
 
 VEX:
   Drop: true
   Chance: 100.00
   Sound: "default"
+  Point: 1
 
 ZOMBIFIED_PIGLIN:
   Drop: true
   Chance: 100.00
   Sound: "default"
+  Point: 1
 
 MAGMA_CUBE:
   Drop: true
   Chance: 100.00
   Sound: "default"
+  Point: 1
 
 PANDA:
   Drop: true
   Chance: 100.00
   Sound: "default"
+  Point: 1
 
 SNOW_GOLEM:
   Drop: true
   Chance: 100.00
   Sound: "default"
+  Point: 1
 
 RABBIT:
   Drop: true
   Chance: 100.00
   Sound: "default"
+  Point: 1
 
 ALLAY:
   Drop: true
   Chance: 100.00
   Sound: "default"
+  Point: 1
 
 TADPOLE:
   Drop: true
   Chance: 100.00
   Sound: "default"
+  Point: 1
 
 FROG:
   Drop: true
   Chance: 100.00
   Sound: "default"
+  Point: 1
 
 WARDEN:
   Drop: true
   Chance: 100.00
   Sound: "default"
+  Point: 1
 
 CAMEL:
   Drop: true
   Chance: 100.00
   Sound: "default"
+  Point: 1
 
 SNIFFER:
   Drop: true
   Chance: 100.00
   Sound: "default"
+  Point: 1
 
 BREEZE:
   Drop: true
   Chance: 100.00
   Sound: "default"
+  Point: 1
 
 BOGGED:
   Drop: true
   Chance: 100.00
   Sound: "default"
+  Point: 1
 
 ARMADILLO:
   Drop: true
   Chance: 100.00
   Sound: "default"
+  Point: 1
 
 CREAKING:
   Drop: true
-  Chance: 100.00
+  Chance: 50.00
   Sound: "default"
+  Point: 1

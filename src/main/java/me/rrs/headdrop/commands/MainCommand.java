@@ -1,10 +1,12 @@
 package me.rrs.headdrop.commands;
 
+
 import me.rrs.headdrop.HeadDrop;
-import me.rrs.headdrop.listener.GUI;
+import me.rrs.headdrop.listener.HeadGUI;
 import me.rrs.headdrop.util.Lang;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 
@@ -16,11 +18,12 @@ import java.util.*;
 public class MainCommand implements CommandExecutor, TabCompleter {
 
     private final Lang lang = new Lang();
+    private final MiniMessage miniMessage = MiniMessage.miniMessage();
 
     @Override
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         if (args.length == 0) {
-            sender.sendMessage(ChatColor.translateAlternateColorCodes('&', "HeadDrop by RRS"));
+            sender.sendMessage(miniMessage.deserialize("<gold>HeadDrop by RRS</gold>"));
         } else {
             switch (args[0].toLowerCase()) {
                 case "help":
@@ -45,13 +48,19 @@ public class MainCommand implements CommandExecutor, TabCompleter {
 
     private void sendHelpMessage(CommandSender sender) {
         if (sender instanceof Player player) {
-            player.sendMessage(
-                    ChatColor.DARK_GREEN + "HeadDrop" + ChatColor.RESET + " plugin by RRS.",
-                    ChatColor.AQUA + "> " + ChatColor.LIGHT_PURPLE + "/headdrop help" + ChatColor.RESET + " -> you already discovered it!",
-                    ChatColor.AQUA + "> " + ChatColor.LIGHT_PURPLE + "/headdrop reload" + ChatColor.RESET + " -> reload plugin config.",
-                    ChatColor.AQUA + "> " + ChatColor.LIGHT_PURPLE + "/myhead" + ChatColor.RESET + " -> Get your head.",
-                    ChatColor.AQUA + "> " + ChatColor.LIGHT_PURPLE + "/head <player Name>" + ChatColor.RESET + " -> Get another player head"
-            );
+            Component message = miniMessage.deserialize("""
+            <dark_green>HeadDrop</dark_green> <reset>plugin by RRS.
+            
+            <aqua>> <light_purple>/headdrop help</light_purple> <reset>-> you already discovered it!
+            
+            <aqua>> <light_purple>/headdrop reload</light_purple> <reset>-> reload plugin config.
+            
+            <aqua>> <light_purple>/myhead</light_purple> <reset>-> Get your head.
+            
+            <aqua>> <light_purple>/head &lt;player Name&gt;</light_purple> <reset>-> Get another player head.
+            """);
+
+            player.sendMessage(message);
         }
     }
 
@@ -61,7 +70,8 @@ public class MainCommand implements CommandExecutor, TabCompleter {
                 try {
                     HeadDrop.getInstance().getLang().reload();
                     HeadDrop.getInstance().getConfiguration().reload();
-                    lang.msg(ChatColor.GREEN + "[HeadDrop] " + ChatColor.RESET, "Reload", player);
+                    Component message = miniMessage.deserialize("<green>[HeadDrop]</green> <reset>Reloaded");
+                    sender.sendMessage(message);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -88,11 +98,19 @@ public class MainCommand implements CommandExecutor, TabCompleter {
         Map<String, Integer> playerData = HeadDrop.getInstance().getDatabase().getPlayerData();
         List<Map.Entry<String, Integer>> sortedData = new ArrayList<>(playerData.entrySet());
         sortedData.sort(Map.Entry.comparingByValue(Comparator.reverseOrder()));
-        sender.sendMessage(ChatColor.GOLD + "---- Top HeadHunter ----");
+        sender.sendMessage(miniMessage.deserialize("<gold><bold>=-=-= Top Head Hunters =-=-=</bold></gold>"));
+        sender.sendMessage(miniMessage.deserialize("<gray>----------------------------</gray>"));
+
         for (int i = 0; i < Math.min(sortedData.size(), 10); i++) {
             Map.Entry<String, Integer> entry = sortedData.get(i);
-            sender.sendMessage(ChatColor.YELLOW.toString() + (i + 1) + ". " + entry.getKey() + " - " + entry.getValue() + " Head(s)");
+            Component message = miniMessage.deserialize("""
+             <aqua>#%d</aqua> <yellow>%s</yellow> - <green>%d</green> <gold>Head(s)</gold>
+            """.formatted(i + 1, entry.getKey(), entry.getValue()));
+            sender.sendMessage(message);
         }
+
+        sender.sendMessage(miniMessage.deserialize("<gray>----------------------------</gray>"));
+
     }
 
     private void generateDebugFile(CommandSender sender) {
@@ -127,7 +145,7 @@ public class MainCommand implements CommandExecutor, TabCompleter {
 
     private void openGUI(CommandSender sender) {
         if (sender instanceof Player player) {
-            GUI gui = new GUI();
+            HeadGUI gui = new HeadGUI();
             player.openInventory(gui.getInventory());
         } else {
             lang.pcmd();

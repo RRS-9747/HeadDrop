@@ -96,12 +96,12 @@ public class HeadDrop extends JavaPlugin {
         metrics.addCustomChart(new SimplePie("discord_bot", () -> String.valueOf(getConfig().getBoolean("Bot.Enable"))));
         metrics.addCustomChart(new SimplePie("web", () -> String.valueOf(getConfig().getBoolean("Web.Enable"))));
 
-        database.cleanupOldData(config.getInt("Database.Cleanup"));
+        database.cleanupOldData(config.getInt("Database.Cleanup", 30));
 
         // Register events
         PluginManager pluginManager = getServer().getPluginManager();
         pluginManager.registerEvents(new EntityDeath(), this);
-        pluginManager.registerEvents(new GUI(), this);
+        pluginManager.registerEvents(new HeadGUI.GUIListener(), this);
 
         if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
             new HeadDropExpansion().register();
@@ -169,7 +169,7 @@ public class HeadDrop extends JavaPlugin {
                         p.sendMessage("§e§l--------------------------------");
                         p.sendMessage("§b§lYou are using §6§lHeadDrop " + getDescription().getVersion());
                         p.sendMessage("§b§lHowever, version §6§l" + newVersion + " §bis available.");
-                        p.sendMessage("§b§lYou can download it from: §6§lhttps://www.spigotmc.org/resources/99976/");
+                        p.sendMessage("§b§lYou can download it from: §6§lhttps://modrinth.com/plugin/headdrop");
                         p.sendMessage("§e§l--------------------------------");
                     }
                 }
@@ -177,7 +177,7 @@ public class HeadDrop extends JavaPlugin {
                     Bukkit.getLogger().info("--------------------------------");
                     Bukkit.getLogger().info("You are using HeadDrop v" + getDescription().getVersion());
                     Bukkit.getLogger().info("However version " + newVersion + " is available.");
-                    Bukkit.getLogger().info("You can download it from: " + "https://www.spigotmc.org/resources/99976/");
+                    Bukkit.getLogger().info("You can download it from: " + "https://modrinth.com/plugin/headdrop");
                     Bukkit.getLogger().info("--------------------------------");
                 }
             }
