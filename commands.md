@@ -1,68 +1,79 @@
 # Commands
 
-## Commands
+## HeadDrop Commands
 
-<details>
+Manage plugin functionality and access features through these commands.
 
-<summary>/head</summary>
+### Command Overview
 
-**Aliases:** /skull\
-**Description:** Get any player's head\
-**Permission:** headdrop.head\
-**Usage:** /head {NAME}
+| Command     | Description         | Permission      | Aliases        |
+| ----------- | ------------------- | --------------- | -------------- |
+| `/headdrop` | Main plugin command | None            | hd             |
+| `/head`     | Get player heads    | `headdrop.head` | gethead, skull |
 
-</details>
+### Main Command: `/headdrop`
 
-<details>
+```bash
+/headdrop [help|reload|leaderboard|debug|gui]
+```
 
-<summary>/headdrop help</summary>
+#### Subcommands
 
-**Aliases:** /hd help\
-**Description:** Show help info about the plugin\
-**Permission:** none\
-**Usage:** /hd help
+| Subcommand  | Description                | Permission                  |
+| ----------- | -------------------------- | --------------------------- |
+| help        | Show command help          | None                        |
+| reload      | Reload configuration files | `headdrop.reload`           |
+| leaderboard | Display head drop rankings | `headdrop.view.leaderboard` |
+| debug       | Debug info for developer   | None                        |
+| gui         | Open HeadDrop interface    | `headdrop.gui.view`         |
 
-</details>
+**Usage Examples:**
 
-<details>
+```
+/headdrop reload  # Reload config
+/headdrop gui     # Open GUI interface
+/headdrop help    # Show command help
+```
 
-<summary>/headdrop reload</summary>
+### Player Head Command: `/head`
 
-**Aliases:** /hd reload\
-**Permission:** headdrop.reload\
-**Usage:** /hd reload
+```
+/head [player]
+```
 
-</details>
+| Parameter  | Description                   |
+| ---------- | ----------------------------- |
+| `[player]` | (Optional) Target player name |
 
-<details>
+**Features:**
 
-<summary>/headdrop leaderboard</summary>
+* Shows your own head if no player specified
+* Works with offline players
+* Preserves custom player textures
 
-**Aliases:** /hd leaderboard\
-**Description:** Show top 10 head hunters\
-**Permission:** none\
-**Usage:** /hd leaderboard
+**Examples:**
 
-</details>
+bashCopy
 
-<details>
+```
+/head           # Get your own head
+/head Notch     # Get Notch's head
+```
 
-<summary>headdrop debug (Console command)</summary>
+### Permission Messages
 
-**Aliases:** /hd debug\
-**Description:** Create a "debug.txt" in the \Plugins\HeadDrop\ directory with some info\
-**Permission:** none\
-**Usage:** hd debug
+* `headdrop.head` required for `/head` command
+* `headdrop.reload` required for config reloads
+* `headdrop.admin` required for debug information
+* Failed commands show: _"You do not have permission to use this command"_
 
-</details>
+### Important Notes
 
-<details>
+1. Leaderboard requires database to be enabled
+2. GUI access requires `headdrop.gui.view` permission
+3. Player heads use persistent UUID-based textures
+4. Reload command may require restart for some changes
 
-<summary>/headdrop gui</summary>
+> **Tip:** Use TAB completion (1.13+) to see available subcommands!
 
-**Aliases:** /hd gui\
-**Description:** Open a GUI with all mob heads\
-**Permission:** none\
-**Usage:** hd gui
-
-</details>
+For permission requirements, see [Permissions Documentation](https://permissions-page-link/).
