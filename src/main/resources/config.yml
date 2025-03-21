@@ -2,53 +2,66 @@
 # For bug report or suggestion, join https://discord.gg/fV4P2yMSgR
 
 Config:
-  Version: ${project.version}
-  Update-Notify: true
-  Require-Killer-Player: true
-  Killer-Require-Permission: false
-  Enable-Looting: false
-  Baby-HeadDrop: false
-  Enable-Perm-Chance: false
-  Nerf-Spawner: false
-
-  Disable-Worlds:
+  Version: ${project.version} # Version of the config. don't change this
+  Require-Killer-Player: true # Need to be killed by a player to drop head
+  Enable-Looting: false # Enable looting enchant buff
+  Baby-HeadDrop: false # Baby mobs will drop heads too
+  Enable-Perm-Chance: false # headdrop.chance.{number} will add extra chance for a player. 1-100
+  Nerf-Spawner: false # Stop mobs from dropping heads spawned from spawnner
+  Bounties: false # Enable bounties feature (Premium version only)
+  Disable-Worlds: # Disable headdrop is certain worlds
     - demoWorld
     - demoWorld2
 
-Require-Weapon:
-  Enable: true
+Require-Weapon: #required weapons to drop head
+  Enable: false
   Weapons:
     - Diamond_Axe
 
-Database:
+Database: #Database function
   Enable: false
-  Online: true
+  Online: true # If your server is in offline mode, set this false
   URL: "jdbc:sqlite:HeadDrop.sqlite"
   User:
   Password:
-  Cleanup: 30
+  Cleanup: 30  #Auto cleanup database if player is inactive for x days
 
-Web:
+Web: # Website for leaderboard
   Enable: false
   Port: 8080
   Endpoint: "leaderboard"
 
-Bot:
+Bot: #Notify about headdrop in discord. Required DiscordUtils plugin
   Enable: false
   Channel-ID: ""
   Title: "HeadDrop"
   Description: "{KILLER} killed {MOB} and got a head!"
   Footer: "HeadDrop by RRS"
 
-# add a blank line/lore if you want to disable lore.
-Lores:
+Effects: #Show a particle effect on head drop (Premium version only)
+  Enabled: true
+  Particle: FLAME
+  Count: 10
+  OffsetX: 0.5
+  OffsetY: 0.5
+  OffsetZ: 0.5
+  Speed: 0.1
+  Sound: ENTITY_PLAYER_LEVELUP
+  Volume: 1.0
+  Pitch: 1.0
+
+Lores: # add a blank line/lore if you want to disable lore.
   - "Killed by {KILLER}"
   - "Killed on {DATE}"
 
+
+# Drop -> Disabling it will behave vanilla
+# Chance -> Chances for dropping head
+# Sound -> Sound for the head in note block
+# Point -> Point for each head drop (Need to enable database)
 PLAYER:
   Drop: true
   Chance: 100.00
-  Require-Permission: false
   Point: 1
 
 ZOMBIE:

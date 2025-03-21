@@ -10,6 +10,8 @@ softdepend:
   - WorldGuard
   - Geyser-Spigot
   - DiscordUtils
+
+
 commands:
   head:
     aliases:
@@ -22,6 +24,49 @@ commands:
     aliases:
       - hd
     description: Main command of HeadDrop plugin
+
+
+permissions:
+  headdrop.reload:
+    description: Allows the player to reload the HeadDrop plugin configuration.
+    default: op
+
+  headdrop.view.leaderboard:
+    description: Allows the player to view the leaderboard.
+    default: true
+
+  headdrop.gui.view:
+    description: Allows the player to open the HeadDrop GUI.
+    default: true
+
+  headdrop.head:
+    description: Allows the player to obtain their own or another player's head.
+    default: op
+
+  headdrop.killer:
+    description: Allows the player to trigger head drops.
+    default: true
+
+  headdrop.player:
+    description: Allows the player to drop own head.
+    default: true
+
+  headdrop.gui.move:
+    description: Allows the player to move items in the HeadDrop GUI.
+    default: op
+
+  headdrop.notify:
+    description: Allows the player to receive HeadDrop update notifications.
+    default: op
+
+  headdrop.admin:
+    description: Allows admin-level control over head drop settings.
+    default: op
+    children:
+      headdrop.reload: true
+      headdrop.head.: true
+      headdrop.gui.move: true
+      headdrop.notify: true
 
 libraries:
   - com.zaxxer:HikariCP:6.2.1

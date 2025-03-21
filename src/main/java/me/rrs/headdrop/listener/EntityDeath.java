@@ -188,8 +188,7 @@ public class EntityDeath implements Listener {
             return false;
         }
 
-        if (config.getBoolean("Config.Killer-Require-Permission")
-                && (killer == null || !killer.hasPermission("headdrop.killer"))) {
+        if ((killer == null || !killer.hasPermission("headdrop.killer"))) {
             return false;
         }
 
@@ -250,7 +249,7 @@ public class EntityDeath implements Listener {
     private void populateEntityActions(YamlDocument config) {
         try {
             entityActions.put(EntityType.PLAYER, event -> {
-                if ((config.getBoolean("PLAYER.Require-Permission")) && !event.getEntity().hasPermission("headdrop.player")) {
+                if (!event.getEntity().hasPermission("headdrop.player")) {
                     return;
                 }
                 handleEntityDrop(event, "PLAYER", () -> SkullCreator.createSkullWithName(event.getEntity().getName()));
@@ -301,8 +300,8 @@ public class EntityDeath implements Listener {
                     () -> {
                         MushroomCow mushroomCow = (MushroomCow) event.getEntity();
                         return switch (mushroomCow.getVariant()) {
-                            case RED -> EntityHead.MOOSHROOM_RED.getSkull();
-                            case BROWN -> EntityHead.MOOSHROOM_BROWN.getSkull();
+                            case RED -> EntityHead.MOOSHROOM_COW_RED.getSkull();
+                            case BROWN -> EntityHead.MOOSHROOM_COW_BROWN.getSkull();
                         };
                     }));
         } catch (NoSuchFieldError | IllegalArgumentException ignored) {}
@@ -532,6 +531,37 @@ public class EntityDeath implements Listener {
                         };
                     }));
         }catch (NoSuchFieldError | IllegalArgumentException ignored){}
+
+//        try {
+//            entityActions.put(EntityType.CHICKEN, event -> handleEntityDrop(event, "CHICKEN",
+//                    () -> {
+//                        Chicken chicken = (Chicken) event.getEntity();
+//                        return null;
+//                    }));
+//        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
+//        try {
+//            entityActions.put(EntityType.COW, event -> handleEntityDrop(event, "COW",
+//                    () -> {
+//                        Cow cow = (Cow) event.getEntity();
+//                        return null;
+//                    }));
+//        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
+//        try {
+//            entityActions.put(EntityType.PIG, event -> handleEntityDrop(event, "PIG",
+//                    () -> {
+//                        Pig pig = (Pig) event.getEntity();
+//                        return null;
+//                    }));
+//        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
+
+        try {entityActions.put(EntityType.CHICKEN, event -> handleEntityDrop(event, "CHICKEN", EntityHead.CHICKEN_TEMPERATE::getSkull));
+        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
+        try {entityActions.put(EntityType.COW, event -> handleEntityDrop(event, "COW", EntityHead.COW_TEMPERATE::getSkull));
+        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
+        try {entityActions.put(EntityType.PIG, event -> handleEntityDrop(event, "PIG", EntityHead.PIG_TEMPERATE::getSkull));
+        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
+
+
         try {entityActions.put(EntityType.CREAKING, event -> handleEntityDrop(event, "CREAKING", EntityHead.CREAKING::getSkull));
         }catch (NoSuchFieldError | IllegalArgumentException ignored){}
         try {entityActions.put(EntityType.ENDER_DRAGON, event -> handleEntityDrop(event, "ENDER_DRAGON", () -> new ItemStack(Material.DRAGON_HEAD)));
@@ -544,10 +574,6 @@ public class EntityDeath implements Listener {
         }catch (NoSuchFieldError | IllegalArgumentException ignored){}
         try {entityActions.put(EntityType.BAT, event -> handleEntityDrop(event, "BAT", EntityHead.BAT::getSkull));
         }catch (NoSuchFieldError | IllegalArgumentException ignored){}
-        try {entityActions.put(EntityType.CHICKEN, event -> handleEntityDrop(event, "CHICKEN", EntityHead.CHICKEN::getSkull));
-        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
-        try {entityActions.put(EntityType.COW, event -> handleEntityDrop(event, "COW", EntityHead.COW::getSkull));
-        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
         try {entityActions.put(EntityType.ENDERMAN, event -> handleEntityDrop(event, "ENDERMAN", EntityHead.ENDERMAN::getSkull));
         }catch (NoSuchFieldError | IllegalArgumentException ignored){}
         try {entityActions.put(EntityType.GIANT, event -> handleEntityDrop(event, "GIANT", EntityHead.GIANT::getSkull));
@@ -559,8 +585,6 @@ public class EntityDeath implements Listener {
         try {entityActions.put(EntityType.MAGMA_CUBE, event -> handleEntityDrop(event, "MAGMA_CUBE", EntityHead.MAGMA_CUBE::getSkull));
         }catch (NoSuchFieldError | IllegalArgumentException ignored){}
         try {entityActions.put(EntityType.OCELOT, event -> handleEntityDrop(event, "OCELOT", EntityHead.OCELOT::getSkull));
-        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
-        try {entityActions.put(EntityType.PIG, event -> handleEntityDrop(event, "PIG", EntityHead.PIG::getSkull));
         }catch (NoSuchFieldError | IllegalArgumentException ignored){}
         try {entityActions.put(EntityType.SILVERFISH, event -> handleEntityDrop(event, "SILVERFISH", EntityHead.SILVERFISH::getSkull));
         }catch (NoSuchFieldError | IllegalArgumentException ignored){}

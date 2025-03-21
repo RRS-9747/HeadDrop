@@ -12,13 +12,10 @@ import java.util.*;
 
 public class Database {
 
-    private final YamlDocument config;
+    private final YamlDocument config = HeadDrop.getInstance().getConfiguration();
     private boolean isSQLite;
     private HikariDataSource dataSource;
 
-    public Database(YamlDocument config) {
-        this.config = config;
-    }
 
     private String getCurrentTimestampFunction() {
         return isSQLite ? "datetime('now')" : "NOW()";

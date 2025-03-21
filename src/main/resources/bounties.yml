@@ -1,0 +1,107 @@
+Version: ${project.version}
+BroadcastInterval: 5 # minutes between new bounties
+MaxActiveBounties: 1
+ActivationMessage: "§6New Bounty! §7Kill {mob} to earn rewards!"
+CompletionMessage: "§aYou completed the {mob} bounty!"
+BroadcastMessage: "§e{player} §ahas completed the {mob} bounty!"
+ExpireMessage: "§cBounty for {mob} has expired!"
+
+Bounties:
+  ZOMBIE:
+    Reward:
+      - "ITEM:ROTTEN_FLESH:16"
+      - "ITEM:IRON_INGOT:3"
+      - "COMMAND:effect give {player} strength 30 0"
+    RequiredKills: 10
+    MoneyReward: 50.0
+    ExperienceReward: 20
+    Duration: 10
+
+  SKELETON:
+    Reward:
+      - "ITEM:BONE:16"
+      - "ITEM:ARROW:32"
+      - "ITEM:BOW:1"
+    RequiredKills: 8
+    MoneyReward: 60.0
+    ExperienceReward: 25
+    Duration: 12
+
+  CREEPER:
+    Reward:
+      - "ITEM:GUNPOWDER:8"
+      - "ITEM:TNT:5"
+      - "COMMAND:summon lightning_bolt ~ ~ ~"
+    RequiredKills: 5
+    MoneyReward: 75.0
+    ExperienceReward: 30
+    Duration: 8
+
+  BLAZE:
+    Reward:
+      - "ITEM:BLAZE_ROD:4"
+      - "ITEM:GOLD_INGOT:8"
+      - "COMMAND:effect give {player} fire_resistance 600 0"
+    RequiredKills: 3
+    MoneyReward: 150.0
+    ExperienceReward: 50
+    Duration: 15
+
+  WITHER_SKELETON:
+    Reward:
+      - "ITEM:COAL:16"
+      - "ITEM:BONE:12"
+      - "ITEM:NETHER_STAR:1"
+    RequiredKills: 2
+    MoneyReward: 200.0
+    ExperienceReward: 75
+    Duration: 20
+
+  GUARDIAN:
+    Reward:
+      - "ITEM:PRISMARINE_SHARD:16"
+      - "ITEM:SPONGE:2"
+      - "ITEM:COOKED_COD:8"
+    RequiredKills: 6
+    MoneyReward: 100.0
+    ExperienceReward: 40
+    Duration: 12
+
+  ENDERMAN:
+    Reward:
+      - "ITEM:ENDER_PEARL:4"
+      - "ITEM:OBSIDIAN:8"
+      - "COMMAND:give {player} ender_chest"
+    RequiredKills: 4
+    MoneyReward: 175.0
+    ExperienceReward: 60
+    Duration: 15
+
+  PHANTOM:
+    Reward:
+      - "ITEM:PHANTOM_MEMBRANE:8"
+      - "ITEM:FEATHER:16"
+      - "COMMAND:effect give {player} slow_falling 600 0"
+    RequiredKills: 5
+    MoneyReward: 125.0
+    ExperienceReward: 45
+    Duration: 10
+
+  COW:
+    Reward:
+      - "ITEM:LEATHER:16"
+      - "ITEM:COOKED_BEEF:16"
+    RequiredKills: 15
+    MoneyReward: 40.0
+    ExperienceReward: 15
+    Duration: 20
+
+  WITCH:
+    Reward:
+      - "ITEM:GLOWSTONE_DUST:16"
+      - "ITEM:REDSTONE:16"
+      - "ITEM:SPLASH_POTION:3"
+    RequiredKills: 4
+    MoneyReward: 160.0
+    ExperienceReward: 55
+    Duration: 12

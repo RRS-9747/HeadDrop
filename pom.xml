@@ -11,7 +11,7 @@
     </parent>
 
     <artifactId>HeadDrop-Free</artifactId>
-    <version>5.4.1</version>
+    <version>5.4.2</version>
 
     <build>
         <plugins>
@@ -38,10 +38,6 @@
                         <relocation>
                             <pattern>org.bstats</pattern>
                             <shadedPattern>me.rrs.lib.bstats</shadedPattern>
-                        </relocation>
-                        <relocation>
-                            <pattern>dev.dejvokep.boostedyaml</pattern>
-                            <shadedPattern>me.rrs.lib.boostedyaml</shadedPattern>
                         </relocation>
                     </relocations>
                 </configuration>

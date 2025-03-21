@@ -1,12 +1,12 @@
 package me.rrs.headdrop.util;
 
+import com.destroystokyo.paper.profile.PlayerProfile;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
-import org.bukkit.profile.PlayerProfile;
 import org.bukkit.profile.PlayerTextures;
 
 import java.net.URL;
@@ -58,7 +58,7 @@ public class SkullCreator {
 					.getAsJsonObject("SKIN")
 					.get("url").getAsString();
 
-			PlayerProfile profile = Bukkit.createPlayerProfile(uuid);
+			PlayerProfile profile = Bukkit.createProfile(uuid);
 			PlayerTextures textures = profile.getTextures();
 			textures.setSkin(new URL(textureUrl));
 			profile.setTextures(textures);

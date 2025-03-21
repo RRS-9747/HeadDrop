@@ -90,9 +90,12 @@ public class MainCommand implements CommandExecutor, TabCompleter {
     }
 
     private void showLeaderboard(CommandSender sender) {
+        if (!sender.hasPermission("headdrop.view.leaderboard")){
+            return;
+        }
         if (!HeadDrop.getInstance().getConfiguration().getBoolean("Database.Enable")){
             Bukkit.getLogger().severe("[HeadDrop] Enable database on config!");
-            if (sender instanceof Player) sender.sendMessage("[HeadDrop] Check console log!");
+            if (sender instanceof Player) sender.sendMessage("[HeadDrop] This is an error. report this to admin!");
             return;
         }
         Map<String, Integer> playerData = HeadDrop.getInstance().getDatabase().getPlayerData();
@@ -145,10 +148,12 @@ public class MainCommand implements CommandExecutor, TabCompleter {
 
     private void openGUI(CommandSender sender) {
         if (sender instanceof Player player) {
-            HeadGUI gui = new HeadGUI();
-            player.openInventory(gui.getInventory());
-        } else {
-            lang.pcmd();
+            if (player.hasPermission("headdrop.gui.view")) {
+                HeadGUI gui = new HeadGUI();
+                player.openInventory(gui.getInventory());
+            } else {
+                lang.pcmd();
+            }
         }
     }
 

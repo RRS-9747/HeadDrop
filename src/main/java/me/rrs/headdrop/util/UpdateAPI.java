@@ -31,4 +31,35 @@ public class UpdateAPI{
             return HeadDrop.getInstance().getDescription().getVersion();
         }
     }
+
+    public boolean hasSpigotUpdate(String resourceId) {
+        boolean hasUpdate = false;
+        try (InputStream inputStream =
+                     new URI("https://api.spigotmc.org/legacy/update.php?resource=" + resourceId).toURL().openStream();
+             java.util.Scanner scanner = new java.util.Scanner(inputStream)) {
+            if (scanner.hasNext())
+                hasUpdate = !HeadDrop.getInstance().getDescription().getVersion().equalsIgnoreCase(scanner.next());
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
+            hasUpdate = false;
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
+        return hasUpdate;
+    }
+
+
+    public String getSpigotVersion (String resourceId){
+        String newVersion = HeadDrop.getInstance().getDescription().getVersion();
+        try (InputStream inputStream =
+                     new URI("https://api.spigotmc.org/legacy/update.php?resource=" + resourceId).toURL().openStream();
+             java.util.Scanner scanner = new java.util.Scanner(inputStream)) {
+            if (scanner.hasNext()) newVersion = String.valueOf(scanner.next());
+        } catch (IOException ioException) {
+            ioException.printStackTrace();
+        } catch (URISyntaxException e) {
+            throw new RuntimeException(e);
+        }
+        return newVersion;
+    }
 }
