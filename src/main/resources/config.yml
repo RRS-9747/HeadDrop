@@ -35,7 +35,7 @@ Bot: #Notify about headdrop in discord. Required DiscordUtils plugin
   Enable: false
   Channel-ID: ""
   Title: "HeadDrop"
-  Description: "{KILLER} killed {MOB} and got a head!"
+  Description: "{KILLER} killed {MOB} using {WEAPON} and got a head!"
   Footer: "HeadDrop by RRS"
 
 Effects: #Show a particle effect on head drop (Premium version only)
@@ -53,6 +53,7 @@ Effects: #Show a particle effect on head drop (Premium version only)
 Lores: # add a blank line/lore if you want to disable lore.
   - "Killed by {KILLER}"
   - "Killed on {DATE}"
+  - "Killed Using {WEAPON}"
 
 
 # Drop -> Disabling it will behave vanilla

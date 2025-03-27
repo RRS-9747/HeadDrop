@@ -23,7 +23,8 @@ public class ItemUtils {
             if (!lore.equalsIgnoreCase("")) {
                 lore = lore
                         .replace("{KILLER}", killer != null ? killer.getName() : "Unknown")
-                        .replace("{DATE}", LocalDate.now().toString());
+                        .replace("{DATE}", LocalDate.now().toString())
+                        .replace("{WEAPON}", killer != null ? killer.getInventory().getItemInMainHand().getType().toString() : "Unknown");
                 if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
                     lore = killer != null ? PlaceholderAPI.setPlaceholders(killer, lore) : PlaceholderAPI.setPlaceholders(null, lore);
                 }

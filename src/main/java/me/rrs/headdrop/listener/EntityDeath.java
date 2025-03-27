@@ -43,7 +43,7 @@ public class EntityDeath implements Listener {
 
     public EntityDeath() {
         this.loreList = config.getStringList("Lores");
-        populateEntityActions(config);
+        populateEntityActions();
         this.worldGuardEnabled = Bukkit.getPluginManager().isPluginEnabled("WorldGuard");
         HeadDropAPI.integrateWithEntityDeath(this);
     }
@@ -82,13 +82,16 @@ public class EntityDeath implements Listener {
 
         String title = config.getString("Bot.Title", "")
                 .replace("{KILLER}", killerName)
-                .replace("{MOB}", mobName);
+                .replace("{MOB}", mobName)
+                .replace("{WEAPON}", killer.getInventory().getItemInMainHand().getType().toString());
         String description = config.getString("Bot.Description", "")
                 .replace("{KILLER}", killerName)
-                .replace("{MOB}", mobName);
+                .replace("{MOB}", mobName)
+                .replace("{WEAPON}", killer.getInventory().getItemInMainHand().getType().toString());
         String footer = config.getString("Bot.Footer", "")
                 .replace("{KILLER}", killerName)
-                .replace("{MOB}", mobName);
+                .replace("{MOB}", mobName)
+                .replace("{WEAPON}", killer.getInventory().getItemInMainHand().getType().toString());
 
         if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
             title = PlaceholderAPI.setPlaceholders(killer, title);
@@ -196,7 +199,7 @@ public class EntityDeath implements Listener {
                 .contains(entity.getWorld().getName());
     }
 
-    private void handleEntityDrop(EntityDeathEvent event, String entityType, Supplier<ItemStack> itemSupplier) {
+    protected void handleEntityDrop(EntityDeathEvent event, String entityType, Supplier<ItemStack> itemSupplier) {
         float baseChance = config.getFloat(entityType + ".Chance");
         float lootBonus = (float) ActionContext.getLootBonus();
 
@@ -246,7 +249,7 @@ public class EntityDeath implements Listener {
         }
     }
 
-    private void populateEntityActions(YamlDocument config) {
+    private void populateEntityActions() {
         try {
             entityActions.put(EntityType.PLAYER, event -> {
                 if (!event.getEntity().hasPermission("headdrop.player")) {
@@ -481,17 +484,53 @@ public class EntityDeath implements Listener {
                     () -> {
                         Wolf wolf = (Wolf) event.getEntity();
                         String variant = wolf.getVariant().toString().toUpperCase().replace("MINECRAFT:", "");
-                        return switch (variant) {
-                            case "ASHEN" -> EntityHead.WOLF_ASHEN.getSkull();
-                            case "BLACK" -> EntityHead.WOLF_BLACK.getSkull();
-                            case "CHESTNUT" -> EntityHead.WOLF_CHESTNUT.getSkull();
-                            case "RUSTY" -> EntityHead.WOLF_RUSTY.getSkull();
-                            case "SNOWY" -> EntityHead.WOLF_SNOWY.getSkull();
-                            case "SPOTTED" -> EntityHead.WOLF_SPOTTED.getSkull();
-                            case "STRIPED" -> EntityHead.WOLF_STRIPED.getSkull();
-                            case "WOODS" -> EntityHead.WOLF_WOODS.getSkull();
-                            default -> EntityHead.WOLF_PALE.getSkull();
-                        };
+                        switch (variant) {
+                            case "ASHEN" -> {
+                                if (wolf.isAngry()) {
+                                    return EntityHead.WOLF_ASHEN_ANGRY.getSkull();
+                                } else return EntityHead.WOLF_ASHEN.getSkull();
+                            }
+                            case "BLACK" -> {
+                                if (wolf.isAngry()) {
+                                    return EntityHead.WOLF_BLACK_ANGRY.getSkull();
+                                } else return EntityHead.WOLF_BLACK.getSkull();
+                            }
+                            case "CHESTNUT" -> {
+                                if (wolf.isAngry()) {
+                                    return EntityHead.WOLF_CHESTNUT_ANGRY.getSkull();
+                                } else return EntityHead.WOLF_CHESTNUT.getSkull();
+                            }
+                            case "RUSTY" -> {
+                                if (wolf.isAngry()) {
+                                    return EntityHead.WOLF_RUSTY_ANGRY.getSkull();
+                                } else return EntityHead.WOLF_RUSTY.getSkull();
+                            }
+                            case "SNOWY" -> {
+                                if (wolf.isAngry()) {
+                                    return EntityHead.WOLF_SNOWY_ANGRY.getSkull();
+                                } else return EntityHead.WOLF_SNOWY.getSkull();
+                            }
+                            case "SPOTTED" -> {
+                                if (wolf.isAngry()) {
+                                    return EntityHead.WOLF_SPOTTED_ANGRY.getSkull();
+                                } else return EntityHead.WOLF_SPOTTED.getSkull();
+                            }
+                            case "STRIPED" -> {
+                                if (wolf.isAngry()) {
+                                    return EntityHead.WOLF_STRIPED_ANGRY.getSkull();
+                                } else return EntityHead.WOLF_STRIPED.getSkull();
+                            }
+                            case "WOODS" -> {
+                                if (wolf.isAngry()) {
+                                    return EntityHead.WOLF_WOODS_ANGRY.getSkull();
+                                } else return EntityHead.WOLF_WOODS.getSkull();
+                            }
+                            default -> {
+                                if (wolf.isAngry()) {
+                                    return EntityHead.WOLF_PALE_ANGRY.getSkull();
+                                } else return EntityHead.WOLF_PALE.getSkull();
+                            }
+                        }
                     }));
         }catch (NoSuchFieldError | IllegalArgumentException ignored){}
         try {
@@ -531,37 +570,65 @@ public class EntityDeath implements Listener {
                         };
                     }));
         }catch (NoSuchFieldError | IllegalArgumentException ignored){}
-
-//        try {
-//            entityActions.put(EntityType.CHICKEN, event -> handleEntityDrop(event, "CHICKEN",
-//                    () -> {
-//                        Chicken chicken = (Chicken) event.getEntity();
-//                        return null;
-//                    }));
-//        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
-//        try {
-//            entityActions.put(EntityType.COW, event -> handleEntityDrop(event, "COW",
-//                    () -> {
-//                        Cow cow = (Cow) event.getEntity();
-//                        return null;
-//                    }));
-//        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
-//        try {
-//            entityActions.put(EntityType.PIG, event -> handleEntityDrop(event, "PIG",
-//                    () -> {
-//                        Pig pig = (Pig) event.getEntity();
-//                        return null;
-//                    }));
-//        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
-
-        try {entityActions.put(EntityType.CHICKEN, event -> handleEntityDrop(event, "CHICKEN", EntityHead.CHICKEN_TEMPERATE::getSkull));
-        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
-        try {entityActions.put(EntityType.COW, event -> handleEntityDrop(event, "COW", EntityHead.COW_TEMPERATE::getSkull));
-        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
-        try {entityActions.put(EntityType.PIG, event -> handleEntityDrop(event, "PIG", EntityHead.PIG_TEMPERATE::getSkull));
+        try {
+            entityActions.put(EntityType.STRIDER, event -> handleEntityDrop(event, "STRIDER",
+                    () -> {
+                        Strider strider = (Strider) event.getEntity();
+                        if (strider.isShivering()){
+                            return EntityHead.STRIDER_SHIVERING.getSkull();
+                        }else return EntityHead.STRIDER.getSkull();
+                    }));
         }catch (NoSuchFieldError | IllegalArgumentException ignored){}
 
-
+        try {
+            entityActions.put(EntityType.CHICKEN, event -> handleEntityDrop(event, "CHICKEN",
+                    () -> {
+                        try {
+                            Chicken chicken = (Chicken) event.getEntity();
+                            return switch (chicken.getVariant().toString()) {
+                                case "COLD" -> EntityHead.CHICKEN_COLD.getSkull();
+                                case "WARM" -> EntityHead.CHICKEN_WARM.getSkull();
+                                case "TEMPERATE" -> EntityHead.CHICKEN_TEMPERATE.getSkull();
+                                default -> throw new IllegalStateException("Unexpected value: " + chicken.getVariant());
+                            };
+                        } catch (NoSuchMethodError | IllegalArgumentException e) {
+                            return EntityHead.CHICKEN_TEMPERATE.getSkull();
+                        }
+                    }));
+        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
+        try {
+            entityActions.put(EntityType.COW, event -> handleEntityDrop(event, "COW",
+                    () -> {
+                        try {
+                            Cow cow = (Cow) event.getEntity();
+                            return switch (cow.getVariant().toString()) {
+                                case "COLD" -> EntityHead.COW_COLD.getSkull();
+                                case "WARM" -> EntityHead.COW_WARM.getSkull();
+                                case "TEMPERATE" -> EntityHead.COW_TEMPERATE.getSkull();
+                                default ->
+                                        throw new IllegalStateException("Unexpected value: " + cow.getVariant());
+                            };
+                        } catch (NoSuchMethodError | IllegalArgumentException e) {
+                            return EntityHead.COW_TEMPERATE.getSkull();
+                        }
+                    }));
+        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
+        try {
+            entityActions.put(EntityType.PIG, event -> handleEntityDrop(event, "PIG",
+                    () -> {
+                        try {
+                            Pig pig = (Pig) event.getEntity();
+                            return switch (pig.getVariant().toString()){
+                                case "COLD" -> EntityHead.PIG_COLD.getSkull();
+                                case "WARM" -> EntityHead.PIG_WARM.getSkull();
+                                case "TEMPERATE" -> EntityHead.PIG_TEMPERATE.getSkull();
+                                default -> throw new IllegalStateException("Unexpected value: " + pig.getVariant());
+                            };
+                        } catch (NoSuchMethodError | IllegalArgumentException e) {
+                            return EntityHead.PIG_TEMPERATE.getSkull();
+                        }
+                    }));
+        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
         try {entityActions.put(EntityType.CREAKING, event -> handleEntityDrop(event, "CREAKING", EntityHead.CREAKING::getSkull));
         }catch (NoSuchFieldError | IllegalArgumentException ignored){}
         try {entityActions.put(EntityType.ENDER_DRAGON, event -> handleEntityDrop(event, "ENDER_DRAGON", () -> new ItemStack(Material.DRAGON_HEAD)));
@@ -670,8 +737,6 @@ public class EntityDeath implements Listener {
         }catch (NoSuchFieldError | IllegalArgumentException ignored){}
         try {entityActions.put(EntityType.SNIFFER, event -> handleEntityDrop(event, "SNIFFER", EntityHead.SNIFFER::getSkull));
         }catch (NoSuchFieldError | IllegalArgumentException ignored){}
-        try {entityActions.put(EntityType.STRIDER, event -> handleEntityDrop(event, "STRIDER", EntityHead.STRIDER::getSkull));
-        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
         try {entityActions.put(EntityType.ARMADILLO, event -> handleEntityDrop(event, "ARMADILLO", EntityHead.ARMADILLO::getSkull));
         }catch (NoSuchFieldError | IllegalArgumentException ignored){}
         try {entityActions.put(EntityType.BREEZE, event -> handleEntityDrop(event, "BREEZE", EntityHead.BREEZE::getSkull));
@@ -681,9 +746,6 @@ public class EntityDeath implements Listener {
         try {entityActions.put(EntityType.valueOf("SNOWMAN"), event -> handleEntityDrop(event, "SNOW_GOLEM", EntityHead.SNOWMAN::getSkull));
         }catch (NoSuchFieldError | IllegalArgumentException ignored){}
     }
-
-
-
 
 
     public void registerCustomDropHandler(EntityType type, Consumer<EntityDeathEvent> handler) {
@@ -701,9 +763,6 @@ public class EntityDeath implements Listener {
     public void awardPoints(Player player, int points) {
         updateDatabase(player, points);
     }
-
-
-
 
 
 }

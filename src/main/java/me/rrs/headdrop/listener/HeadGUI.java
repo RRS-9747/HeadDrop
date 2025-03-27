@@ -18,6 +18,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.persistence.PersistentDataContainer;
 import org.bukkit.persistence.PersistentDataType;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -40,6 +41,7 @@ public class HeadGUI implements InventoryHolder {
         this.filteredHeads = new ArrayList<>(Arrays.asList(EntityHead.values()));
     }
 
+    @NotNull
     @Override
     public Inventory getInventory() {
         Component title = Component.text("Mob Heads ", NamedTextColor.BLUE)
@@ -93,7 +95,7 @@ public class HeadGUI implements InventoryHolder {
     }
 
     private int getTotalPages() {
-        return (int) Math.ceil((double) filteredHeads.size() / ITEMS_PER_PAGE);
+        return (filteredHeads.size() + ITEMS_PER_PAGE - 1) / ITEMS_PER_PAGE;
     }
 
     public static class GUIListener implements Listener {
@@ -112,7 +114,7 @@ public class HeadGUI implements InventoryHolder {
             if (data.has(BUTTON_KEY, PersistentDataType.STRING)) {
                 String buttonType = data.get(BUTTON_KEY, PersistentDataType.STRING);
                 handleButtonClick(gui, buttonType, player);
-            } else if (e.getRawSlot() < gui.getInventory().getSize()) {
+            } else if (e.getRawSlot() >= 9 && e.getRawSlot() < gui.getInventory().getSize()) {
                 handleItemTake(player, clicked);
             }
         }
