@@ -170,21 +170,17 @@ public class EntityDeath implements Listener {
         }
 
         if (config.getBoolean("Require-Weapon.Enable")) {
-            List<String> requiredWeapons = config.getStringList("Weapons");
-            if (!requiredWeapons.isEmpty()) {
-                if (killer == null) {
-                    return false;
-                }
+            List<String> requiredWeapons = config.getStringList("Require-Weapon.Weapons");
 
-                ItemStack weapon = killer.getInventory().getItemInMainHand();
-                String weaponName = weapon.getType().toString();
+            if (requiredWeapons == null || requiredWeapons.isEmpty()) return false;
+            if (killer == null) return false;
 
-                boolean matches = requiredWeapons.stream()
-                        .anyMatch(weaponName::equalsIgnoreCase);
-                if (!matches) {
-                    return false;
-                }
-            }
+            ItemStack weapon = killer.getInventory().getItemInMainHand();
+            String weaponName = weapon.getType().name();
+            return requiredWeapons.stream()
+                    .filter(Objects::nonNull)
+                    .map(String::toUpperCase)
+                    .anyMatch(weaponName::equals);
         }
 
         if (config.getBoolean("Config.Require-Killer-Player") && killer == null) {
