@@ -69,8 +69,8 @@ permissions:
       headdrop.notify: true
 
 libraries:
-  - com.zaxxer:HikariCP:6.2.1
-  - org.json:json:20250107
+  - com.zaxxer:HikariCP:6.3.0
+  - org.json:json:20250517
 
 
 
