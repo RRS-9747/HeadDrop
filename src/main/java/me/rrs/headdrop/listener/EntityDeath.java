@@ -362,10 +362,10 @@ public class EntityDeath implements Listener {
                     () -> {
                         TraderLlama traderLlama = (TraderLlama) event.getEntity();
                         return switch (traderLlama.getColor()) {
-                            case BROWN -> EntityHead.LLAMA_BROWN.getSkull();
-                            case GRAY -> EntityHead.LLAMA_GRAY.getSkull();
-                            case CREAMY -> EntityHead.LLAMA_CREAMY.getSkull();
-                            case WHITE -> EntityHead.LLAMA_WHITE.getSkull();
+                            case BROWN -> EntityHead.TRADER_LLAMA_BROWN.getSkull();
+                            case GRAY -> EntityHead.TRADER_LLAMA_GRAY.getSkull();
+                            case CREAMY -> EntityHead.TRADER_LLAMA_CREAMY.getSkull();
+                            case WHITE -> EntityHead.TRADER_LLAMA_WHITE.getSkull();
                         };
                     }));
         }catch (NoSuchFieldError | IllegalArgumentException ignored){}
