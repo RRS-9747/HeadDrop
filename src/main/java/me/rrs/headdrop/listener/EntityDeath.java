@@ -673,7 +673,14 @@ public class EntityDeath implements Listener {
         }catch (NoSuchFieldError | IllegalArgumentException ignored){}
         try {entityActions.put(EntityType.VINDICATOR, event -> handleEntityDrop(event, "VINDICATOR", EntityHead.VINDICATOR::getSkull));
         }catch (NoSuchFieldError | IllegalArgumentException ignored){}
-        try {entityActions.put(EntityType.VEX, event -> handleEntityDrop(event, "VEX", EntityHead.VEX::getSkull));
+        try {
+            entityActions.put(EntityType.VEX, event -> handleEntityDrop(event, "VEX",
+                    ()-> {
+                        Vex vex = (Vex) event.getEntity();
+                        if (vex.isCharging()){
+                            return EntityHead.VEX_CHARGE.getSkull();
+                        } else return EntityHead.VEX.getSkull();
+                    }));
         }catch (NoSuchFieldError | IllegalArgumentException ignored){}
         try {entityActions.put(EntityType.EVOKER, event -> handleEntityDrop(event, "EVOKER", EntityHead.EVOKER::getSkull));
         }catch (NoSuchFieldError | IllegalArgumentException ignored){}
