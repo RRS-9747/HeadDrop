@@ -594,7 +594,7 @@ public class EntityDeath implements Listener {
                     () -> {
                         try {
                             Cow cow = (Cow) event.getEntity();
-                            return switch (cow.getVariant().toString()) {
+                            return switch (cow.getVariant().getKey().getKey().toUpperCase()) {
                                 case "COLD" -> EntityHead.COW_COLD.getSkull();
                                 case "WARM" -> EntityHead.COW_WARM.getSkull();
                                 case "TEMPERATE" -> EntityHead.COW_TEMPERATE.getSkull();
