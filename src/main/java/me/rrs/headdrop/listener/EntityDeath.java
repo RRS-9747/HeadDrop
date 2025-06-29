@@ -479,7 +479,8 @@ public class EntityDeath implements Listener {
             entityActions.put(EntityType.WOLF, event -> handleEntityDrop(event, "WOLF",
                     () -> {
                         Wolf wolf = (Wolf) event.getEntity();
-                        String variant = wolf.getVariant().toString().toUpperCase().replace("MINECRAFT:", "");
+                        String variant = wolf.getVariant().getKey().getKey().toUpperCase();
+
                         switch (variant) {
                             case "ASHEN" -> {
                                 if (wolf.isAngry()) {
@@ -521,11 +522,7 @@ public class EntityDeath implements Listener {
                                     return EntityHead.WOLF_WOODS_ANGRY.getSkull();
                                 } else return EntityHead.WOLF_WOODS.getSkull();
                             }
-                            default -> {
-                                if (wolf.isAngry()) {
-                                    return EntityHead.WOLF_PALE_ANGRY.getSkull();
-                                } else return EntityHead.WOLF_PALE.getSkull();
-                            }
+                            default -> throw new IllegalStateException("Unexpected value: " + wolf.getVariant());
                         }
                     }));
         }catch (NoSuchFieldError | IllegalArgumentException ignored){}
@@ -581,7 +578,7 @@ public class EntityDeath implements Listener {
                     () -> {
                         try {
                             Chicken chicken = (Chicken) event.getEntity();
-                            return switch (chicken.getVariant().toString()) {
+                            return switch (chicken.getVariant().getKey().getKey().toUpperCase()) {
                                 case "COLD" -> EntityHead.CHICKEN_COLD.getSkull();
                                 case "WARM" -> EntityHead.CHICKEN_WARM.getSkull();
                                 case "TEMPERATE" -> EntityHead.CHICKEN_TEMPERATE.getSkull();
@@ -614,7 +611,7 @@ public class EntityDeath implements Listener {
                     () -> {
                         try {
                             Pig pig = (Pig) event.getEntity();
-                            return switch (pig.getVariant().toString()){
+                            return switch (pig.getVariant().getKey().getKey().toUpperCase()){
                                 case "COLD" -> EntityHead.PIG_COLD.getSkull();
                                 case "WARM" -> EntityHead.PIG_WARM.getSkull();
                                 case "TEMPERATE" -> EntityHead.PIG_TEMPERATE.getSkull();
