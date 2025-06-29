@@ -748,6 +748,8 @@ public class EntityDeath implements Listener {
         }catch (NoSuchFieldError | IllegalArgumentException ignored){}
         try {entityActions.put(EntityType.valueOf("SNOWMAN"), event -> handleEntityDrop(event, "SNOW_GOLEM", EntityHead.SNOWMAN::getSkull));
         }catch (NoSuchFieldError | IllegalArgumentException ignored){}
+        try {entityActions.put(EntityType.HAPPY_GHAST, event -> handleEntityDrop(event, "HAPPY_GHAST", EntityHead.HAPPY_GHAST::getSkull));
+        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
     }
 
 
