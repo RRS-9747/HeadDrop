@@ -685,6 +685,8 @@ public class EntityDeath implements Listener {
         }catch (NoSuchFieldError | IllegalArgumentException ignored){}
         try {entityActions.put(EntityType.STRAY, event -> handleEntityDrop(event, "STRAY", EntityHead.STRAY::getSkull));
         }catch (NoSuchFieldError | IllegalArgumentException ignored){}
+        try {entityActions.put(EntityType.SLIME, event -> handleEntityDrop(event, "SLIME", EntityHead.SLIME::getSkull));
+        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
         try {entityActions.put(EntityType.ELDER_GUARDIAN, event -> handleEntityDrop(event, "ELDER_GUARDIAN", EntityHead.ELDER_GUARDIAN::getSkull));
         }catch (NoSuchFieldError | IllegalArgumentException ignored){}
         try {entityActions.put(EntityType.DONKEY, event -> handleEntityDrop(event, "DONKEY", EntityHead.DONKEY::getSkull));
