@@ -362,10 +362,10 @@ public class EntityDeath implements Listener {
                     () -> {
                         TraderLlama traderLlama = (TraderLlama) event.getEntity();
                         return switch (traderLlama.getColor()) {
-                            case BROWN -> EntityHead.LLAMA_BROWN.getSkull();
-                            case GRAY -> EntityHead.LLAMA_GRAY.getSkull();
-                            case CREAMY -> EntityHead.LLAMA_CREAMY.getSkull();
-                            case WHITE -> EntityHead.LLAMA_WHITE.getSkull();
+                            case BROWN -> EntityHead.TRADER_LLAMA_BROWN.getSkull();
+                            case GRAY -> EntityHead.TRADER_LLAMA_GRAY.getSkull();
+                            case CREAMY -> EntityHead.TRADER_LLAMA_CREAMY.getSkull();
+                            case WHITE -> EntityHead.TRADER_LLAMA_WHITE.getSkull();
                         };
                     }));
         }catch (NoSuchFieldError | IllegalArgumentException ignored){}
@@ -479,7 +479,8 @@ public class EntityDeath implements Listener {
             entityActions.put(EntityType.WOLF, event -> handleEntityDrop(event, "WOLF",
                     () -> {
                         Wolf wolf = (Wolf) event.getEntity();
-                        String variant = wolf.getVariant().toString().toUpperCase().replace("MINECRAFT:", "");
+                        String variant = wolf.getVariant().getKey().getKey().toUpperCase();
+
                         switch (variant) {
                             case "ASHEN" -> {
                                 if (wolf.isAngry()) {
@@ -521,11 +522,7 @@ public class EntityDeath implements Listener {
                                     return EntityHead.WOLF_WOODS_ANGRY.getSkull();
                                 } else return EntityHead.WOLF_WOODS.getSkull();
                             }
-                            default -> {
-                                if (wolf.isAngry()) {
-                                    return EntityHead.WOLF_PALE_ANGRY.getSkull();
-                                } else return EntityHead.WOLF_PALE.getSkull();
-                            }
+                            default -> throw new IllegalStateException("Unexpected value: " + wolf.getVariant());
                         }
                     }));
         }catch (NoSuchFieldError | IllegalArgumentException ignored){}
@@ -581,7 +578,7 @@ public class EntityDeath implements Listener {
                     () -> {
                         try {
                             Chicken chicken = (Chicken) event.getEntity();
-                            return switch (chicken.getVariant().toString()) {
+                            return switch (chicken.getVariant().getKey().getKey().toUpperCase()) {
                                 case "COLD" -> EntityHead.CHICKEN_COLD.getSkull();
                                 case "WARM" -> EntityHead.CHICKEN_WARM.getSkull();
                                 case "TEMPERATE" -> EntityHead.CHICKEN_TEMPERATE.getSkull();
@@ -597,7 +594,7 @@ public class EntityDeath implements Listener {
                     () -> {
                         try {
                             Cow cow = (Cow) event.getEntity();
-                            return switch (cow.getVariant().toString()) {
+                            return switch (cow.getVariant().getKey().getKey().toUpperCase()) {
                                 case "COLD" -> EntityHead.COW_COLD.getSkull();
                                 case "WARM" -> EntityHead.COW_WARM.getSkull();
                                 case "TEMPERATE" -> EntityHead.COW_TEMPERATE.getSkull();
@@ -614,7 +611,7 @@ public class EntityDeath implements Listener {
                     () -> {
                         try {
                             Pig pig = (Pig) event.getEntity();
-                            return switch (pig.getVariant().toString()){
+                            return switch (pig.getVariant().getKey().getKey().toUpperCase()){
                                 case "COLD" -> EntityHead.PIG_COLD.getSkull();
                                 case "WARM" -> EntityHead.PIG_WARM.getSkull();
                                 case "TEMPERATE" -> EntityHead.PIG_TEMPERATE.getSkull();
@@ -673,13 +670,22 @@ public class EntityDeath implements Listener {
         }catch (NoSuchFieldError | IllegalArgumentException ignored){}
         try {entityActions.put(EntityType.VINDICATOR, event -> handleEntityDrop(event, "VINDICATOR", EntityHead.VINDICATOR::getSkull));
         }catch (NoSuchFieldError | IllegalArgumentException ignored){}
-        try {entityActions.put(EntityType.VEX, event -> handleEntityDrop(event, "VEX", EntityHead.VEX::getSkull));
+        try {
+            entityActions.put(EntityType.VEX, event -> handleEntityDrop(event, "VEX",
+                    ()-> {
+                        Vex vex = (Vex) event.getEntity();
+                        if (vex.isCharging()){
+                            return EntityHead.VEX_CHARGE.getSkull();
+                        } else return EntityHead.VEX.getSkull();
+                    }));
         }catch (NoSuchFieldError | IllegalArgumentException ignored){}
         try {entityActions.put(EntityType.EVOKER, event -> handleEntityDrop(event, "EVOKER", EntityHead.EVOKER::getSkull));
         }catch (NoSuchFieldError | IllegalArgumentException ignored){}
         try {entityActions.put(EntityType.HUSK, event -> handleEntityDrop(event, "HUSK", EntityHead.HUSK::getSkull));
         }catch (NoSuchFieldError | IllegalArgumentException ignored){}
         try {entityActions.put(EntityType.STRAY, event -> handleEntityDrop(event, "STRAY", EntityHead.STRAY::getSkull));
+        }catch (NoSuchFieldError | IllegalArgumentException ignored){}
+        try {entityActions.put(EntityType.SLIME, event -> handleEntityDrop(event, "SLIME", EntityHead.SLIME::getSkull));
         }catch (NoSuchFieldError | IllegalArgumentException ignored){}
         try {entityActions.put(EntityType.ELDER_GUARDIAN, event -> handleEntityDrop(event, "ELDER_GUARDIAN", EntityHead.ELDER_GUARDIAN::getSkull));
         }catch (NoSuchFieldError | IllegalArgumentException ignored){}
