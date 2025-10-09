@@ -521,6 +521,10 @@ public class EntityDeath implements Listener {
                                 if (wolf.isAngry()) {
                                     return EntityHead.WOLF_WOODS_ANGRY.getSkull();
                                 } else return EntityHead.WOLF_WOODS.getSkull();
+                            }case "PALE" -> {
+                                if (wolf.isAngry()) {
+                                    return EntityHead.WOLF_PALE_ANGRY.getSkull();
+                                } else return EntityHead.WOLF_PALE.getSkull();
                             }
                             default -> throw new IllegalStateException("Unexpected value: " + wolf.getVariant());
                         }
