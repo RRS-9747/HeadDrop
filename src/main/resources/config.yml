@@ -562,3 +562,39 @@ CREAKING:
   Chance: 50.00
   Sound: "default"
   Point: 1
+
+HAPPY_GHAST:
+  Drop: true
+  Chance: 50.00
+  Sound: "default"
+  Point: 1
+
+COPPER_GOLEM:
+  Drop: true
+  Chance: 50.00
+  Sound: "default"
+  Point: 1
+
+NAUTILUS:
+  Drop: true
+  Chance: 50.00
+  Sound: "default"
+  Point: 1
+
+PARCHED:
+  Drop: true
+  Chance: 50.00
+  Sound: "default"
+  Point: 1
+
+ZOMBIE_NAUTILUS:
+  Drop: true
+  Chance: 50.00
+  Sound: "default"
+  Point: 1
+
+CAMEL_HUSK:
+  Drop: true
+  Chance: 50.00
+  Sound: "default"
+  Point: 1

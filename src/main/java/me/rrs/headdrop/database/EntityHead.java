@@ -208,9 +208,14 @@ public enum EntityHead {
       ARMADILLO("ARMADILLO", "entity.armadillo.ambient", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYzljMWU5NmNlOTg1NzI1ZTIyZWQ2Y2NmMGY0YzQ4MTBjNzI5YTI1MzhiOTdiZGEwNmZhZWIzYjkyNzk5Yzg3OCJ9fX0="),
       BOGGED("BOGGED", "entity.bogged.ambient", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNDgzNDc0YTgxM2EwMzg5ZTUyZmM1YWViZDVlNjllMDlhNzI1NDE2NDI4ODE1M2IxM2JkMDU5NjNiZjIzOTYxMSJ9fX0="),
       CREAKING("CREAKING", "entity.creaking.activate", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMTJmZmNlNDU2MWYzYjA3NjkwZjU4Y2Q2MmM2ZjJiNWY4Y2NjMjc2ZjQ0M2MyZDFkN2NmZGU0ODcwYTJiYWYwMyJ9fX0="),
-      HAPPY_GHAST("HAPPY_GHAST", "entity.creaking.activate", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvODI2OThhYTcyNzRlZTI0MWQzMTM2MmUyZmFhNDhjZmE3MzNkMjUwMTA1MTY1NjhkNDBmM2Y5NjcyNDdkYTExYiJ9fX0=");
+      HAPPY_GHAST("HAPPY_GHAST", "entity.happy_ghast.ambient", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvODI2OThhYTcyNzRlZTI0MWQzMTM2MmUyZmFhNDhjZmE3MzNkMjUwMTA1MTY1NjhkNDBmM2Y5NjcyNDdkYTExYiJ9fX0="),
+      COPPER_GOLEM("COPPER_GOLEM", "entity.copper_golem.spawn", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOTllMjRlOTRkYmU0MmUyMzBkODMyOTNhNzdkNjFmZjcxMDFhOGM2OGFiNjhiYmM2YTkzZjk2MzBmYjJmZGI0In19fQ=="),
+      NAUTILUS("NAUTILUS", "entity.nautilus.ambient", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYjUzZDYzZWIxNzViMDBmYjM1Mjg1ZjQzMzBkMGJlNjhhMDcxM2RiOTRlMDBlNmZkZDg1ODMyZDQxZTNhMDhiIn19fQ=="),
+      PARCHED("PARCHED", "entity.parched.ambient", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMjRhZWNlZmY1ZjI2ZGQ4NDEzYzVjMDM1NDdjMjM0YWMwMzEwOGQxODdhZjBiOWNkODM0YThjZTEyNTk4NTkxYyJ9fX0="),
+      ZOMBIE_NAUTILUS("ZOMBIE_NAUTILUS", "entity.zombie_nautilus.ambient", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZmQ5YTkzMzM3NmRhNDRjMzM5MTMwN2NiOWY0Y2YwM2YxNmYzYTU0ZjQ5NWZkNWExMWJhZDhhMzczZjlkNTcyMCJ9fX0="),
+      CAMEL_HUSK("CAMEL_HUSK", "entity.camel_husk.ambient", "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvM2JkN2E5MmE2ZjY3Yjc1MDBkMTZjNGUxMmYyODA1OGVjMjg1OTMxMTU1NmJhMDNiZTJkMWY1ODExNzBmMmRiNiJ9fX0=");
 
-      private final String name;
+    private final String name;
       private final String sound;
       private final String headHash;
       private final UUID headUUID;
