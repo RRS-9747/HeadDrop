@@ -21,7 +21,7 @@ public class HeadDropEvent extends Event implements Cancellable {
         this.isCancelled = false;
     }
 
-    public Player getPlayer() {
+    public Player getKiller() {
         return player;
     }
 

@@ -1,8 +1,8 @@
 package me.rrs.headdrop.util;
 
 import me.clip.placeholderapi.PlaceholderAPI;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -17,22 +17,22 @@ public class ItemUtils {
         if (rawLore == null || rawLore.isEmpty()) return;
 
         ItemMeta itemMeta = head.getItemMeta();
-        List<String> finalLore = new ArrayList<>();
+        List<Component> finalLore = new ArrayList<>();
 
         rawLore.forEach(lore -> {
             if (!lore.equalsIgnoreCase("")) {
-                lore = lore
+                String processedLore = lore
                         .replace("{KILLER}", killer != null ? killer.getName() : "Unknown")
                         .replace("{DATE}", LocalDate.now().toString())
                         .replace("{WEAPON}", killer != null ? killer.getInventory().getItemInMainHand().getType().toString() : "Unknown");
                 if (Bukkit.getPluginManager().isPluginEnabled("PlaceholderAPI")) {
-                    lore = killer != null ? PlaceholderAPI.setPlaceholders(killer, lore) : PlaceholderAPI.setPlaceholders(null, lore);
+                    processedLore = killer != null ? PlaceholderAPI.setPlaceholders(killer, processedLore) : PlaceholderAPI.setPlaceholders(null, processedLore);
                 }
-                finalLore.add(ChatColor.translateAlternateColorCodes('&', lore));
+                finalLore.add(net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer.legacyAmpersand().deserialize(processedLore));
             }
         });
 
-        itemMeta.setLore(finalLore);
+        itemMeta.lore(finalLore);
         head.setItemMeta(itemMeta);
     }
 

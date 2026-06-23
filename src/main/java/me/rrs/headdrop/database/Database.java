@@ -211,6 +211,10 @@ public class Database {
         }
     }
 
+    public HikariDataSource getDataSource() {
+        return dataSource;
+    }
+
     public void setupDataSource() {
         String connectionString = config.getString("Database.URL");
         String username = config.getString("Database.User");

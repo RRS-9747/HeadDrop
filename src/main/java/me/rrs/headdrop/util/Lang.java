@@ -5,7 +5,6 @@ import me.rrs.headdrop.HeadDrop;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 
 public class Lang {
@@ -35,7 +34,7 @@ public class Lang {
     }
 
     public void noPerm(Player player) {
-        msg("&c&l[HeadDrop]&r", "Permission-Error", player);
+        msg("<red><bold>[HeadDrop]<reset>", "Permission-Error", player);
     }
 
     public void pcmd() {

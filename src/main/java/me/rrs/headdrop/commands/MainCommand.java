@@ -2,7 +2,6 @@ package me.rrs.headdrop.commands;
 
 
 import me.rrs.headdrop.HeadDrop;
-import me.rrs.headdrop.listener.HeadGUI;
 import me.rrs.headdrop.util.Lang;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
@@ -37,9 +36,6 @@ public class MainCommand implements CommandExecutor, TabCompleter {
                     break;
                 case "debug":
                     generateDebugFile(sender);
-                    break;
-                case "gui":
-                    openGUI(sender);
                     break;
             }
         }
@@ -128,7 +124,7 @@ public class MainCommand implements CommandExecutor, TabCompleter {
                 try (FileWriter writer = new FileWriter(debugFile)) {
                     writer.write("Server Name: " + Bukkit.getServer().getName() + "\n");
                     writer.write("Server Version: " + Bukkit.getServer().getVersion() + "\n");
-                    writer.write("Plugin Version: " + HeadDrop.getInstance().getDescription().getVersion() + "\n");
+                    writer.write("Plugin Version: " + HeadDrop.getInstance().getPluginMeta().getVersion() + "\n");
                     writer.write("Java Version: " + System.getProperty("java.version") + "\n");
                     writer.write("Operating System: " + System.getProperty("os.name") + " " + System.getProperty("os.version") + "\n");
                     writer.write("\n");
@@ -146,23 +142,11 @@ public class MainCommand implements CommandExecutor, TabCompleter {
         }
     }
 
-    private void openGUI(CommandSender sender) {
-        if (sender instanceof Player player) {
-            if (player.hasPermission("headdrop.gui.view")) {
-                HeadGUI gui = new HeadGUI();
-                player.openInventory(gui.getInventory());
-            } else {
-                lang.pcmd();
-            }
-        }
-    }
-
-
     @Override
     public List<String> onTabComplete(CommandSender sender, Command cmd, String alias, String[] args) {
 
         if (cmd.getName().equals("headdrop") && args.length ==1){
-            return Arrays.asList("help", "reload", "leaderboard", "gui");
+            return Arrays.asList("help", "reload", "leaderboard");
         }
         return Collections.emptyList();
     }

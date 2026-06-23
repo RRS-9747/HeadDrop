@@ -20,7 +20,7 @@ public class Head implements CommandExecutor {
             if (player.hasPermission("headdrop.head")) {
                 player.getInventory().addItem(skull);
                 String message = (args.length > 0) ? "Head-Success" : "MyHead-Success";
-                lang.msg("&a&l[HeadDrop]&r", message, (args.length > 0) ? "%player%" : "", (args.length > 0) ? args[0] : "", player);
+                lang.msg("<green><bold>[HeadDrop]<reset>", message, (args.length > 0) ? "%player%" : "", (args.length > 0) ? args[0] : "", player);
             } else {
                 lang.noPerm(player);
             }

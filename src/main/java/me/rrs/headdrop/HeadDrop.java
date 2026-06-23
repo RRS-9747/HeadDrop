@@ -14,7 +14,7 @@ import me.rrs.headdrop.hook.GeyserMC;
 import me.rrs.headdrop.hook.HeadDropExpansion;
 import me.rrs.headdrop.hook.WorldGuardSupport;
 import me.rrs.headdrop.listener.EntityDeath;
-import me.rrs.headdrop.listener.HeadGUI;
+import org.bukkit.entity.Player;
 import me.rrs.headdrop.util.UpdateAPI;
 import org.bstats.bukkit.Metrics;
 import org.bstats.charts.SimplePie;
@@ -32,17 +32,29 @@ public class HeadDrop extends JavaPlugin {
 
     // Instance management
     private static HeadDrop instance;
-    public static HeadDrop getInstance() { return instance; }
+
+    public static HeadDrop getInstance() {
+        return instance;
+    }
 
     // Configuration files
     private YamlDocument lang;
     private YamlDocument config;
-    public YamlDocument getConfiguration() { return config; }
-    public YamlDocument getLang() { return lang; }
+
+    public YamlDocument getConfiguration() {
+        return config;
+    }
+
+    public YamlDocument getLang() {
+        return lang;
+    }
 
     // Core components
     private Database database;
-    public Database getDatabase() { return database; }
+
+    public Database getDatabase() {
+        return database;
+    }
 
     // Lifecycle methods
     @Override
@@ -55,18 +67,15 @@ public class HeadDrop extends JavaPlugin {
 
     @Override
     public void onEnable() {
-        displayStartupMessage();
         setupMetrics();
         registerComponents();
         startUpdateChecker();
-        startWebServer();
-        logInfo("Enabled successfully!");
+        logInfo("HeadDrop v" + getPluginMeta().getVersion() + " enabled!");
     }
 
     @Override
     public void onDisable() {
-        stopWebServer();
-        logInfo("Disabled");
+        // Core teardown logic if needed
     }
 
     // region Configuration & Setup
@@ -90,12 +99,11 @@ public class HeadDrop extends JavaPlugin {
                 UpdaterSettings.builder()
                         .setAutoSave(true)
                         .setVersioning(new Pattern(
-                                        Segment.range(1, Integer.MAX_VALUE),
-                                        Segment.literal("."),
-                                        Segment.range(0, 100)),
-                                versionKey
-                        ).build()
-        );
+                                Segment.range(1, Integer.MAX_VALUE),
+                                Segment.literal("."),
+                                Segment.range(0, 100)),
+                                versionKey)
+                        .build());
     }
 
     private void setupDatabase() {
@@ -106,6 +114,7 @@ public class HeadDrop extends JavaPlugin {
     }
 
     private void initializeWorldGuardSupport() {
+        if (!config.getBoolean("Config.WorldGuard-Integration", true)) return;
         try {
             new WorldGuardSupport();
         } catch (NoClassDefFoundError ignored) {
@@ -123,7 +132,6 @@ public class HeadDrop extends JavaPlugin {
     private void registerEvents() {
         PluginManager pm = getServer().getPluginManager();
         pm.registerEvents(new EntityDeath(), this);
-        pm.registerEvents(new HeadGUI.GUIListener(), this);
     }
 
     private void registerCommands() {
@@ -143,34 +151,8 @@ public class HeadDrop extends JavaPlugin {
             GeyserApi.api().eventBus().subscribe(
                     new GeyserMC(),
                     GeyserDefineCustomSkullsEvent.class,
-                    GeyserMC::onDefineCustomSkulls
-            );
+                    GeyserMC::onDefineCustomSkulls);
             logInfo("Hooked into Geyser!");
-        }
-    }
-
-    // region Web Server
-    private void startWebServer() {
-        if (!config.getBoolean("Web.Enable")) return;
-
-        if (!config.getBoolean("Database.Enable")) {
-            logSevere("Database must be enabled to host the leaderboard website!");
-            return;
-        }
-
-        try {
-            WebsiteController handler = new WebsiteController();
-            handler.start(config.getInt("Web.Port"));
-            logInfo("Website online at port " + config.getInt("Web.Port"));
-        } catch (IOException e) {
-            logSevere("Failed to start web server!");
-            throw new RuntimeException(e);
-        }
-    }
-
-    private void stopWebServer() {
-        if (config.getBoolean("Web.Enable")) {
-            new WebsiteController().stop();
         }
     }
 
@@ -183,14 +165,16 @@ public class HeadDrop extends JavaPlugin {
 
         new BukkitRunnable() {
             @Override
-            public void run() { checkForUpdates(); }
-        }.runTaskTimerAsynchronously(this, 0L, 20L * 60L * 30L);
+            public void run() {
+                checkForUpdates();
+            }
+        }.runTaskTimerAsynchronously(this, 0L, 20L * 60L * 40L); // Check every 40 minutes
     }
 
     private void checkForUpdates() {
         UpdateAPI updateAPI = new UpdateAPI();
-        if (updateAPI.hasGithubUpdate("RRS-9747", "HeadDrop")) {
-            String newVersion = updateAPI.getGithubVersion("RRS-9747", "HeadDrop");
+        String newVersion = updateAPI.getGithubVersion("RRS-9747", "HeadDrop");
+        if (!getPluginMeta().getVersion().equals(newVersion)) {
             notifyPlayers(newVersion);
             logUpdateInfo(newVersion);
         }
@@ -221,14 +205,6 @@ public class HeadDrop extends JavaPlugin {
         };
     }
 
-    // region Utilities
-    private void displayStartupMessage() {
-        String version = getPluginMeta().getVersion();
-        logInfo("\n==============================");
-        logInfo("    HeadDrop Plugin v" + version);
-        logInfo("==============================\n");
-    }
-
     public boolean isFolia() {
         try {
             Class.forName("io.papermc.paper.threadedregions.RegionizedServer");
@@ -240,17 +216,26 @@ public class HeadDrop extends JavaPlugin {
 
     private void setupMetrics() {
         Metrics metrics = new Metrics(this, 13554);
-        metrics.addCustomChart(new SimplePie("discord_bot", () ->
-                String.valueOf(config.getBoolean("Bot.Enable"))));
-        metrics.addCustomChart(new SimplePie("web", () ->
-                String.valueOf(config.getBoolean("Web.Enable"))));
+        metrics.addCustomChart(new SimplePie("discord_bot", () -> String.valueOf(config.getBoolean("Bot.Enable"))));
+        metrics.addCustomChart(new SimplePie("web", () -> String.valueOf(config.getBoolean("Web.Enable"))));
     }
 
     private void logInfo(String message) {
-        getLogger().info("[HeadDrop] " + message);
+        if (config == null || config.getBoolean("Config.Debug", false)) {
+            getLogger().info(message);
+        }
     }
 
     private void logSevere(String message) {
-        getLogger().severe("[HeadDrop] " + message);
+        getLogger().severe(message);
+    }
+
+    /**
+     * Hook for opening the Head GUI.
+     * Overridden in Premium to provide the actual GUI.
+     */
+    public void openHeadGUI(Player player) {
+        player.sendMessage("§e§lHeadDrop §8» §cThis feature is only available in §6HeadDrop-Premium§c!");
+        player.sendMessage("§eGet it at: §6§nmodrinth.com/plugin/headdrop");
     }
 }

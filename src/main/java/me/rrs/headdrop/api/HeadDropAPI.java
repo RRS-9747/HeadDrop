@@ -6,7 +6,7 @@ import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.entity.EntityDeathEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.util.Consumer;
+import java.util.function.Consumer;
 
 import java.util.EnumMap;
 import java.util.Map;

@@ -9,9 +9,11 @@ Config:
   Enable-Perm-Chance: false # headdrop.chance.{number} will add extra chance for a player. 1-100
   Nerf-Spawner: false # Stop mobs from dropping heads spawned from spawnner
   Bounties: false # Enable bounties feature (Premium version only)
+  WorldGuard-Integration: false # Create a headdrop flag and handle region checks
   Disable-Worlds: # Disable headdrop is certain worlds
     - demoWorld
     - demoWorld2
+  Debug: false # Silence non-critical console logs
 
 Require-Weapon: #required weapons to drop head
   Enable: false
@@ -26,19 +28,7 @@ Database: #Database function
   Password:
   Cleanup: 30  #Auto cleanup database if player is inactive for x days
 
-Web: # Website for leaderboard
-  Enable: false
-  Port: 8080
-  Endpoint: "leaderboard"
-
-Bot: #Notify about headdrop in discord. Required DiscordUtils plugin
-  Enable: false
-  Channel-ID: ""
-  Title: "HeadDrop"
-  Description: "{KILLER} killed {MOB} using {WEAPON} and got a head!"
-  Footer: "HeadDrop by RRS"
-
-Effects: #Show a particle effect on head drop (Premium version only)
+# Effects: #Show a particle effect on head drop (Premium version only)
   Enabled: true
   Particle: FLAME
   Count: 10
@@ -594,6 +584,12 @@ ZOMBIE_NAUTILUS:
   Point: 1
 
 CAMEL_HUSK:
+  Drop: true
+  Chance: 50.00
+  Sound: "default"
+  Point: 1
+
+SULFUR_CUBE:
   Drop: true
   Chance: 50.00
   Sound: "default"

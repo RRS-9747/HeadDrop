@@ -21,7 +21,10 @@ public class WorldGuardSupport {
 
     public static boolean canDrop(Location loc){
         WorldGuard wGuard = WorldGuard.getInstance();
-        for (ProtectedRegion k : wGuard.getPlatform().getRegionContainer().get(BukkitAdapter.adapt(loc.getWorld())).getRegions().values()) {
+        var regionManager = wGuard.getPlatform().getRegionContainer().get(BukkitAdapter.adapt(loc.getWorld()));
+        if (regionManager == null) return true;
+        
+        for (ProtectedRegion k : regionManager.getRegions().values()) {
             if (k.contains(loc.getBlockX(), loc.getBlockY(), loc.getBlockZ())) {
                 RegionContainer container = WorldGuard.getInstance().getPlatform().getRegionContainer();
                 RegionQuery query = container.createQuery();

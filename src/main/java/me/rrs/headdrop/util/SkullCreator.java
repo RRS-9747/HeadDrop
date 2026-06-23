@@ -9,7 +9,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.SkullMeta;
 import org.bukkit.profile.PlayerTextures;
 
-import java.net.URL;
+import java.net.URI;
 import java.util.Base64;
 import java.util.UUID;
 
@@ -60,10 +60,10 @@ public class SkullCreator {
 
 			PlayerProfile profile = Bukkit.createProfile(uuid);
 			PlayerTextures textures = profile.getTextures();
-			textures.setSkin(new URL(textureUrl));
+			textures.setSkin(URI.create(textureUrl).toURL());
 			profile.setTextures(textures);
 
-			meta.setOwnerProfile(profile);
+			meta.setPlayerProfile(profile);
 			item.setItemMeta(meta);
 
 		} catch (Exception e) {
