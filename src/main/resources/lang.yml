@@ -1,4 +1,5 @@
 Version: ${project.version}
+Update-Disabled: "Update notifications are disabled in config."
 MyHead-Success: "Your Head added in your inventory!"
 Head-Success: "%player%'s Head added in your inventory"
 Head-Error: "You Need to give a player name to get head!"
